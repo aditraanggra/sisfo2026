@@ -154,62 +154,78 @@ Bahasa implementasi: **Dart/Flutter** (sesuai dengan project yang sudah ada)
 - [x] 14. Checkpoint - Verify Home page updates
   - Ensure all tests pass, ask the user if questions arise.
 
-- [-] 15. Update Transaction History Page
+- [x] 15. Update Transaction History Page
   - [x] 15.1 Update histori_transaksi_widget.dart with modern styling
     - Update background color to off-white (#F5F7F5)
     - Add "View All" link in section headers
     - _Requirements: 6.6_
-  - [-] 15.2 Replace transaction list items with ModernTransactionItemWidget
+  - [x] 15.2 Replace transaction list items with ModernTransactionItemWidget
     - Update list rendering to use new component
     - Apply color coding for income/expense
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.7_
 
-- [ ] 16. Update Login Page with Modern Styling
-  - [ ] 16.1 Update login_widget.dart styling
+- [x] 16. Update Login Page with Modern Styling
+  - [x] 16.1 Update login_widget.dart styling
     - Update background color
     - Replace input fields with ModernInputWidget styling
     - Replace buttons with ModernPrimaryButton styling
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2, 10.3_
 
-- [ ] 17. Update Transaction Form Pages
-  - [ ] 17.1 Update zakat_fitrah_widget.dart with modern styling
+- [x] 17. Update Transaction Form Pages
+  - [x] 17.1 Update zakat_fitrah_widget.dart with modern styling
     - Apply ModernInputWidget styling to form fields
     - Apply ModernPrimaryButton styling to submit button
     - Update card styling with ModernCardWidget
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2, 10.3_
-  - [ ] 17.2 Update infak_widget.dart with modern styling
-    - Apply same styling updates as zakat_fitrah
+  - [x] 17.2 Update infak_widget.dart with modern styling
+    - Update background color to ModernColors.backgroundPrimary
+    - Update AppBar to use ModernColors.primaryDark
+    - Apply modern input decoration with ModernColors and ModernRadius
+    - Update form card with ModernCardWidget styling (shadow, border radius)
+    - Apply ModernPrimaryButton styling to submit button
+    - Use Google Fonts Inter for typography
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2, 10.3_
-  - [ ] 17.3 Update zakat_mal_widget.dart with modern styling
-    - Apply same styling updates
+  - [x] 17.3 Update zakat_mal_widget.dart with modern styling
+    - Update background color to ModernColors.backgroundPrimary
+    - Update AppBar to use ModernColors.primaryDark
+    - Apply modern input decoration with ModernColors and ModernRadius
+    - Update form card with ModernCardWidget styling (shadow, border radius)
+    - Apply ModernPrimaryButton styling to submit button
+    - Use Google Fonts Inter for typography
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2, 10.3_
 
-- [ ] 18. Checkpoint - Verify form page updates
+- [x] 18. Checkpoint - Verify form page updates
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 19. Update Profile Page with Modern Styling
-  - [ ] 19.1 Update profile_responsive_widget.dart
-    - Update header with large centered avatar
-    - Update card styling
-    - Apply modern button styling
+- [x] 19. Update Profile Page with Modern Styling
+  - [x] 19.1 Update profile_responsive_widget.dart
+    - Update background color to ModernColors.backgroundPrimary
+    - Update AppBar to use ModernColors.primaryDark
+    - Update avatar border color to ModernColors.primaryAccent
+    - Update card styling with ModernRadius.xl and ModernShadows.cardShadow
+    - Update icon colors to ModernColors.primaryAccent
+    - Use Google Fonts Inter for typography
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6_
 
-- [ ] 20. Update Bottom Navigation Styling
-  - [ ] 20.1 Update nav bar styling in nav.dart
-    - White background with subtle top shadow
-    - Outlined icons for inactive, filled for active
-    - Text labels below icons
-    - Safe area padding
+- [x] 20. Update Bottom Navigation Styling
+  - [x] 20.1 Update nav bar styling in main.dart NavBarPage
+    - Add subtle top shadow to BottomNavigationBar
+    - Update selectedItemColor to ModernColors.primaryDark
+    - Update unselectedItemColor to ModernColors.textSecondary
+    - Ensure safe area padding for devices with home indicator
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
 
-- [ ] 21. Update Laporan Page with Modern Styling
-  - [ ] 21.1 Update laporan_widget.dart
-    - Apply modern card styling
-    - Update button styling
-    - Apply consistent spacing
+- [x] 21. Update Laporan Page with Modern Styling
+  - [x] 21.1 Update laporan_widget.dart
+    - Update background color to ModernColors.backgroundPrimary
+    - Update AppBar to use ModernColors.primaryDark
+    - Apply modern card styling with ModernRadius and ModernShadows
+    - Update button styling with ModernColors.primaryDark
+    - Apply consistent spacing using ModernSpacing
+    - Use Google Fonts Inter for typography
     - _Requirements: 7.1, 7.2, 7.3, 10.1, 10.2, 10.3_
 
-- [ ] 22. Final Checkpoint - Full UI Review
+- [x] 22. Final Checkpoint - Full UI Review
   - Ensure all tests pass, ask the user if questions arise.
   - Run full test suite
   - Visual review of all updated pages

@@ -1,16 +1,16 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'modern_header_model.dart';
 export 'modern_header_model.dart';
 
 /// Modern header component with gradient background and user info
-/// Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
+/// Requirements: 3.1, 3.2, 3.4, 3.5
 ///
 /// Features:
 /// - Dark green gradient background (#1A3C34 to #0D1F1A) (Req 3.1)
-/// - Greeting text "Welcome Back" with user name (Req 3.2)
-/// - Circular profile avatar with border (Req 3.3)
+/// - Greeting text "Welcome Back" with user name and Verified badge (Req 3.2)
 /// - Rounded bottom corners (24px) (Req 3.4)
 /// - Notification icon with badge indicator (Req 3.5)
 class ModernHeaderWidget extends StatefulWidget {
@@ -67,6 +67,9 @@ class _ModernHeaderWidgetState extends State<ModernHeaderWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+    final isVerified = FFAppState().profileUPZ.isVerified == true;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -90,18 +93,11 @@ class _ModernHeaderWidgetState extends State<ModernHeaderWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Left side: Avatar and greeting
+              // Left side: Greeting with Verified badge (no avatar)
               Expanded(
-                child: Row(
-                  children: [
-                    // Requirements: 3.3 - Circular profile avatar with border
-                    _buildAvatar(),
-                    const SizedBox(width: ModernSpacing.md),
-                    // Requirements: 3.2 - Greeting text "Welcome Back" with user name
-                    Expanded(
-                      child: _buildGreeting(),
-                    ),
-                  ],
+                child: GestureDetector(
+                  onTap: widget.onAvatarTap,
+                  child: _buildGreeting(isVerified),
                 ),
               ),
               // Right side: Notification icon
@@ -114,58 +110,9 @@ class _ModernHeaderWidgetState extends State<ModernHeaderWidget> {
     );
   }
 
-  /// Builds the circular avatar with border
-  /// Requirements: 3.3
-  Widget _buildAvatar() {
-    return GestureDetector(
-      onTap: widget.onAvatarTap,
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 2,
-          ),
-        ),
-        child: ClipOval(
-          child: widget.avatarUrl != null && widget.avatarUrl!.isNotEmpty
-              ? Image.network(
-                  widget.avatarUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildDefaultAvatar(),
-                )
-              : _buildDefaultAvatar(),
-        ),
-      ),
-    );
-  }
-
-  /// Builds default avatar with user initial
-  Widget _buildDefaultAvatar() {
-    final initial =
-        widget.userName.isNotEmpty ? widget.userName[0].toUpperCase() : 'U';
-    return Container(
-      color: ModernColors.primaryAccent,
-      child: Center(
-        child: Text(
-          initial,
-          style: FlutterFlowTheme.of(context).titleMedium.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-      ),
-    );
-  }
-
-  /// Builds the greeting text section
+  /// Builds the greeting text section with Verified badge
   /// Requirements: 3.2
-  Widget _buildGreeting() {
+  Widget _buildGreeting(bool isVerified) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -179,19 +126,64 @@ class _ModernHeaderWidgetState extends State<ModernHeaderWidget> {
                 fontWeight: FontWeight.normal,
               ),
         ),
-        const SizedBox(height: 2),
-        Text(
-          widget.userName,
-          style: FlutterFlowTheme.of(context).titleMedium.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                widget.userName,
+                style: FlutterFlowTheme.of(context).titleMedium.override(
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+            ),
+            if (isVerified) ...[
+              const SizedBox(width: 8),
+              _buildVerifiedBadge(),
+            ],
+          ],
         ),
       ],
+    );
+  }
+
+  /// Builds the Verified badge
+  Widget _buildVerifiedBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.verified,
+            size: 14,
+            color: const Color(0xFF4CAF50),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            'Verified',
+            style: FlutterFlowTheme.of(context).bodySmall.override(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+        ],
+      ),
     );
   }
 

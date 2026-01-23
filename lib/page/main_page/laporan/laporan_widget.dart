@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'laporan_model.dart';
 export 'laporan_model.dart';
 
+// Modern styling constants for Laporan page
+// Requirements: 7.1, 7.2, 7.3, 10.1, 10.2, 10.3
+
 class LaporanWidget extends StatefulWidget {
   const LaporanWidget({super.key});
 
@@ -55,13 +58,13 @@ class _LaporanWidgetState extends State<LaporanWidget> {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            backgroundColor: ModernColors.backgroundPrimary,
             body: Center(
               child: SizedBox(
                 width: 40.0,
                 height: 40.0,
                 child: SpinKitFadingFour(
-                  color: Color(0xFF259148),
+                  color: ModernColors.primaryAccent,
                   size: 40.0,
                 ),
               ),
@@ -77,34 +80,25 @@ class _LaporanWidgetState extends State<LaporanWidget> {
           },
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            backgroundColor: ModernColors.backgroundPrimary,
             appBar: responsiveVisibility(
               context: context,
               desktop: false,
             )
                 ? AppBar(
-                    backgroundColor: Color(0xFF259148),
+                    backgroundColor: ModernColors.primaryDark,
                     automaticallyImplyLeading: false,
                     title: Text(
                       'Laporan',
-                      style: FlutterFlowTheme.of(context).titleMedium.override(
-                            font: GoogleFonts.notoSans(
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .fontStyle,
-                            ),
-                            fontSize: 14.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .fontStyle,
-                          ),
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
                     ),
                     actions: [],
                     centerTitle: true,
-                    elevation: 2.0,
+                    elevation: 0.0,
                   )
                 : null,
             body: SafeArea(
@@ -123,7 +117,7 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                         width: 40.0,
                         height: 40.0,
                         child: SpinKitFadingFour(
-                          color: Color(0xFF259148),
+                          color: ModernColors.primaryAccent,
                           size: 40.0,
                         ),
                       ),
@@ -147,7 +141,7 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                               width: 40.0,
                               height: 40.0,
                               child: SpinKitFadingFour(
-                                color: Color(0xFF259148),
+                                color: ModernColors.primaryAccent,
                                 size: 40.0,
                               ),
                             ),
@@ -172,7 +166,7 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                     width: 40.0,
                                     height: 40.0,
                                     child: SpinKitFadingFour(
-                                      color: Color(0xFF259148),
+                                      color: ModernColors.primaryAccent,
                                       size: 40.0,
                                     ),
                                   ),
@@ -189,14 +183,20 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                     children: [
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            16.0, 0.0, 16.0, 0.0),
+                                            ModernSpacing.md,
+                                            0.0,
+                                            ModernSpacing.md,
+                                            0.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                      24.0, 8.0, 24.0, 40.0),
+                                                      ModernSpacing.lg,
+                                                      ModernSpacing.sm,
+                                                      ModernSpacing.lg,
+                                                      ModernSpacing.xl),
                                               child: FFButtonWidget(
                                                 onPressed: () async {
                                                   await actions.saveToPdf(
@@ -506,74 +506,46 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                 ),
                                                 options: FFButtonOptions(
                                                   width: double.infinity,
-                                                  height: 40.0,
+                                                  height: 52.0,
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
-                                                          24.0, 0.0, 24.0, 0.0),
+                                                          ModernSpacing.lg,
+                                                          0.0,
+                                                          ModernSpacing.lg,
+                                                          0.0),
                                                   iconPadding:
                                                       EdgeInsetsDirectional
                                                           .fromSTEB(0.0, 0.0,
                                                               0.0, 0.0),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .success,
-                                                  textStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .fontWeight,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Colors.white,
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .fontStyle,
-                                                          ),
-                                                  elevation: 3.0,
+                                                  color:
+                                                      ModernColors.primaryDark,
+                                                  textStyle: GoogleFonts.inter(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                  elevation: 0.0,
                                                   borderSide: BorderSide(
                                                     color: Colors.transparent,
                                                     width: 1.0,
                                                   ),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          8.0),
+                                                          ModernRadius.md),
                                                 ),
                                               ),
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                      0.0, 16.0, 0.0, 0.0),
+                                                      0.0,
+                                                      ModernSpacing.md,
+                                                      0.0,
+                                                      0.0),
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(0.0),
-                                                  bottomRight:
-                                                      Radius.circular(0.0),
-                                                  topLeft: Radius.circular(0.0),
-                                                  topRight:
-                                                      Radius.circular(0.0),
-                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        ModernRadius.sm),
                                                 child: Image.asset(
                                                   Theme.of(context)
                                                               .brightness ==
@@ -588,101 +560,60 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                      0.0, 16.0, 0.0, 0.0),
+                                                      0.0,
+                                                      ModernSpacing.md,
+                                                      0.0,
+                                                      0.0),
                                               child: Text(
                                                 'LAPORAN PENGELOLAAN ZIS',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.notoSans(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
+                                                style: GoogleFonts.inter(
+                                                  color:
+                                                      ModernColors.textPrimary,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0,
+                                                ),
                                               ),
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                  .fromSTEB(
+                                                      0.0,
+                                                      ModernSpacing.xs,
+                                                      0.0,
+                                                      0.0),
                                               child: Text(
                                                 'UPZ ${FFAppState().profileUPZ.unitName}',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.notoSans(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
+                                                style: GoogleFonts.inter(
+                                                  color:
+                                                      ModernColors.textPrimary,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0,
+                                                ),
                                               ),
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 4.0),
+                                                  .fromSTEB(
+                                                      0.0,
+                                                      ModernSpacing.xs,
+                                                      0.0,
+                                                      ModernSpacing.xs),
                                               child: Text(
                                                 FFAppState()
                                                     .profileUPZ
                                                     .noRegister,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.notoSans(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
+                                                style: GoogleFonts.inter(
+                                                  color: ModernColors
+                                                      .textSecondary,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14.0,
+                                                ),
                                               ),
                                             ),
                                             Divider(
                                               thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
+                                              color: ModernColors
+                                                  .backgroundPrimary,
                                             ),
                                             Align(
                                               alignment: AlignmentDirectional(
@@ -690,39 +621,28 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
+                                                        0.0,
+                                                        ModernSpacing.sm,
+                                                        0.0,
+                                                        0.0),
                                                 child: Text(
                                                   'TOTAL PENERIMAAN DAN PENYALURAN ZIS',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
+                                                  style: GoogleFonts.inter(
+                                                    color: ModernColors
+                                                        .textPrimary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12.0,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                  .fromSTEB(
+                                                      0.0,
+                                                      ModernSpacing.xs,
+                                                      0.0,
+                                                      0.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -735,33 +655,13 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                             -1.0, -1.0),
                                                     child: Text(
                                                       'Total Penerimaan Uang',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
+                                                      style: GoogleFonts.inter(
+                                                        color: ModernColors
+                                                            .textPrimary,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 14.0,
+                                                      ),
                                                     ),
                                                   ),
                                                   Align(
@@ -810,33 +710,13 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                       ),
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                      style: GoogleFonts.inter(
+                                                        color: ModernColors
+                                                            .primaryAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -1420,8 +1300,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -1738,8 +1618,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -1961,8 +1841,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -2172,7 +2052,10 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            16.0, 0.0, 16.0, 8.0),
+                                            ModernSpacing.md,
+                                            0.0,
+                                            ModernSpacing.md,
+                                            ModernSpacing.sm),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -2182,33 +2065,18 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
+                                                        0.0,
+                                                        ModernSpacing.sm,
+                                                        0.0,
+                                                        0.0),
                                                 child: Text(
                                                   'RINCIAN PENYALURAN',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
+                                                  style: GoogleFonts.inter(
+                                                    color: ModernColors
+                                                        .textPrimary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12.0,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -2235,8 +2103,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -2574,8 +2442,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -3074,8 +2942,8 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        color:
-                                                            Color(0xFF259148),
+                                                        color: ModernColors
+                                                            .primaryAccent,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
                                                             FontWeight.w600,

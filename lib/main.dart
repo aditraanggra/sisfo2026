@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'auth/custom_auth/auth_util.dart';
 import 'auth/custom_auth/custom_auth_user_provider.dart';
@@ -178,52 +179,101 @@ class _NavBarPageState extends State<NavBarPage> {
           context: context,
           desktop: false,
         ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (i) => safeSetState(() {
-            _currentPage = null;
-            _currentPageName = tabs.keys.toList()[i];
-          }),
-          backgroundColor: Colors.white,
-          selectedItemColor: Color(0xFF259148),
-          unselectedItemColor: Color(0x8A4B4A4A),
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: FaIcon(
-                FontAwesomeIcons.home,
-                size: 18.0,
+        // Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6
+        // Modern bottom navigation with subtle top shadow and safe area padding
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            // Requirements: 8.1 - Subtle top shadow
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
               ),
-              label: 'Beranda',
-              tooltip: '',
+            ],
+          ),
+          // Requirements: 8.6 - Safe area padding for devices with home indicator
+          child: SafeArea(
+            top: false,
+            child: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (i) => safeSetState(() {
+                _currentPage = null;
+                _currentPageName = tabs.keys.toList()[i];
+              }),
+              // Requirements: 8.1 - White background
+              backgroundColor: Colors.white,
+              elevation: 0, // Remove default elevation, using custom shadow
+              // Requirements: 8.4 - Primary dark color for active state
+              selectedItemColor: ModernColors.primaryDark,
+              // Requirements: 8.3 - Secondary text color for inactive state
+              unselectedItemColor: ModernColors.textSecondary,
+              // Requirements: 8.5 - Text labels below icons
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              type: BottomNavigationBarType.fixed,
+              selectedLabelStyle: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+              unselectedLabelStyle: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  // Requirements: 8.3, 8.4 - Outlined icons for inactive, filled for active
+                  icon: FaIcon(
+                    FontAwesomeIcons.house,
+                    size: 20.0,
+                  ),
+                  activeIcon: FaIcon(
+                    FontAwesomeIcons.house,
+                    size: 20.0,
+                  ),
+                  label: 'Beranda',
+                  tooltip: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    FFIcons.kchartPie,
+                    size: 20.0,
+                  ),
+                  activeIcon: Icon(
+                    FFIcons.kchartPie,
+                    size: 20.0,
+                  ),
+                  label: 'Laporan',
+                  tooltip: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.view_list_outlined,
+                    size: 22.0,
+                  ),
+                  activeIcon: Icon(
+                    Icons.view_list_rounded,
+                    size: 22.0,
+                  ),
+                  label: 'Transaksi',
+                  tooltip: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.person_outline_rounded,
+                    size: 24.0,
+                  ),
+                  activeIcon: Icon(
+                    Icons.person_rounded,
+                    size: 24.0,
+                  ),
+                  label: 'Profil',
+                  tooltip: '',
+                )
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                FFIcons.kchartPie,
-                size: 18.0,
-              ),
-              label: 'Laporan',
-              tooltip: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.view_list_rounded,
-                size: 18.0,
-              ),
-              label: 'Transaksi',
-              tooltip: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.location_history_rounded,
-                size: 24.0,
-              ),
-              label: 'Profil',
-              tooltip: '',
-            )
-          ],
+          ),
         ),
       ),
     );

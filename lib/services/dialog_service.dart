@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 
 /// Enum representing the action taken on a success modal.
 enum SuccessModalAction {
@@ -136,25 +135,24 @@ class DialogService {
                   child: Semantics(
                     label: 'Batal hapus',
                     button: true,
-                    child: FFButtonWidget(
+                    child: OutlinedButton(
                       onPressed: () => Navigator.of(dialogContext).pop(false),
-                      text: 'Batal',
-                      options: FFButtonOptions(
-                        height: 48.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        color: theme.secondaryBackground,
-                        textStyle: theme.bodyMedium.override(
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                        side: BorderSide(color: theme.alternate),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Batal',
+                        style: theme.bodyMedium.override(
                           font:
                               GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                           color: theme.primaryText,
                           letterSpacing: 0.0,
                         ),
-                        elevation: 0.0,
-                        borderSide:
-                            BorderSide(color: theme.alternate, width: 1.0),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      showLoadingIndicator: false,
                     ),
                   ),
                 ),
@@ -163,23 +161,26 @@ class DialogService {
                   child: Semantics(
                     label: 'Konfirmasi hapus data',
                     button: true,
-                    child: FFButtonWidget(
+                    child: ElevatedButton(
                       onPressed: () => Navigator.of(dialogContext).pop(true),
-                      text: 'Hapus',
-                      options: FFButtonOptions(
-                        height: 48.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        color: theme.error,
-                        textStyle: theme.bodyMedium.override(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                        backgroundColor: theme.error,
+                        foregroundColor: Colors.white,
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Hapus',
+                        style: theme.bodyMedium.override(
                           font:
                               GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                           color: Colors.white,
                           letterSpacing: 0.0,
                         ),
-                        elevation: 2.0,
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      showLoadingIndicator: false,
                     ),
                   ),
                 ),
@@ -314,30 +315,28 @@ class DialogService {
                       child: Semantics(
                         label: 'Tambah transaksi lagi',
                         button: true,
-                        child: FFButtonWidget(
+                        child: OutlinedButton(
                           onPressed: () {
                             Navigator.of(dialogContext)
                                 .pop(SuccessModalAction.addMore);
                             onAddMore();
                           },
-                          text: 'Tambah Lagi',
-                          options: FFButtonOptions(
-                            height: 48.0,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            color: theme.secondaryBackground,
-                            textStyle: theme.bodyMedium.override(
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 48),
+                            side: BorderSide(color: theme.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            'Tambah Lagi',
+                            style: theme.bodyMedium.override(
                               font: GoogleFonts.notoSans(
                                   fontWeight: FontWeight.w600),
                               color: theme.primary,
                               letterSpacing: 0.0,
                             ),
-                            elevation: 0.0,
-                            borderSide:
-                                BorderSide(color: theme.primary, width: 1.0),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          showLoadingIndicator: false,
                         ),
                       ),
                     ),
@@ -348,28 +347,30 @@ class DialogService {
                       child: Semantics(
                         label: 'Lihat histori transaksi',
                         button: true,
-                        child: FFButtonWidget(
+                        child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(dialogContext)
                                 .pop(SuccessModalAction.viewHistory);
                             onViewHistory();
                           },
-                          text: 'Lihat Histori',
-                          options: FFButtonOptions(
-                            height: 48.0,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            color: theme.primary,
-                            textStyle: theme.bodyMedium.override(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(0, 48),
+                            backgroundColor: theme.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 2.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            'Lihat Histori',
+                            style: theme.bodyMedium.override(
                               font: GoogleFonts.notoSans(
                                   fontWeight: FontWeight.w600),
                               color: Colors.white,
                               letterSpacing: 0.0,
                             ),
-                            elevation: 2.0,
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          showLoadingIndicator: false,
                         ),
                       ),
                     ),
@@ -381,24 +382,27 @@ class DialogService {
                   child: Semantics(
                     label: 'Tutup dialog',
                     button: true,
-                    child: FFButtonWidget(
+                    child: ElevatedButton(
                       onPressed: () => Navigator.of(dialogContext)
                           .pop(SuccessModalAction.dismissed),
-                      text: 'Tutup',
-                      options: FFButtonOptions(
-                        height: 48.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        color: theme.primary,
-                        textStyle: theme.bodyMedium.override(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                        backgroundColor: theme.primary,
+                        foregroundColor: Colors.white,
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Tutup',
+                        style: theme.bodyMedium.override(
                           font:
                               GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                           color: Colors.white,
                           letterSpacing: 0.0,
                         ),
-                        elevation: 2.0,
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      showLoadingIndicator: false,
                     ),
                   ),
                 ),
@@ -510,26 +514,25 @@ class DialogService {
                   child: Semantics(
                     label: 'Tutup dialog error',
                     button: true,
-                    child: FFButtonWidget(
+                    child: OutlinedButton(
                       onPressed: () => Navigator.of(dialogContext)
                           .pop(ErrorDialogAction.dismissed),
-                      text: 'Tutup',
-                      options: FFButtonOptions(
-                        height: 48.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        color: theme.secondaryBackground,
-                        textStyle: theme.bodyMedium.override(
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                        side: BorderSide(color: theme.alternate),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Tutup',
+                        style: theme.bodyMedium.override(
                           font:
                               GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                           color: theme.primaryText,
                           letterSpacing: 0.0,
                         ),
-                        elevation: 0.0,
-                        borderSide:
-                            BorderSide(color: theme.alternate, width: 1.0),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      showLoadingIndicator: false,
                     ),
                   ),
                 ),
@@ -539,27 +542,30 @@ class DialogService {
                     child: Semantics(
                       label: 'Coba lagi',
                       button: true,
-                      child: FFButtonWidget(
+                      child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(dialogContext)
                               .pop(ErrorDialogAction.retry);
                           onRetry();
                         },
-                        text: 'Coba Lagi',
-                        options: FFButtonOptions(
-                          height: 48.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          color: theme.primary,
-                          textStyle: theme.bodyMedium.override(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(0, 48),
+                          backgroundColor: theme.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 2.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Coba Lagi',
+                          style: theme.bodyMedium.override(
                             font: GoogleFonts.notoSans(
                                 fontWeight: FontWeight.w600),
                             color: Colors.white,
                             letterSpacing: 0.0,
                           ),
-                          elevation: 2.0,
-                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        showLoadingIndicator: false,
                       ),
                     ),
                   ),
@@ -630,22 +636,25 @@ class DialogService {
           actions: [
             SizedBox(
               width: double.infinity,
-              child: FFButtonWidget(
+              child: ElevatedButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
-                text: 'OK',
-                options: FFButtonOptions(
-                  height: 48.0,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  color: theme.primary,
-                  textStyle: theme.bodyMedium.override(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(0, 48),
+                  backgroundColor: theme.primary,
+                  foregroundColor: Colors.white,
+                  elevation: 2.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  'OK',
+                  style: theme.bodyMedium.override(
                     font: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                     color: Colors.white,
                     letterSpacing: 0.0,
                   ),
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                showLoadingIndicator: false,
               ),
             ),
           ],
@@ -695,44 +704,47 @@ class DialogService {
             Row(
               children: [
                 Expanded(
-                  child: FFButtonWidget(
+                  child: OutlinedButton(
                     onPressed: () => Navigator.of(dialogContext).pop(false),
-                    text: cancelText,
-                    options: FFButtonOptions(
-                      height: 48.0,
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      color: theme.secondaryBackground,
-                      textStyle: theme.bodyMedium.override(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 48),
+                      side: BorderSide(color: theme.alternate),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      cancelText,
+                      style: theme.bodyMedium.override(
                         font: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                         color: theme.primaryText,
                         letterSpacing: 0.0,
                       ),
-                      elevation: 0.0,
-                      borderSide:
-                          BorderSide(color: theme.alternate, width: 1.0),
-                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    showLoadingIndicator: false,
                   ),
                 ),
                 const SizedBox(width: 12.0),
                 Expanded(
-                  child: FFButtonWidget(
+                  child: ElevatedButton(
                     onPressed: () => Navigator.of(dialogContext).pop(true),
-                    text: confirmText,
-                    options: FFButtonOptions(
-                      height: 48.0,
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      color: isDestructive ? theme.error : theme.primary,
-                      textStyle: theme.bodyMedium.override(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0, 48),
+                      backgroundColor:
+                          isDestructive ? theme.error : theme.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      confirmText,
+                      style: theme.bodyMedium.override(
                         font: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                         color: Colors.white,
                         letterSpacing: 0.0,
                       ),
-                      elevation: 2.0,
-                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    showLoadingIndicator: false,
                   ),
                 ),
               ],

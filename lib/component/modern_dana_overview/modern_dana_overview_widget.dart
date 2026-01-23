@@ -4,27 +4,26 @@ import 'package:flutter/material.dart';
 import 'modern_dana_overview_model.dart';
 export 'modern_dana_overview_model.dart';
 
-/// Modern dana overview component displaying simplified fund availability
+/// Modern overview component displaying Muzakki and Mustahik counts
 /// Requirements: 4.6, 4.7, 4.8
 ///
 /// Features:
 /// - Two clean cards side by side (Req 4.6, 4.7)
-/// - Show Ketersediaan Dana Pendistribusian (icon + amount) (Req 4.6)
-/// - Show Ketersediaan Hak Amil (icon + amount) (Req 4.7)
-/// - NO progress bars or percentages (Req 4.8)
-/// - Clean card layout with icon and amount only (Req 4.8)
+/// - Show Jumlah Muzakki (icon + count) (Req 4.6)
+/// - Show Jumlah Mustahik (icon + count) (Req 4.7)
+/// - Clean card layout with icon and count only (Req 4.8)
 class ModernDanaOverviewWidget extends StatefulWidget {
   const ModernDanaOverviewWidget({
     super.key,
-    required this.ketersediaanPendis,
-    required this.ketersediaanAmil,
+    required this.jumlahMuzakki,
+    required this.jumlahMustahik,
   });
 
-  /// Available funds for distribution (Ketersediaan Dana Pendistribusian)
-  final int ketersediaanPendis;
+  /// Total number of Muzakki (zakat payers)
+  final int jumlahMuzakki;
 
-  /// Available amil funds (Ketersediaan Hak Amil)
-  final int ketersediaanAmil;
+  /// Total number of Mustahik (zakat recipients)
+  final int jumlahMustahik;
 
   @override
   State<ModernDanaOverviewWidget> createState() =>
@@ -54,12 +53,11 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
     super.dispose();
   }
 
-  /// Formats the monetary value with Indonesian currency format
-  String _formatCurrency(int value) {
+  /// Formats the count number with thousand separator
+  String _formatNumber(int value) {
     return formatNumber(
       value,
       formatType: FormatType.custom,
-      currency: 'Rp ',
       format: '###,###',
       locale: 'id_ID',
     );
@@ -70,25 +68,25 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
     // Requirements: 4.6, 4.7 - Two clean cards side by side
     return Row(
       children: [
-        // Requirements: 4.6 - Ketersediaan Dana Pendistribusian
+        // Requirements: 4.6 - Jumlah Muzakki
         Expanded(
-          child: _buildDanaCard(
+          child: _buildCountCard(
             context: context,
-            title: 'Dana Pendistribusian',
-            amount: widget.ketersediaanPendis,
-            icon: Icons.account_balance_wallet_outlined,
+            title: 'Jumlah Muzakki',
+            count: widget.jumlahMuzakki,
+            icon: Icons.people_outline_rounded,
             iconBackgroundColor: ModernColors.backgroundMint,
             iconColor: ModernColors.primaryAccent,
           ),
         ),
         const SizedBox(width: ModernSpacing.md),
-        // Requirements: 4.7 - Ketersediaan Hak Amil
+        // Requirements: 4.7 - Jumlah Mustahik
         Expanded(
-          child: _buildDanaCard(
+          child: _buildCountCard(
             context: context,
-            title: 'Hak Amil',
-            amount: widget.ketersediaanAmil,
-            icon: Icons.savings_outlined,
+            title: 'Jumlah Mustahik',
+            count: widget.jumlahMustahik,
+            icon: Icons.volunteer_activism_outlined,
             iconBackgroundColor: const Color(0xFFFFF4E5),
             iconColor: ModernColors.goldAccent,
           ),
@@ -97,12 +95,12 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
     );
   }
 
-  /// Builds a single dana card with icon and amount
-  /// Requirements: 4.8 - Clean card layout with icon and amount only, NO progress bars
-  Widget _buildDanaCard({
+  /// Builds a single count card with icon and number
+  /// Requirements: 4.8 - Clean card layout with icon and count only
+  Widget _buildCountCard({
     required BuildContext context,
     required String title,
-    required int amount,
+    required int count,
     required IconData icon,
     required Color iconBackgroundColor,
     required Color iconColor,
@@ -147,13 +145,13 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: ModernSpacing.xs),
-            // Amount - Requirements: 4.8 - single amount only
+            // Count - Requirements: 4.8 - single count only
             Text(
-              _formatCurrency(amount),
+              _formatNumber(count),
               style: FlutterFlowTheme.of(context).titleMedium.override(
                     fontFamily: 'Inter',
                     color: ModernColors.textPrimary,
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
               maxLines: 1,

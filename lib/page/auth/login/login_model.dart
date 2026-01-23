@@ -13,11 +13,16 @@ class LoginModel extends FlutterFlowModel<LoginWidget> {
   TextEditingController? emailLoginTextController;
   String? emailLoginSelectedOption;
   String? Function(BuildContext, String?)? emailLoginTextControllerValidator;
+
   // State field(s) for passLogin widget.
   FocusNode? passLoginFocusNode;
   TextEditingController? passLoginTextController;
   late bool passLoginVisibility;
   String? Function(BuildContext, String?)? passLoginTextControllerValidator;
+
+  // Remember me checkbox state
+  bool rememberMe = false;
+
   // Stores action output result for [Backend Call - API (Login User)] action in Button widget.
   ApiCallResponse? loginResponse;
 
@@ -29,6 +34,7 @@ class LoginModel extends FlutterFlowModel<LoginWidget> {
   @override
   void dispose() {
     emailLoginFocusNode?.dispose();
+    emailLoginTextController?.dispose();
 
     passLoginFocusNode?.dispose();
     passLoginTextController?.dispose();

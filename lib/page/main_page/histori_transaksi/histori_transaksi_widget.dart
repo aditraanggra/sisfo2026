@@ -270,7 +270,17 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                                                           .error,
                                                   icon: Icons
                                                       .delete_sweep_outlined,
-                                                  onPressed: (_) async {
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    // Close slidable first to prevent UI issues
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    // Small delay to ensure slidable is closed before showing dialog
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
                                                     // Show confirmation dialog BEFORE API call using DialogService
                                                     var confirmDialogResponse =
                                                         await DialogService
@@ -372,773 +382,728 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                               },
                             ),
                           ),
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 8.0, 16.0, 8.0),
-                                  child: FutureBuilder<ApiCallResponse>(
-                                    future: TransactionEndPointGroup
-                                        .getSedekahCall
-                                        .call(
-                                      token: currentAuthenticationToken,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return SkeletonLoaderWidget(
-                                          type: SkeletonType.listItem,
-                                          itemCount: 5,
-                                        );
-                                      }
-                                      final listViewIfsGetSedekahResponse =
-                                          snapshot.data!;
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future:
+                                  TransactionEndPointGroup.getSedekahCall.call(
+                                token: currentAuthenticationToken,
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return SkeletonLoaderWidget(
+                                    type: SkeletonType.listItem,
+                                    itemCount: 5,
+                                  );
+                                }
+                                final listViewIfsGetSedekahResponse =
+                                    snapshot.data!;
 
-                                      return Builder(
-                                        builder: (context) {
-                                          final listTrxInfak =
-                                              TransactionEndPointGroup
-                                                      .getSedekahCall
-                                                      .dataTrxInfak(
-                                                        listViewIfsGetSedekahResponse
-                                                            .jsonBody,
-                                                      )
-                                                      ?.toList() ??
-                                                  [];
-                                          if (listTrxInfak.isEmpty) {
-                                            return EnhancedEmptyStateWidget(
-                                              title:
-                                                  'Belum Ada Transaksi Infak/Sedekah',
-                                              description:
-                                                  'Anda belum memiliki transaksi infak atau sedekah. Mulai catat transaksi infak dari munfiq.',
-                                              icon: Icons
+                                return Builder(
+                                  builder: (context) {
+                                    final listTrxInfak =
+                                        TransactionEndPointGroup.getSedekahCall
+                                                .dataTrxInfak(
+                                                  listViewIfsGetSedekahResponse
+                                                      .jsonBody,
+                                                )
+                                                ?.toList() ??
+                                            [];
+                                    if (listTrxInfak.isEmpty) {
+                                      return EnhancedEmptyStateWidget(
+                                        title:
+                                            'Belum Ada Transaksi Infak/Sedekah',
+                                        description:
+                                            'Anda belum memiliki transaksi infak atau sedekah. Mulai catat transaksi infak dari munfiq.',
+                                        icon: Icons
+                                            .account_balance_wallet_rounded,
+                                        iconColor: ModernColors.primaryAccent,
+                                        actionButtonText:
+                                            'Tambah Infak/Sedekah',
+                                        onActionPressed: () {
+                                          context
+                                              .pushNamed(InfakWidget.routeName);
+                                        },
+                                        tips: [
+                                          'Infak adalah pengeluaran harta di jalan Allah tanpa batasan jumlah',
+                                          'Sedekah dapat berupa harta maupun non-harta (senyum, tenaga, dll)',
+                                          'Infak dan sedekah dapat diberikan kapan saja sepanjang tahun',
+                                        ],
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      padding: EdgeInsets.all(ModernSpacing.sm),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listTrxInfak.length,
+                                      itemBuilder:
+                                          (context, listTrxInfakIndex) {
+                                        final listTrxInfakItem =
+                                            listTrxInfak[listTrxInfakIndex];
+                                        final ifsData =
+                                            DataIfsStruct.maybeFromMap(
+                                                listTrxInfakItem);
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: ModernSpacing.sm),
+                                          child: Slidable(
+                                            endActionPane: ActionPane(
+                                              motion: const ScrollMotion(),
+                                              extentRatio: 0.5,
+                                              children: [
+                                                SlidableAction(
+                                                  label: 'Hapus',
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                  icon: Icons
+                                                      .delete_sweep_outlined,
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    // Close slidable first to prevent UI issues
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    // Small delay to ensure slidable is closed before showing dialog
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
+                                                    // Show confirmation dialog BEFORE API call using DialogService
+                                                    var confirmDialogResponse =
+                                                        await DialogService
+                                                            .showDeleteConfirmation(
+                                                      context: context,
+                                                      itemName:
+                                                          'Transaksi Infak/Sedekah',
+                                                      itemId: DataIfsStruct
+                                                              .maybeFromMap(
+                                                                  listTrxInfakItem)
+                                                          ?.id
+                                                          .toString(),
+                                                    );
+
+                                                    // Only call delete API if user confirmed
+                                                    if (confirmDialogResponse) {
+                                                      _model.apiResultadsCopy2 =
+                                                          await TransactionEndPointGroup
+                                                              .deleteSedekahCall
+                                                              .call(
+                                                        token:
+                                                            currentAuthenticationToken,
+                                                        id: DataIfsStruct
+                                                                .maybeFromMap(
+                                                                    listTrxInfakItem)
+                                                            ?.id,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            'Data transaksi ${DataIfsStruct.maybeFromMap(listTrxInfakItem)?.id.toString()} berhasil dihapus',
+                                                            style: TextStyle(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryBackground,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primary,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                ),
+                                                SlidableAction(
+                                                  label: 'Edit',
+                                                  backgroundColor:
+                                                      Color(0xFF3311D2),
+                                                  icon: Icons.edit,
+                                                  onPressed: (_) {
+                                                    print(
+                                                        'SlidableActionWidget pressed ...');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            child: _buildModernTransactionItem(
+                                              context: context,
+                                              title: 'Infak/Sedekah',
+                                              subtitle:
+                                                  '${ifsData?.munfiqName ?? ''} - #${ifsData?.id ?? 0}',
+                                              amount: ifsData?.amount ?? 0,
+                                              dateString:
+                                                  ifsData?.trxDate ?? '',
+                                              type: TransactionType.income,
+                                              iconData: Icons
                                                   .account_balance_wallet_rounded,
-                                              iconColor:
-                                                  ModernColors.primaryAccent,
-                                              actionButtonText:
-                                                  'Tambah Infak/Sedekah',
-                                              onActionPressed: () {
-                                                context.pushNamed(
-                                                    InfakWidget.routeName);
-                                              },
-                                              tips: [
-                                                'Infak adalah pengeluaran harta di jalan Allah tanpa batasan jumlah',
-                                                'Sedekah dapat berupa harta maupun non-harta (senyum, tenaga, dll)',
-                                                'Infak dan sedekah dapat diberikan kapan saja sepanjang tahun',
-                                              ],
-                                            );
-                                          }
-
-                                          return ListView.builder(
-                                            padding: EdgeInsets.all(
-                                                ModernSpacing.sm),
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: listTrxInfak.length,
-                                            itemBuilder:
-                                                (context, listTrxInfakIndex) {
-                                              final listTrxInfakItem =
-                                                  listTrxInfak[
-                                                      listTrxInfakIndex];
-                                              final ifsData =
-                                                  DataIfsStruct.maybeFromMap(
-                                                      listTrxInfakItem);
-
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: ModernSpacing.sm),
-                                                child: Slidable(
-                                                  endActionPane: ActionPane(
-                                                    motion:
-                                                        const ScrollMotion(),
-                                                    extentRatio: 0.5,
-                                                    children: [
-                                                      SlidableAction(
-                                                        label: 'Hapus',
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .error,
-                                                        icon: Icons
-                                                            .delete_sweep_outlined,
-                                                        onPressed: (_) async {
-                                                          // Show confirmation dialog BEFORE API call using DialogService
-                                                          var confirmDialogResponse =
-                                                              await DialogService
-                                                                  .showDeleteConfirmation(
-                                                            context: context,
-                                                            itemName:
-                                                                'Transaksi Infak/Sedekah',
-                                                            itemId: DataIfsStruct
-                                                                    .maybeFromMap(
-                                                                        listTrxInfakItem)
-                                                                ?.id
-                                                                .toString(),
-                                                          );
-
-                                                          // Only call delete API if user confirmed
-                                                          if (confirmDialogResponse) {
-                                                            _model.apiResultadsCopy2 =
-                                                                await TransactionEndPointGroup
-                                                                    .deleteSedekahCall
-                                                                    .call(
-                                                              token:
-                                                                  currentAuthenticationToken,
-                                                              id: DataIfsStruct
-                                                                      .maybeFromMap(
-                                                                          listTrxInfakItem)
-                                                                  ?.id,
-                                                            );
-
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(
-                                                                  'Data transaksi ${DataIfsStruct.maybeFromMap(listTrxInfakItem)?.id.toString()} berhasil dihapus',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryBackground,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                  ),
-                                                                ),
-                                                                duration: Duration(
-                                                                    milliseconds:
-                                                                        4000),
-                                                                backgroundColor:
-                                                                    FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                              ),
-                                                            );
-
-                                                            safeSetState(() {});
-                                                          }
-                                                        },
-                                                      ),
-                                                      SlidableAction(
-                                                        label: 'Edit',
-                                                        backgroundColor:
-                                                            Color(0xFF3311D2),
-                                                        icon: Icons.edit,
-                                                        onPressed: (_) {
-                                                          print(
-                                                              'SlidableActionWidget pressed ...');
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child:
-                                                      _buildModernTransactionItem(
-                                                    context: context,
-                                                    title: 'Infak/Sedekah',
-                                                    subtitle:
-                                                        '${ifsData?.munfiqName ?? ''} - #${ifsData?.id ?? 0}',
-                                                    amount:
-                                                        ifsData?.amount ?? 0,
-                                                    dateString:
-                                                        ifsData?.trxDate ?? '',
-                                                    type:
-                                                        TransactionType.income,
-                                                    iconData: Icons
-                                                        .account_balance_wallet_rounded,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 8.0, 16.0, 8.0),
-                                  child: FutureBuilder<ApiCallResponse>(
-                                    future: TransactionEndPointGroup
-                                        .getZakatMaalCall
-                                        .call(
-                                      token: currentAuthenticationToken,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return SkeletonLoaderWidget(
-                                          type: SkeletonType.listItem,
-                                          itemCount: 5,
-                                        );
-                                      }
-                                      final listViewZmGetZakatMaalResponse =
-                                          snapshot.data!;
-
-                                      return Builder(
-                                        builder: (context) {
-                                          final listTrxZm =
-                                              TransactionEndPointGroup
-                                                      .getZakatMaalCall
-                                                      .dataTrxZakatMal(
-                                                        listViewZmGetZakatMaalResponse
-                                                            .jsonBody,
-                                                      )
-                                                      ?.toList() ??
-                                                  [];
-                                          if (listTrxZm.isEmpty) {
-                                            return EnhancedEmptyStateWidget(
-                                              title:
-                                                  'Belum Ada Transaksi Zakat Mal',
-                                              description:
-                                                  'Anda belum memiliki transaksi zakat mal. Mulai catat transaksi zakat mal dari muzakki.',
-                                              icon: Icons.work_outlined,
-                                              iconColor:
-                                                  ModernColors.primaryAccent,
-                                              actionButtonText:
-                                                  'Tambah Zakat Mal',
-                                              onActionPressed: () {
-                                                context.pushNamed(
-                                                    ZakatMalWidget.routeName);
-                                              },
-                                              tips: [
-                                                'Zakat mal wajib jika harta mencapai nisab dan haul (1 tahun)',
-                                                'Nisab zakat mal setara dengan 85 gram emas',
-                                                'Besaran zakat mal adalah 2.5% dari total harta',
-                                              ],
-                                            );
-                                          }
-
-                                          return ListView.builder(
-                                            padding: EdgeInsets.all(
-                                                ModernSpacing.sm),
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: listTrxZm.length,
-                                            itemBuilder:
-                                                (context, listTrxZmIndex) {
-                                              final listTrxZmItem =
-                                                  listTrxZm[listTrxZmIndex];
-                                              final zmData =
-                                                  DataZmStruct.maybeFromMap(
-                                                      listTrxZmItem);
-
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: ModernSpacing.sm),
-                                                child: Slidable(
-                                                  endActionPane: ActionPane(
-                                                    motion:
-                                                        const ScrollMotion(),
-                                                    extentRatio: 0.5,
-                                                    children: [
-                                                      SlidableAction(
-                                                        label: 'Hapus',
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .error,
-                                                        icon: Icons
-                                                            .delete_sweep_outlined,
-                                                        onPressed: (_) async {
-                                                          // Show confirmation dialog BEFORE API call using DialogService
-                                                          var confirmDialogResponse =
-                                                              await DialogService
-                                                                  .showDeleteConfirmation(
-                                                            context: context,
-                                                            itemName:
-                                                                'Transaksi Zakat Mal',
-                                                            itemId: DataZmStruct
-                                                                    .maybeFromMap(
-                                                                        listTrxZmItem)
-                                                                ?.id
-                                                                .toString(),
-                                                          );
-
-                                                          // Only call delete API if user confirmed
-                                                          if (confirmDialogResponse) {
-                                                            _model.apiResultadsCopy =
-                                                                await TransactionEndPointGroup
-                                                                    .deleteZakatMalCall
-                                                                    .call(
-                                                              token:
-                                                                  currentAuthenticationToken,
-                                                              id: DataZmStruct
-                                                                      .maybeFromMap(
-                                                                          listTrxZmItem)
-                                                                  ?.id,
-                                                            );
-
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(
-                                                                  'Data transaksi ${DataZmStruct.maybeFromMap(listTrxZmItem)?.id.toString()} berhasil dihapus',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryBackground,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                  ),
-                                                                ),
-                                                                duration: Duration(
-                                                                    milliseconds:
-                                                                        4000),
-                                                                backgroundColor:
-                                                                    FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                              ),
-                                                            );
-
-                                                            safeSetState(() {});
-                                                          }
-                                                        },
-                                                      ),
-                                                      SlidableAction(
-                                                        label: 'Edit',
-                                                        backgroundColor:
-                                                            Color(0xFF3311D2),
-                                                        icon: Icons.edit,
-                                                        onPressed: (_) {
-                                                          print(
-                                                              'SlidableActionWidget pressed ...');
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child:
-                                                      _buildModernTransactionItem(
-                                                    context: context,
-                                                    title:
-                                                        'Zakat Mal - ${zmData?.categoryMaal ?? ''}',
-                                                    subtitle:
-                                                        '${zmData?.muzakkiName ?? ''} - #${zmData?.id ?? 0}',
-                                                    amount: zmData?.amount ?? 0,
-                                                    dateString:
-                                                        zmData?.trxDate ?? '',
-                                                    type:
-                                                        TransactionType.income,
-                                                    iconData:
-                                                        Icons.work_outlined,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 8.0, 16.0, 8.0),
-                                  child: FutureBuilder<ApiCallResponse>(
-                                    future: TransactionEndPointGroup
-                                        .getKotakAmalCall
-                                        .call(
-                                      token: currentAuthenticationToken,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return SkeletonLoaderWidget(
-                                          type: SkeletonType.listItem,
-                                          itemCount: 5,
-                                        );
-                                      }
-                                      final listViewKaGetKotakAmalResponse =
-                                          snapshot.data!;
-
-                                      return Builder(
-                                        builder: (context) {
-                                          final listTrxKomal =
-                                              TransactionEndPointGroup
-                                                      .getKotakAmalCall
-                                                      .dataListKomal(
-                                                        listViewKaGetKotakAmalResponse
-                                                            .jsonBody,
-                                                      )
-                                                      ?.toList() ??
-                                                  [];
-                                          if (listTrxKomal.isEmpty) {
-                                            return EnhancedEmptyStateWidget(
-                                              title:
-                                                  'Belum Ada Transaksi Kotak Amal',
-                                              description:
-                                                  'Anda belum memiliki transaksi kotak amal. Mulai catat hasil pengumpulan kotak amal.',
-                                              icon: Icons.mosque_rounded,
-                                              iconColor:
-                                                  ModernColors.primaryAccent,
-                                              actionButtonText:
-                                                  'Tambah Kotak Amal',
-                                              onActionPressed: () {
-                                                context.pushNamed(
-                                                    KotakAmalWidget.routeName);
-                                              },
-                                              tips: [
-                                                'Kotak amal biasanya dikumpulkan setiap hari Jumat',
-                                                'Catat hasil pengumpulan secara rutin untuk laporan yang akurat',
-                                                'Pastikan jumlah yang dicatat sesuai dengan hasil penghitungan',
-                                              ],
-                                            );
-                                          }
-
-                                          return ListView.builder(
-                                            padding: EdgeInsets.all(
-                                                ModernSpacing.sm),
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: listTrxKomal.length,
-                                            itemBuilder:
-                                                (context, listTrxKomalIndex) {
-                                              final listTrxKomalItem =
-                                                  listTrxKomal[
-                                                      listTrxKomalIndex];
-                                              final komalData =
-                                                  DataKomalStruct.maybeFromMap(
-                                                      listTrxKomalItem);
-
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: ModernSpacing.sm),
-                                                child: Slidable(
-                                                  endActionPane: ActionPane(
-                                                    motion:
-                                                        const ScrollMotion(),
-                                                    extentRatio: 0.5,
-                                                    children: [
-                                                      SlidableAction(
-                                                        label: 'Hapus',
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .error,
-                                                        icon: Icons
-                                                            .delete_sweep_outlined,
-                                                        onPressed: (_) async {
-                                                          // Show confirmation dialog BEFORE API call using DialogService
-                                                          var confirmDialogResponse =
-                                                              await DialogService
-                                                                  .showDeleteConfirmation(
-                                                            context: context,
-                                                            itemName:
-                                                                'Transaksi Kotak Amal',
-                                                            itemId: DataKomalStruct
-                                                                    .maybeFromMap(
-                                                                        listTrxKomalItem)
-                                                                ?.id
-                                                                .toString(),
-                                                          );
-
-                                                          // Only call delete API if user confirmed
-                                                          if (confirmDialogResponse) {
-                                                            _model.apiResultadsCopy3 =
-                                                                await TransactionEndPointGroup
-                                                                    .deleteKotakAmalCall
-                                                                    .call(
-                                                              token:
-                                                                  currentAuthenticationToken,
-                                                              id: DataKomalStruct
-                                                                      .maybeFromMap(
-                                                                          listTrxKomalItem)
-                                                                  ?.id,
-                                                            );
-
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(
-                                                                  'Data transaksi ${DataKomalStruct.maybeFromMap(listTrxKomalItem)?.id.toString()} berhasil dihapus',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryBackground,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                  ),
-                                                                ),
-                                                                duration: Duration(
-                                                                    milliseconds:
-                                                                        4000),
-                                                                backgroundColor:
-                                                                    FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                              ),
-                                                            );
-
-                                                            safeSetState(() {});
-                                                          }
-                                                        },
-                                                      ),
-                                                      SlidableAction(
-                                                        label: 'Edit',
-                                                        backgroundColor:
-                                                            Color(0xFF3311D2),
-                                                        icon: Icons.edit,
-                                                        onPressed: (_) {
-                                                          print(
-                                                              'SlidableActionWidget pressed ...');
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child:
-                                                      _buildModernTransactionItem(
-                                                    context: context,
-                                                    title: 'Kotak Amal',
-                                                    subtitle:
-                                                        '${FFAppState().profileUPZ.unitName} - #${komalData?.id ?? 0}',
-                                                    amount:
-                                                        komalData?.amount ?? 0,
-                                                    dateString:
-                                                        komalData?.trxDate ??
-                                                            '',
-                                                    type:
-                                                        TransactionType.income,
-                                                    iconData:
-                                                        Icons.mosque_rounded,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(-1.0, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16.0, 0.0, 16.0, 0.0),
-                                    child: FutureBuilder<ApiCallResponse>(
-                                      future: TransactionEndPointGroup
-                                          .getPendistribusianCall
-                                          .call(
-                                        token: currentAuthenticationToken,
-                                      ),
-                                      builder: (context, snapshot) {
-                                        // Customize what your widget looks like when it's loading.
-                                        if (!snapshot.hasData) {
-                                          return SkeletonLoaderWidget(
-                                            type: SkeletonType.listItem,
-                                            itemCount: 5,
-                                          );
-                                        }
-                                        final listViewPendisGetPendistribusianResponse =
-                                            snapshot.data!;
-
-                                        return Builder(
-                                          builder: (context) {
-                                            final listTrxPendis =
-                                                TransactionEndPointGroup
-                                                        .getPendistribusianCall
-                                                        .dataListPendis(
-                                                          listViewPendisGetPendistribusianResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toList() ??
-                                                    [];
-                                            if (listTrxPendis.isEmpty) {
-                                              return EnhancedEmptyStateWidget(
-                                                title:
-                                                    'Belum Ada Transaksi Pendistribusian',
-                                                description:
-                                                    'Anda belum memiliki transaksi pendistribusian. Mulai catat penyaluran ZIS kepada mustahik.',
-                                                icon:
-                                                    Icons.local_florist_rounded,
-                                                iconColor:
-                                                    ModernColors.primaryAccent,
-                                                actionButtonText:
-                                                    'Tambah Pendistribusian',
-                                                onActionPressed: () {
-                                                  context.pushNamed(
-                                                      PendistribusianWidget
-                                                          .routeName);
-                                                },
-                                                tips: [
-                                                  'Pendistribusian ZIS harus tepat sasaran kepada 8 asnaf',
-                                                  'Dokumentasikan setiap penyaluran dengan bukti yang valid',
-                                                  'Prioritaskan mustahik yang paling membutuhkan',
-                                                ],
-                                              );
-                                            }
-
-                                            return ListView.builder(
-                                              padding: EdgeInsets.all(ModernSpacing.sm),
-                                              primary: false,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.vertical,
-                                              itemCount: listTrxPendis.length,
-                                              itemBuilder: (context,
-                                                  listTrxPendisIndex) {
-                                                final listTrxPendisItem =
-                                                    listTrxPendis[
-                                                        listTrxPendisIndex];
-                                                final pendisData = DataPendisStruct.maybeFromMap(listTrxPendisItem);
-                                                final amount = pendisData?.totalRice != null && pendisData!.totalRice > 0.0
-                                                    ? pendisData.totalRice.toInt()
-                                                    : pendisData?.totalAmount ?? 0;
-                                                final isRice = pendisData?.totalRice != null && pendisData!.totalRice > 0.0;
-                                                
-                                                return Padding(
-                                                  padding: EdgeInsets.only(bottom: ModernSpacing.sm),
-                                                  child: Slidable(
-                                                      endActionPane: ActionPane(
-                                                        motion:
-                                                            const ScrollMotion(),
-                                                        extentRatio: 0.5,
-                                                        children: [
-                                                          SlidableAction(
-                                                            label: 'Hapus',
-                                                            backgroundColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .error,
-                                                            icon: Icons
-                                                                .delete_sweep_outlined,
-                                                            onPressed:
-                                                                (_) async {
-                                                              // Show confirmation dialog BEFORE API call using DialogService
-                                                              var confirmDialogResponse =
-                                                                  await DialogService
-                                                                      .showDeleteConfirmation(
-                                                                context:
-                                                                    context,
-                                                                itemName:
-                                                                    'Transaksi Pendistribusian',
-                                                                itemId: DataPendisStruct
-                                                                        .maybeFromMap(
-                                                                            listTrxPendisItem)
-                                                                    ?.id
-                                                                    .toString(),
-                                                              );
-
-                                                              // Only call delete API if user confirmed
-                                                              if (confirmDialogResponse) {
-                                                                _model.apiResultadsCopy3Copy =
-                                                                    await TransactionEndPointGroup
-                                                                        .deletePendistribusianCall
-                                                                        .call(
-                                                                  token:
-                                                                      currentAuthenticationToken,
-                                                                  id: DataPendisStruct
-                                                                          .maybeFromMap(
-                                                                              listTrxPendisItem)
-                                                                      ?.id,
-                                                                );
-
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(
-                                                                    content:
-                                                                        Text(
-                                                                      'Data transaksi ${DataPendisStruct.maybeFromMap(listTrxPendisItem)?.id.toString()} berhasil dihapus',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
-                                                                      ),
-                                                                    ),
-                                                                    duration: Duration(
-                                                                        milliseconds:
-                                                                            4000),
-                                                                    backgroundColor:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .primary,
-                                                                  ),
-                                                                );
-
-                                                                safeSetState(
-                                                                    () {});
-                                                              }
-                                                            },
-                                                          ),
-                                                          SlidableAction(
-                                                            label: 'Edit',
-                                                            backgroundColor:
-                                                                Color(
-                                                                    0xFF3311D2),
-                                                            icon: Icons.edit,
-                                                            onPressed: (_) {
-                                                              print(
-                                                                  'SlidableActionWidget pressed ...');
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      child: _buildModernTransactionItem(
-                                                        context: context,
-                                                        title: 'Pendistribusian - ${pendisData?.asnaf ?? ''}',
-                                                        subtitle: '${pendisData?.mustahikName ?? ''} - #${pendisData?.id ?? 0}',
-                                                        amount: amount,
-                                                        dateString: pendisData?.trxDate ?? '',
-                                                        type: TransactionType.expense, // Pendistribusian is expense (outgoing)
-                                                        iconData: Icons.local_florist_rounded,
-                                                        isRice: isRice,
-                                                      ),
-                                                    ),
-                                                );
-                                              },
-                                            );
-                                                      thickness: 1.0,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .alternate,
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
+                                            ),
+                                          ),
                                         );
                                       },
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future: TransactionEndPointGroup.getZakatMaalCall
+                                  .call(
+                                token: currentAuthenticationToken,
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return SkeletonLoaderWidget(
+                                    type: SkeletonType.listItem,
+                                    itemCount: 5,
+                                  );
+                                }
+                                final listViewZmGetZakatMaalResponse =
+                                    snapshot.data!;
+
+                                return Builder(
+                                  builder: (context) {
+                                    final listTrxZm = TransactionEndPointGroup
+                                            .getZakatMaalCall
+                                            .dataTrxZakatMal(
+                                              listViewZmGetZakatMaalResponse
+                                                  .jsonBody,
+                                            )
+                                            ?.toList() ??
+                                        [];
+                                    if (listTrxZm.isEmpty) {
+                                      return EnhancedEmptyStateWidget(
+                                        title: 'Belum Ada Transaksi Zakat Mal',
+                                        description:
+                                            'Anda belum memiliki transaksi zakat mal. Mulai catat transaksi zakat mal dari muzakki.',
+                                        icon: Icons.work_outlined,
+                                        iconColor: ModernColors.primaryAccent,
+                                        actionButtonText: 'Tambah Zakat Mal',
+                                        onActionPressed: () {
+                                          context.pushNamed(
+                                              ZakatMalWidget.routeName);
+                                        },
+                                        tips: [
+                                          'Zakat mal wajib jika harta mencapai nisab dan haul (1 tahun)',
+                                          'Nisab zakat mal setara dengan 85 gram emas',
+                                          'Besaran zakat mal adalah 2.5% dari total harta',
+                                        ],
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      padding: EdgeInsets.all(ModernSpacing.sm),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listTrxZm.length,
+                                      itemBuilder: (context, listTrxZmIndex) {
+                                        final listTrxZmItem =
+                                            listTrxZm[listTrxZmIndex];
+                                        final zmData =
+                                            DataZmStruct.maybeFromMap(
+                                                listTrxZmItem);
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: ModernSpacing.sm),
+                                          child: Slidable(
+                                            endActionPane: ActionPane(
+                                              motion: const ScrollMotion(),
+                                              extentRatio: 0.5,
+                                              children: [
+                                                SlidableAction(
+                                                  label: 'Hapus',
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                  icon: Icons
+                                                      .delete_sweep_outlined,
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    // Close slidable first to prevent UI issues
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    // Small delay to ensure slidable is closed before showing dialog
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
+                                                    // Show confirmation dialog BEFORE API call using DialogService
+                                                    var confirmDialogResponse =
+                                                        await DialogService
+                                                            .showDeleteConfirmation(
+                                                      context: context,
+                                                      itemName:
+                                                          'Transaksi Zakat Mal',
+                                                      itemId: DataZmStruct
+                                                              .maybeFromMap(
+                                                                  listTrxZmItem)
+                                                          ?.id
+                                                          .toString(),
+                                                    );
+
+                                                    // Only call delete API if user confirmed
+                                                    if (confirmDialogResponse) {
+                                                      _model.apiResultadsCopy =
+                                                          await TransactionEndPointGroup
+                                                              .deleteZakatMalCall
+                                                              .call(
+                                                        token:
+                                                            currentAuthenticationToken,
+                                                        id: DataZmStruct
+                                                                .maybeFromMap(
+                                                                    listTrxZmItem)
+                                                            ?.id,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            'Data transaksi ${DataZmStruct.maybeFromMap(listTrxZmItem)?.id.toString()} berhasil dihapus',
+                                                            style: TextStyle(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primary,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                ),
+                                                SlidableAction(
+                                                  label: 'Edit',
+                                                  backgroundColor:
+                                                      Color(0xFF3311D2),
+                                                  icon: Icons.edit,
+                                                  onPressed: (_) {
+                                                    print(
+                                                        'SlidableActionWidget pressed ...');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            child: _buildModernTransactionItem(
+                                              context: context,
+                                              title:
+                                                  'Zakat Mal - ${zmData?.categoryMaal ?? ''}',
+                                              subtitle:
+                                                  '${zmData?.muzakkiName ?? ''} - #${zmData?.id ?? 0}',
+                                              amount: zmData?.amount ?? 0,
+                                              dateString: zmData?.trxDate ?? '',
+                                              type: TransactionType.income,
+                                              iconData: Icons.work_outlined,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future: TransactionEndPointGroup.getKotakAmalCall
+                                  .call(
+                                token: currentAuthenticationToken,
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return SkeletonLoaderWidget(
+                                    type: SkeletonType.listItem,
+                                    itemCount: 5,
+                                  );
+                                }
+                                final listViewKaGetKotakAmalResponse =
+                                    snapshot.data!;
+
+                                return Builder(
+                                  builder: (context) {
+                                    final listTrxKomal =
+                                        TransactionEndPointGroup
+                                                .getKotakAmalCall
+                                                .dataListKomal(
+                                                  listViewKaGetKotakAmalResponse
+                                                      .jsonBody,
+                                                )
+                                                ?.toList() ??
+                                            [];
+                                    if (listTrxKomal.isEmpty) {
+                                      return EnhancedEmptyStateWidget(
+                                        title: 'Belum Ada Transaksi Kotak Amal',
+                                        description:
+                                            'Anda belum memiliki transaksi kotak amal. Mulai catat hasil pengumpulan kotak amal.',
+                                        icon: Icons.mosque_rounded,
+                                        iconColor: ModernColors.primaryAccent,
+                                        actionButtonText: 'Tambah Kotak Amal',
+                                        onActionPressed: () {
+                                          context.pushNamed(
+                                              KotakAmalWidget.routeName);
+                                        },
+                                        tips: [
+                                          'Kotak amal biasanya dikumpulkan setiap hari Jumat',
+                                          'Catat hasil pengumpulan secara rutin untuk laporan yang akurat',
+                                          'Pastikan jumlah yang dicatat sesuai dengan hasil penghitungan',
+                                        ],
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      padding: EdgeInsets.all(ModernSpacing.sm),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listTrxKomal.length,
+                                      itemBuilder:
+                                          (context, listTrxKomalIndex) {
+                                        final listTrxKomalItem =
+                                            listTrxKomal[listTrxKomalIndex];
+                                        final komalData =
+                                            DataKomalStruct.maybeFromMap(
+                                                listTrxKomalItem);
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: ModernSpacing.sm),
+                                          child: Slidable(
+                                            endActionPane: ActionPane(
+                                              motion: const ScrollMotion(),
+                                              extentRatio: 0.5,
+                                              children: [
+                                                SlidableAction(
+                                                  label: 'Hapus',
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                  icon: Icons
+                                                      .delete_sweep_outlined,
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    // Close slidable first to prevent UI issues
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    // Small delay to ensure slidable is closed before showing dialog
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
+                                                    // Show confirmation dialog BEFORE API call using DialogService
+                                                    var confirmDialogResponse =
+                                                        await DialogService
+                                                            .showDeleteConfirmation(
+                                                      context: context,
+                                                      itemName:
+                                                          'Transaksi Kotak Amal',
+                                                      itemId: DataKomalStruct
+                                                              .maybeFromMap(
+                                                                  listTrxKomalItem)
+                                                          ?.id
+                                                          .toString(),
+                                                    );
+
+                                                    // Only call delete API if user confirmed
+                                                    if (confirmDialogResponse) {
+                                                      _model.apiResultadsCopy3 =
+                                                          await TransactionEndPointGroup
+                                                              .deleteKotakAmalCall
+                                                              .call(
+                                                        token:
+                                                            currentAuthenticationToken,
+                                                        id: DataKomalStruct
+                                                                .maybeFromMap(
+                                                                    listTrxKomalItem)
+                                                            ?.id,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            'Data transaksi ${DataKomalStruct.maybeFromMap(listTrxKomalItem)?.id.toString()} berhasil dihapus',
+                                                            style: TextStyle(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryBackground,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primary,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                ),
+                                                SlidableAction(
+                                                  label: 'Edit',
+                                                  backgroundColor:
+                                                      Color(0xFF3311D2),
+                                                  icon: Icons.edit,
+                                                  onPressed: (_) {
+                                                    print(
+                                                        'SlidableActionWidget pressed ...');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            child: _buildModernTransactionItem(
+                                              context: context,
+                                              title: 'Kotak Amal',
+                                              subtitle:
+                                                  '${FFAppState().profileUPZ.unitName} - #${komalData?.id ?? 0}',
+                                              amount: komalData?.amount ?? 0,
+                                              dateString:
+                                                  komalData?.trxDate ?? '',
+                                              type: TransactionType.income,
+                                              iconData: Icons.mosque_rounded,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future: TransactionEndPointGroup
+                                  .getPendistribusianCall
+                                  .call(
+                                token: currentAuthenticationToken,
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return SkeletonLoaderWidget(
+                                    type: SkeletonType.listItem,
+                                    itemCount: 5,
+                                  );
+                                }
+                                final listViewPendisGetPendistribusianResponse =
+                                    snapshot.data!;
+
+                                return Builder(
+                                  builder: (context) {
+                                    final listTrxPendis =
+                                        TransactionEndPointGroup
+                                                .getPendistribusianCall
+                                                .dataListPendis(
+                                                  listViewPendisGetPendistribusianResponse
+                                                      .jsonBody,
+                                                )
+                                                ?.toList() ??
+                                            [];
+                                    if (listTrxPendis.isEmpty) {
+                                      return EnhancedEmptyStateWidget(
+                                        title:
+                                            'Belum Ada Transaksi Pendistribusian',
+                                        description:
+                                            'Anda belum memiliki transaksi pendistribusian. Mulai catat penyaluran ZIS kepada mustahik.',
+                                        icon: Icons.local_florist_rounded,
+                                        iconColor: ModernColors.primaryAccent,
+                                        actionButtonText:
+                                            'Tambah Pendistribusian',
+                                        onActionPressed: () {
+                                          context.pushNamed(
+                                              PendistribusianWidget.routeName);
+                                        },
+                                        tips: [
+                                          'Pendistribusian ZIS harus tepat sasaran kepada 8 asnaf',
+                                          'Dokumentasikan setiap penyaluran dengan bukti yang valid',
+                                          'Prioritaskan mustahik yang paling membutuhkan',
+                                        ],
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      padding: EdgeInsets.all(ModernSpacing.sm),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listTrxPendis.length,
+                                      itemBuilder:
+                                          (context, listTrxPendisIndex) {
+                                        final listTrxPendisItem =
+                                            listTrxPendis[listTrxPendisIndex];
+                                        final pendisData =
+                                            DataPendisStruct.maybeFromMap(
+                                                listTrxPendisItem);
+                                        final amount =
+                                            pendisData?.totalRice != null &&
+                                                    pendisData!.totalRice > 0.0
+                                                ? pendisData.totalRice.toInt()
+                                                : pendisData?.totalAmount ?? 0;
+                                        final isRice =
+                                            pendisData?.totalRice != null &&
+                                                pendisData!.totalRice > 0.0;
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: ModernSpacing.sm),
+                                          child: Slidable(
+                                            endActionPane: ActionPane(
+                                              motion: const ScrollMotion(),
+                                              extentRatio: 0.5,
+                                              children: [
+                                                SlidableAction(
+                                                  label: 'Hapus',
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                  icon: Icons
+                                                      .delete_sweep_outlined,
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    // Close slidable first to prevent UI issues
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    // Small delay to ensure slidable is closed before showing dialog
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
+                                                    // Show confirmation dialog BEFORE API call using DialogService
+                                                    var confirmDialogResponse =
+                                                        await DialogService
+                                                            .showDeleteConfirmation(
+                                                      context: context,
+                                                      itemName:
+                                                          'Transaksi Pendistribusian',
+                                                      itemId: DataPendisStruct
+                                                              .maybeFromMap(
+                                                                  listTrxPendisItem)
+                                                          ?.id
+                                                          .toString(),
+                                                    );
+
+                                                    // Only call delete API if user confirmed
+                                                    if (confirmDialogResponse) {
+                                                      _model.apiResultadsCopy3Copy =
+                                                          await TransactionEndPointGroup
+                                                              .deletePendistribusianCall
+                                                              .call(
+                                                        token:
+                                                            currentAuthenticationToken,
+                                                        id: DataPendisStruct
+                                                                .maybeFromMap(
+                                                                    listTrxPendisItem)
+                                                            ?.id,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            'Data transaksi ${DataPendisStruct.maybeFromMap(listTrxPendisItem)?.id.toString()} berhasil dihapus',
+                                                            style: TextStyle(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primary,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                ),
+                                                SlidableAction(
+                                                  label: 'Edit',
+                                                  backgroundColor:
+                                                      Color(0xFF3311D2),
+                                                  icon: Icons.edit,
+                                                  onPressed: (_) {
+                                                    print(
+                                                        'SlidableActionWidget pressed ...');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            child: _buildModernTransactionItem(
+                                              context: context,
+                                              title:
+                                                  'Pendistribusian - ${pendisData?.asnaf ?? ''}',
+                                              subtitle:
+                                                  '${pendisData?.mustahikName ?? ''} - #${pendisData?.id ?? 0}',
+                                              amount: amount,
+                                              dateString:
+                                                  pendisData?.trxDate ?? '',
+                                              type: TransactionType
+                                                  .expense, // Pendistribusian is expense (outgoing)
+                                              iconData:
+                                                  Icons.local_florist_rounded,
+                                              isRice: isRice,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ],

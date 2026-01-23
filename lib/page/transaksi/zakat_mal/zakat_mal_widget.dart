@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 import 'zakat_mal_model.dart';
 export 'zakat_mal_model.dart';
 
+/// Zakat Mal transaction form page with modern UI styling
+/// Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2, 10.3
 class ZakatMalWidget extends StatefulWidget {
   const ZakatMalWidget({super.key});
 
@@ -27,10 +29,15 @@ class ZakatMalWidget extends StatefulWidget {
   State<ZakatMalWidget> createState() => _ZakatMalWidgetState();
 }
 
-class _ZakatMalWidgetState extends State<ZakatMalWidget> {
+class _ZakatMalWidgetState extends State<ZakatMalWidget>
+    with TickerProviderStateMixin {
   late ZakatMalModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Animation controller for submit button press feedback
+  late AnimationController _buttonAnimationController;
+  late Animation<double> _buttonScaleAnimation;
 
   @override
   void initState() {
@@ -50,14 +57,90 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget> {
     _model.keteranganTextController ??= TextEditingController();
     _model.keteranganFocusNode ??= FocusNode();
 
+    _buttonAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+
+    _buttonScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(CurvedAnimation(
+      parent: _buttonAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    _buttonAnimationController.dispose();
     super.dispose();
+  }
+
+  /// Build modern styled input decoration
+  /// Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
+  InputDecoration _buildModernInputDecoration({
+    required String labelText,
+    String? hintText,
+    String? prefixText,
+    Widget? suffixIcon,
+    bool hasError = false,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixText: prefixText,
+      labelStyle: GoogleFonts.inter(
+        color: ModernColors.textSecondary,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w400,
+      ),
+      hintStyle: GoogleFonts.inter(
+        color: ModernColors.textSecondary.withOpacity(0.7),
+        fontSize: 16.0,
+        fontWeight: FontWeight.w400,
+      ),
+      floatingLabelStyle: GoogleFonts.inter(
+        color: hasError ? ModernColors.expenseRed : ModernColors.primaryAccent,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
+      enabledBorder: OutlineInputBorder(
+        borderSide: hasError
+            ? BorderSide(color: ModernColors.expenseRed, width: 1.5)
+            : BorderSide.none,
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.primaryAccent,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.expenseRed,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.expenseRed,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      filled: true,
+      fillColor: ModernColors.backgroundPrimary,
+      contentPadding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+      suffixIcon: suffixIcon,
+    );
   }
 
   @override
@@ -71,13 +154,13 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: ModernColors.backgroundPrimary,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: Color(0xFF259148),
+                backgroundColor: ModernColors.primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -86,7 +169,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget> {
                   buttonSize: 48.0,
                   icon: Icon(
                     Icons.arrow_back_rounded,
-                    color: Colors.white,
+                    color: ModernColors.textOnDark,
                     size: 20.0,
                   ),
                   onPressed: () async {
@@ -95,23 +178,15 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget> {
                 ),
                 title: Text(
                   'Penerimaan Zakat Mal',
-                  style: FlutterFlowTheme.of(context).titleMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .fontStyle,
-                        ),
-                        fontSize: 14.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                      ),
+                  style: GoogleFonts.inter(
+                    color: ModernColors.textOnDark,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 actions: [],
                 centerTitle: false,
-                elevation: 2.0,
+                elevation: 0.0,
               )
             : null,
         body: SafeArea(
@@ -125,905 +200,623 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget> {
                 children: [
                   Container(
                     width: double.infinity,
-                    child: Form(
-                      key: _model.formKey,
-                      autovalidateMode: AutovalidateMode.disabled,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'PILIH TANGGAL',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                          wrapWithModel(
-                            model: _model.datePickerModel,
-                            updateCallback: () => safeSetState(() {}),
-                            child: DatePickerWidget(),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'DATA MUZAKKI',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.namaMuzakkiTextController,
-                              focusNode: _model.namaMuzakkiFocusNode,
-                              onChanged: (_) => EasyDebounce.debounce(
-                                '_model.namaMuzakkiTextController',
-                                Duration(milliseconds: 2000),
-                                () => safeSetState(() {}),
-                              ),
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nama Muzakki / Donatur ',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                suffixIcon: _model.namaMuzakkiTextController!
-                                        .text.isNotEmpty
-                                    ? InkWell(
-                                        onTap: () async {
-                                          _model.namaMuzakkiTextController
-                                              ?.clear();
-                                          safeSetState(() {});
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          size: 22,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .namaMuzakkiTextControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: FlutterFlowDropDown<String>(
-                                controller: _model.jenisZMValueController ??=
-                                    FormFieldController<String>(null),
-                                options: [
-                                  'Profesi',
-                                  'Perdagangan',
-                                  'Pertanian',
-                                  'Harta'
-                                ],
-                                onChanged: (val) => safeSetState(
-                                    () => _model.jenisZMValue = val),
-                                width: double.infinity,
-                                height: 50.0,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                hintText: 'Pilih Jenis Zakat Mal',
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 24.0,
-                                ),
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                elevation: 2.0,
-                                borderColor:
-                                    FlutterFlowTheme.of(context).alternate,
-                                borderWidth: 2.0,
-                                borderRadius: 8.0,
-                                margin: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 4.0, 16.0, 4.0),
-                                hidesUnderline: true,
-                                isSearchable: false,
-                                isMultiSelect: false,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.jmlZakatMalTextController,
-                              focusNode: _model.jmlZakatMalFocusNode,
-                              onChanged: (_) => EasyDebounce.debounce(
-                                '_model.jmlZakatMalTextController',
-                                Duration(milliseconds: 2000),
-                                () => safeSetState(() {}),
-                              ),
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nominal Zakat Mal',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                suffixIcon: _model.jmlZakatMalTextController!
-                                        .text.isNotEmpty
-                                    ? InkWell(
-                                        onTap: () async {
-                                          _model.jmlZakatMalTextController
-                                              ?.clear();
-                                          safeSetState(() {});
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          color: Color(0xFF259148),
-                                          size: 22,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .titleLarge
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
-                                  ),
-                              maxLines: null,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              validator: _model
-                                  .jmlZakatMalTextControllerValidator
-                                  .asValidator(context),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9]'))
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 16.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Switch(
-                                  value: _model.switchValue!,
-                                  onChanged: (newValue) async {
-                                    safeSetState(
-                                        () => _model.switchValue = newValue);
-                                  },
-                                  activeColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  activeTrackColor: Color(0xFFC4FFD2),
-                                  inactiveTrackColor: Color(0xFFDDDDDD),
-                                  inactiveThumbColor: Color(0xFFC9C9C9),
-                                ),
-                                Text(
-                                  'Tambah Infak',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.notoSans(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (_model.switchValue ?? true)
-                            TextFormField(
-                              controller: _model.jmlInfakTextController,
-                              focusNode: _model.jmlInfakFocusNode,
-                              onChanged: (_) => EasyDebounce.debounce(
-                                '_model.jmlInfakTextController',
-                                Duration(milliseconds: 2000),
-                                () => safeSetState(() {}),
-                              ),
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nominal Infak',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                suffixIcon: _model
-                                        .jmlInfakTextController!.text.isNotEmpty
-                                    ? InkWell(
-                                        onTap: () async {
-                                          _model.jmlInfakTextController
-                                              ?.clear();
-                                          safeSetState(() {});
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          color: Color(0xFF259148),
-                                          size: 22,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .titleLarge
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
-                                  ),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              validator: _model.jmlInfakTextControllerValidator
-                                  .asValidator(context),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9]'))
-                              ],
-                            ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 24.0, 0.0, 16.0),
-                            child: TextFormField(
-                              controller: _model.keteranganTextController,
-                              focusNode: _model.keteranganFocusNode,
-                              onChanged: (_) => EasyDebounce.debounce(
-                                '_model.keteranganTextController',
-                                Duration(milliseconds: 2000),
-                                () => safeSetState(() {}),
-                              ),
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Keterangan',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                suffixIcon: _model.keteranganTextController!
-                                        .text.isNotEmpty
-                                    ? InkWell(
-                                        onTap: () async {
-                                          _model.keteranganTextController
-                                              ?.clear();
-                                          safeSetState(() {});
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          size: 22,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .keteranganTextControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 24.0, 0.0, 24.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                if (_model.formKey.currentState == null ||
-                                    !_model.formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                if (_model.datePickerModel.datePicked == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Tanggal Belum Dipilih',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .info,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context).error,
-                                    ),
-                                  );
-                                  return;
-                                }
-                                if (_model.jenisZMValue == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Jenis Zakat Mal Belum Dipilih',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .info,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context).error,
-                                    ),
-                                  );
-                                  return;
-                                }
-                                await TransactionEndPointGroup.addZakatMalCall
-                                    .call(
-                                  token: currentAuthenticationToken,
-                                  unitId: FFAppState().profileUPZ.id,
-                                  trxDate: _model.datePickerModel.datePicked
-                                      ?.toString(),
-                                  muzakkiName:
-                                      _model.namaMuzakkiTextController.text,
-                                  categoryMaal: _model.jenisZMValue,
-                                  amount: int.tryParse(
-                                      _model.jmlZakatMalTextController.text),
-                                  desc: _model.keteranganTextController.text,
-                                );
-
-                                if (_model.switchValue!) {
-                                  await TransactionEndPointGroup.addSedekahCall
-                                      .call(
-                                    token: currentAuthenticationToken,
-                                    unitId: FFAppState().profileUPZ.id,
-                                    trxDate: _model.datePickerModel.datePicked
-                                        ?.toString(),
-                                    munfiqName:
-                                        _model.namaMuzakkiTextController.text,
-                                    amount: int.tryParse(
-                                        _model.jmlInfakTextController.text),
-                                    desc: _model.keteranganTextController.text,
-                                  );
-                                }
-                                var confirmDialogResponse =
-                                    await showDialog<bool>(
-                                          context: context,
-                                          builder: (alertDialogContext) {
-                                            return AlertDialog(
-                                              content: Text(
-                                                  'Muzakki atas nama ${_model.namaMuzakkiTextController.text} akan berzakat Mal sebesar ${formatNumber(
-                                                functions.strToInt(_model
-                                                    .jmlZakatMalTextController
-                                                    .text),
-                                                formatType: FormatType.custom,
-                                                currency: 'Rp ',
-                                                format: '###,###',
-                                                locale: 'ID',
-                                              )}${_model.switchValue == true ? valueOrDefault<String>(
-                                                      ' dan Infak Sebesar ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          functions.strToInt(_model
-                                                              .jmlInfakTextController
-                                                              .text),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'id_ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      '0',
-                                                    ) : ''}'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          false),
-                                                  child: Text('Batal'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          true),
-                                                  child: Text('Proses'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ) ??
-                                        false;
-                                if (confirmDialogResponse) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (alertDialogContext) {
-                                      return AlertDialog(
-                                        title: Text('info'),
-                                        content: Text('Transaksi  Berhasil'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                alertDialogContext),
-                                            child: Text('Ok'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-
-                                  context.goNamed(HomeWidget.routeName);
-                                }
-                              },
-                              text: 'Simpan',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF259148),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
+                    decoration: BoxDecoration(
+                      color: ModernColors.backgroundCard,
+                      borderRadius: BorderRadius.circular(ModernRadius.xl),
+                      boxShadow: ModernShadows.cardShadow,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(ModernSpacing.md),
+                      child: Form(
+                        key: _model.formKey,
+                        autovalidateMode: AutovalidateMode.disabled,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildDatePickerSection(),
+                            _buildMuzakkiDataSection(),
+                            _buildJenisZakatDropdown(),
+                            _buildNominalZakatMalSection(),
+                            _buildTambahInfakSwitch(),
+                            if (_model.switchValue ?? true)
+                              _buildNominalInfakSection(),
+                            _buildKeteranganSection(),
+                            _buildSubmitButton(),
+                            SizedBox(height: ModernSpacing.md),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDatePickerSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: Text(
+            'PILIH TANGGAL',
+            style: GoogleFonts.inter(
+              color: ModernColors.textSecondary,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        wrapWithModel(
+          model: _model.datePickerModel,
+          updateCallback: () => safeSetState(() {}),
+          child: DatePickerWidget(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMuzakkiDataSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: Text(
+            'DATA MUZAKKI',
+            style: GoogleFonts.inter(
+              color: ModernColors.textSecondary,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: SizedBox(
+            height: 56.0,
+            child: TextFormField(
+              controller: _model.namaMuzakkiTextController,
+              focusNode: _model.namaMuzakkiFocusNode,
+              onChanged: (_) => EasyDebounce.debounce(
+                '_model.namaMuzakkiTextController',
+                Duration(milliseconds: 2000),
+                () => safeSetState(() {}),
+              ),
+              autofocus: false,
+              obscureText: false,
+              decoration: _buildModernInputDecoration(
+                labelText: 'Nama Muzakki / Donatur',
+                suffixIcon: _model.namaMuzakkiTextController!.text.isNotEmpty
+                    ? InkWell(
+                        onTap: () async {
+                          _model.namaMuzakkiTextController?.clear();
+                          safeSetState(() {});
+                        },
+                        child: Icon(
+                          Icons.clear,
+                          color: ModernColors.textSecondary,
+                          size: 22,
+                        ),
+                      )
+                    : null,
+              ),
+              style: GoogleFonts.inter(
+                color: ModernColors.textPrimary,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+              ),
+              cursorColor: ModernColors.primaryAccent,
+              validator: _model.namaMuzakkiTextControllerValidator
+                  .asValidator(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildJenisZakatDropdown() {
+    return Align(
+      alignment: AlignmentDirectional(-1.0, -1.0),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+        child: FlutterFlowDropDown<String>(
+          controller: _model.jenisZMValueController ??=
+              FormFieldController<String>(null),
+          options: ['Profesi', 'Perdagangan', 'Pertanian', 'Harta'],
+          onChanged: (val) => safeSetState(() => _model.jenisZMValue = val),
+          width: double.infinity,
+          height: 56.0,
+          textStyle: GoogleFonts.inter(
+            color: ModernColors.textPrimary,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w400,
+          ),
+          hintText: 'Pilih Jenis Zakat Mal',
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: ModernColors.textSecondary,
+            size: 24.0,
+          ),
+          fillColor: ModernColors.backgroundPrimary,
+          elevation: 0,
+          borderColor: Colors.transparent,
+          borderWidth: 0,
+          borderRadius: ModernRadius.lg,
+          margin: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
+          hidesUnderline: true,
+          isSearchable: false,
+          isMultiSelect: false,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNominalZakatMalSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: Text(
+            'NOMINAL ZAKAT MAL',
+            style: GoogleFonts.inter(
+              color: ModernColors.textSecondary,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: TextFormField(
+            controller: _model.jmlZakatMalTextController,
+            focusNode: _model.jmlZakatMalFocusNode,
+            onChanged: (_) => EasyDebounce.debounce(
+              '_model.jmlZakatMalTextController',
+              Duration(milliseconds: 2000),
+              () => safeSetState(() {}),
+            ),
+            autofocus: false,
+            obscureText: false,
+            decoration: InputDecoration(
+              labelText: 'Isi Nominal',
+              labelStyle: GoogleFonts.inter(
+                color: ModernColors.textSecondary,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+              ),
+              hintStyle: GoogleFonts.inter(
+                color: ModernColors.textSecondary.withOpacity(0.7),
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+              ),
+              floatingLabelStyle: GoogleFonts.inter(
+                color: ModernColors.primaryAccent,
+                fontSize: 14.0,
+                fontWeight: FontWeight.w500,
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: FlutterFlowTheme.of(context).alternate,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(ModernRadius.sm),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: ModernColors.primaryAccent,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(ModernRadius.sm),
+              ),
+              errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: ModernColors.expenseRed,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(ModernRadius.sm),
+              ),
+              focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: ModernColors.expenseRed,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(ModernRadius.sm),
+              ),
+              suffixIcon: _model.jmlZakatMalTextController!.text.isNotEmpty
+                  ? InkWell(
+                      onTap: () async {
+                        _model.jmlZakatMalTextController?.clear();
+                        safeSetState(() {});
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: ModernColors.primaryAccent,
+                        size: 22,
+                      ),
+                    )
+                  : null,
+            ),
+            style: GoogleFonts.inter(
+              color: ModernColors.textPrimary,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w500,
+            ),
+            cursorColor: ModernColors.primaryAccent,
+            maxLines: null,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            validator:
+                _model.jmlZakatMalTextControllerValidator.asValidator(context),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTambahInfakSwitch() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Switch(
+            value: _model.switchValue!,
+            onChanged: (newValue) async {
+              safeSetState(() => _model.switchValue = newValue);
+            },
+            activeColor: ModernColors.primaryAccent,
+            activeTrackColor: ModernColors.backgroundMint,
+            inactiveTrackColor: Color(0xFFDDDDDD),
+            inactiveThumbColor: Color(0xFFC9C9C9),
+          ),
+          Text(
+            'Tambah Infak',
+            style: GoogleFonts.inter(
+              color: ModernColors.textPrimary,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNominalInfakSection() {
+    return TextFormField(
+      controller: _model.jmlInfakTextController,
+      focusNode: _model.jmlInfakFocusNode,
+      onChanged: (_) => EasyDebounce.debounce(
+        '_model.jmlInfakTextController',
+        Duration(milliseconds: 2000),
+        () => safeSetState(() {}),
+      ),
+      autofocus: false,
+      obscureText: false,
+      decoration: InputDecoration(
+        labelText: 'Nominal Infak',
+        labelStyle: GoogleFonts.inter(
+          color: ModernColors.textSecondary,
+          fontSize: 16.0,
+          fontWeight: FontWeight.w400,
+        ),
+        hintStyle: GoogleFonts.inter(
+          color: ModernColors.textSecondary.withOpacity(0.7),
+          fontSize: 16.0,
+          fontWeight: FontWeight.w400,
+        ),
+        floatingLabelStyle: GoogleFonts.inter(
+          color: ModernColors.primaryAccent,
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: FlutterFlowTheme.of(context).alternate,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(ModernRadius.sm),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: ModernColors.primaryAccent,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(ModernRadius.sm),
+        ),
+        errorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: ModernColors.expenseRed,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(ModernRadius.sm),
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: ModernColors.expenseRed,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(ModernRadius.sm),
+        ),
+        suffixIcon: _model.jmlInfakTextController!.text.isNotEmpty
+            ? InkWell(
+                onTap: () async {
+                  _model.jmlInfakTextController?.clear();
+                  safeSetState(() {});
+                },
+                child: Icon(
+                  Icons.clear,
+                  color: ModernColors.primaryAccent,
+                  size: 22,
+                ),
+              )
+            : null,
+      ),
+      style: GoogleFonts.inter(
+        color: ModernColors.textPrimary,
+        fontSize: 22.0,
+        fontWeight: FontWeight.w500,
+      ),
+      cursorColor: ModernColors.primaryAccent,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      validator: _model.jmlInfakTextControllerValidator.asValidator(context),
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+    );
+  }
+
+  Widget _buildKeteranganSection() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 16.0),
+      child: SizedBox(
+        height: 56.0,
+        child: TextFormField(
+          controller: _model.keteranganTextController,
+          focusNode: _model.keteranganFocusNode,
+          onChanged: (_) => EasyDebounce.debounce(
+            '_model.keteranganTextController',
+            Duration(milliseconds: 2000),
+            () => safeSetState(() {}),
+          ),
+          autofocus: false,
+          obscureText: false,
+          decoration: _buildModernInputDecoration(
+            labelText: 'Keterangan',
+            suffixIcon: _model.keteranganTextController!.text.isNotEmpty
+                ? InkWell(
+                    onTap: () async {
+                      _model.keteranganTextController?.clear();
+                      safeSetState(() {});
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      color: ModernColors.textSecondary,
+                      size: 22,
+                    ),
+                  )
+                : null,
+          ),
+          style: GoogleFonts.inter(
+            color: ModernColors.textPrimary,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w400,
+          ),
+          cursorColor: ModernColors.primaryAccent,
+          validator:
+              _model.keteranganTextControllerValidator.asValidator(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+      child: AnimatedBuilder(
+        animation: _buttonScaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _buttonScaleAnimation.value,
+            child: child,
+          );
+        },
+        child: GestureDetector(
+          onTapDown: (_) {
+            _buttonAnimationController.forward();
+          },
+          onTapUp: (_) {
+            _buttonAnimationController.reverse();
+          },
+          onTapCancel: () {
+            _buttonAnimationController.reverse();
+          },
+          child: FFButtonWidget(
+            onPressed: () async {
+              if (_model.formKey.currentState == null ||
+                  !_model.formKey.currentState!.validate()) {
+                return;
+              }
+              if (_model.datePickerModel.datePicked == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Tanggal Belum Dipilih',
+                      style: GoogleFonts.inter(
+                        color: ModernColors.textOnDark,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: ModernColors.expenseRed,
+                  ),
+                );
+                return;
+              }
+              if (_model.jenisZMValue == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Jenis Zakat Mal Belum Dipilih',
+                      style: GoogleFonts.inter(
+                        color: ModernColors.textOnDark,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    duration: Duration(milliseconds: 4000),
+                    backgroundColor: ModernColors.expenseRed,
+                  ),
+                );
+                return;
+              }
+              await TransactionEndPointGroup.addZakatMalCall.call(
+                token: currentAuthenticationToken,
+                unitId: FFAppState().profileUPZ.id,
+                trxDate: _model.datePickerModel.datePicked?.toString(),
+                muzakkiName: _model.namaMuzakkiTextController.text,
+                categoryMaal: _model.jenisZMValue,
+                amount: int.tryParse(_model.jmlZakatMalTextController.text),
+                desc: _model.keteranganTextController.text,
+              );
+
+              if (_model.switchValue!) {
+                await TransactionEndPointGroup.addSedekahCall.call(
+                  token: currentAuthenticationToken,
+                  unitId: FFAppState().profileUPZ.id,
+                  trxDate: _model.datePickerModel.datePicked?.toString(),
+                  munfiqName: _model.namaMuzakkiTextController.text,
+                  amount: int.tryParse(_model.jmlInfakTextController.text),
+                  desc: _model.keteranganTextController.text,
+                );
+              }
+              var confirmDialogResponse = await showDialog<bool>(
+                    context: context,
+                    builder: (alertDialogContext) {
+                      return AlertDialog(
+                        title: Text(
+                          'Konfirmasi',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        content: Text(
+                          'Muzakki atas nama ${_model.namaMuzakkiTextController.text} akan berzakat Mal sebesar ${formatNumber(
+                            functions.strToInt(
+                                _model.jmlZakatMalTextController.text),
+                            formatType: FormatType.custom,
+                            currency: 'Rp ',
+                            format: '###,###',
+                            locale: 'ID',
+                          )}${_model.switchValue == true ? valueOrDefault<String>(
+                              ' dan Infak Sebesar ${valueOrDefault<String>(
+                                formatNumber(
+                                  functions.strToInt(
+                                      _model.jmlInfakTextController.text),
+                                  formatType: FormatType.custom,
+                                  currency: 'Rp ',
+                                  format: '###,###',
+                                  locale: 'id_ID',
+                                ),
+                                '0',
+                              )}',
+                              '0',
+                            ) : ''}',
+                          style: GoogleFonts.inter(),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.pop(alertDialogContext, false),
+                            child: Text(
+                              'Batal',
+                              style: GoogleFonts.inter(
+                                color: ModernColors.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.pop(alertDialogContext, true),
+                            child: Text(
+                              'Proses',
+                              style: GoogleFonts.inter(
+                                color: ModernColors.primaryAccent,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ) ??
+                  false;
+              if (confirmDialogResponse) {
+                await showDialog(
+                  context: context,
+                  builder: (alertDialogContext) {
+                    return AlertDialog(
+                      title: Text(
+                        'Berhasil',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      content: Text(
+                        'Transaksi Berhasil',
+                        style: GoogleFonts.inter(),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(alertDialogContext),
+                          child: Text(
+                            'Ok',
+                            style: GoogleFonts.inter(
+                              color: ModernColors.primaryAccent,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                context.goNamed(HomeWidget.routeName);
+              }
+            },
+            text: 'Simpan',
+            options: FFButtonOptions(
+              width: double.infinity,
+              height: 52.0,
+              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+              color: ModernColors.primaryDark,
+              textStyle: GoogleFonts.inter(
+                color: ModernColors.textOnDark,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+              elevation: 0.0,
+              borderSide: BorderSide(
+                color: Colors.transparent,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(ModernRadius.lg),
             ),
           ),
         ),
