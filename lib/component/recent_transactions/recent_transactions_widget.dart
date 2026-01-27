@@ -1,3 +1,4 @@
+import '/auth/custom_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -5,36 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'recent_transactions_model.dart';
 export 'recent_transactions_model.dart';
 
-/// Transaction item data model
-class TransactionItem {
-  final String title;
-  final String category;
-  final String date;
-  final int amount;
-  final bool isIncome;
-  final Color iconBackgroundColor;
-  final IconData icon;
-
-  const TransactionItem({
-    required this.title,
-    required this.category,
-    required this.date,
-    required this.amount,
-    required this.isIncome,
-    required this.iconBackgroundColor,
-    required this.icon,
-  });
-}
-
 /// Recent Transactions Component
-/// Displays recent transactions with filter tabs
+/// Displays recent transactions with filter tabs - connected to real backend data
 class RecentTransactionsWidget extends StatefulWidget {
-  const RecentTransactionsWidget({
-    super.key,
-    this.transactions,
-  });
-
-  final List<TransactionItem>? transactions;
+  const RecentTransactionsWidget({super.key});
 
   @override
   State<RecentTransactionsWidget> createState() =>
@@ -55,7 +30,11 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
     super.initState();
     _model = createModel(context, () => RecentTransactionsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    // Fetch transactions on init
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _model.fetchAllTransactions(currentAuthenticationToken ?? '');
+      safeSetState(() {});
+    });
   }
 
   @override
@@ -141,9 +120,74 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
   }
 
   Widget _buildTransactionList(BuildContext context) {
-    final transactions = widget.transactions ?? _getSampleTransactions();
-    final filteredTransactions = _filterTransactions(transactions);
+    // Show loading state
+    if (_model.isLoading) {
+      return Container(
+        padding: const EdgeInsets.all(24.0),
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF259148),
+          ),
+        ),
+      );
+    }
 
+    // Show error state
+    if (_model.errorMessage != null) {
+      return Container(
+        padding: const EdgeInsets.all(24.0),
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: FlutterFlowTheme.of(context).error,
+                size: 32.0,
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                _model.errorMessage!,
+                style: GoogleFonts.inter(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 14.0,
+                ),
+              ),
+              const SizedBox(height: 12.0),
+              TextButton(
+                onPressed: () async {
+                  safeSetState(() {
+                    _model.isLoading = true;
+                  });
+                  await _model
+                      .fetchAllTransactions(currentAuthenticationToken ?? '');
+                  safeSetState(() {});
+                },
+                child: Text(
+                  'Coba Lagi',
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF259148),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final filteredTransactions = _model.getFilteredTransactions();
+
+    // Show empty state
     if (filteredTransactions.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(24.0),
@@ -152,12 +196,23 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Center(
-          child: Text(
-            'Belum ada transaksi',
-            style: GoogleFonts.inter(
-              color: FlutterFlowTheme.of(context).secondaryText,
-              fontSize: 14.0,
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.receipt_long_outlined,
+                color: FlutterFlowTheme.of(context).secondaryText,
+                size: 48.0,
+              ),
+              const SizedBox(height: 12.0),
+              Text(
+                'Belum ada transaksi',
+                style: GoogleFonts.inter(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -194,7 +249,10 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, TransactionItem item) {
+  Widget _buildTransactionItem(BuildContext context, TransactionData item) {
+    final iconData = _getIconForType(item.type);
+    final iconColor = _getColorForType(item.type, item.isIncome);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -204,12 +262,12 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
             width: 48.0,
             height: 48.0,
             decoration: BoxDecoration(
-              color: item.iconBackgroundColor.withOpacity(0.15),
+              color: iconColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Icon(
-              item.icon,
-              color: item.iconBackgroundColor,
+              iconData,
+              color: iconColor,
               size: 24.0,
             ),
           ),
@@ -220,16 +278,18 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.title,
+                  item.title.isNotEmpty ? item.title : item.category,
                   style: GoogleFonts.inter(
                     color: FlutterFlowTheme.of(context).primaryText,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2.0),
                 Text(
-                  '${item.category} • ${item.date}',
+                  '${item.category} • ${item.formattedDate}',
                   style: GoogleFonts.inter(
                     color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 12.0,
@@ -267,20 +327,45 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
     );
   }
 
-  List<TransactionItem> _filterTransactions(
-      List<TransactionItem> transactions) {
-    if (_model.selectedFilter == 'Semua') {
-      return transactions;
-    } else if (_model.selectedFilter == 'Penerimaan') {
-      return transactions
-          .where((t) => t.isIncome && t.category != 'Setor')
-          .toList();
-    } else if (_model.selectedFilter == 'Distribusi') {
-      return transactions.where((t) => !t.isIncome).toList();
-    } else if (_model.selectedFilter == 'Setor') {
-      return transactions.where((t) => t.category == 'Setor').toList();
+  IconData _getIconForType(TransactionType type) {
+    switch (type) {
+      case TransactionType.zakatFitrah:
+        return Icons.grain;
+      case TransactionType.zakatMaal:
+        return Icons.account_balance_wallet;
+      case TransactionType.infak:
+        return Icons.favorite;
+      case TransactionType.kotakAmal:
+        return Icons.inventory_2;
+      case TransactionType.distribusi:
+        return Icons.send;
+      case TransactionType.setor:
+        return Icons.upload;
+      case TransactionType.fidyah:
+        return Icons.restaurant;
     }
-    return transactions;
+  }
+
+  Color _getColorForType(TransactionType type, bool isIncome) {
+    if (!isIncome) {
+      return const Color(0xFFE53935);
+    }
+    switch (type) {
+      case TransactionType.zakatFitrah:
+        return const Color(0xFF4CAF50);
+      case TransactionType.zakatMaal:
+        return const Color(0xFF2196F3);
+      case TransactionType.infak:
+        return const Color(0xFFFF9800);
+      case TransactionType.kotakAmal:
+        return const Color(0xFF26A69A);
+      case TransactionType.distribusi:
+        return const Color(0xFFE53935);
+      case TransactionType.setor:
+        return const Color(0xFF9C27B0);
+      case TransactionType.fidyah:
+        return const Color(0xFFFF9800);
+    }
   }
 
   String _formatNumber(int number) {
@@ -288,46 +373,5 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match m) => '${m[1]}.',
         );
-  }
-
-  List<TransactionItem> _getSampleTransactions() {
-    return const [
-      TransactionItem(
-        title: 'Infak Jumat',
-        category: 'Infak',
-        date: '15 Des',
-        amount: 3250000,
-        isIncome: true,
-        iconBackgroundColor: Color(0xFFFF9800),
-        icon: Icons.favorite,
-      ),
-      TransactionItem(
-        title: 'Hasan Ali',
-        category: 'Fidyah',
-        date: '14 Des',
-        amount: 48000,
-        isIncome: true,
-        iconBackgroundColor: Color(0xFFFF9800),
-        icon: Icons.restaurant,
-      ),
-      TransactionItem(
-        title: 'Kotak Amal Masjid',
-        category: 'Kotak Amal',
-        date: '13 Des',
-        amount: 1500000,
-        isIncome: true,
-        iconBackgroundColor: Color(0xFF26A69A),
-        icon: Icons.inventory_2,
-      ),
-      TransactionItem(
-        title: 'Distribusi Fakir Miskin',
-        category: 'Distribusi',
-        date: '12 Des',
-        amount: 2500000,
-        isIncome: false,
-        iconBackgroundColor: Color(0xFFE53935),
-        icon: Icons.send,
-      ),
-    ];
   }
 }

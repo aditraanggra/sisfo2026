@@ -142,7 +142,40 @@ GET /api/desa
 }
 ```
 
-### 2.3 Jenis Pembayaran Zakat Fitrah
+### 2.3 Program Infak/Sedekah
+
+```
+GET /api/programs
+GET /api/programs/{id}
+```
+
+**Query Parameters:**
+
+| Parameter | Type    | Description                                         |
+| --------- | ------- | --------------------------------------------------- |
+| all       | boolean | `true` untuk menampilkan semua (termasuk non-aktif) |
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "List Data Program",
+  "data": [
+    {
+      "id": 1,
+      "name": "Kemanusiaan",
+      "description": "Program kemanusiaan",
+      "icon": "favorite",
+      "is_active": true,
+      "created_at": "2025-01-01T00:00:00.000000Z",
+      "updated_at": "2025-01-01T00:00:00.000000Z"
+    }
+  ]
+}
+```
+
+### 2.4 Jenis Pembayaran Zakat Fitrah
 
 ```
 GET /api/zf-payment-types
@@ -310,13 +343,14 @@ DELETE /api/ifs/{id}     # Delete
 
 **Request Body:**
 
-| Field       | Type    | Required | Description       |
-| ----------- | ------- | -------- | ----------------- |
-| unit_id     | integer | Yes      | ID unit ZIS       |
-| trx_date    | date    | Yes      | Tanggal transaksi |
-| munfiq_name | string  | Yes      | Nama munfiq       |
-| amount      | integer | Yes      | Jumlah (Rp)       |
-| desc        | string  | No       | Keterangan        |
+| Field       | Type    | Required | Description                             |
+| ----------- | ------- | -------- | --------------------------------------- |
+| unit_id     | integer | Yes      | ID unit ZIS                             |
+| trx_date    | date    | Yes      | Tanggal transaksi                       |
+| munfiq_name | string  | Yes      | Nama munfiq                             |
+| amount      | integer | Yes      | Jumlah (Rp)                             |
+| program_id  | integer | No       | ID program (null = infak tidak terikat) |
+| desc        | string  | No       | Keterangan                              |
 
 ### 4.4 Fidyah
 

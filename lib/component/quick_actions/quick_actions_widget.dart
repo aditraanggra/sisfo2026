@@ -33,7 +33,7 @@ class QuickActionsWidget extends StatefulWidget {
 class _QuickActionsWidgetState extends State<QuickActionsWidget> {
   late QuickActionsModel _model;
 
-  /// List of quick action items with their configurations
+  /// List of quick action items with their configurations (3x3 grid = 9 items)
   static final List<QuickActionItem> _quickActions = [
     QuickActionItem(
       label: 'Zakat Fitrah',
@@ -60,16 +60,34 @@ class _QuickActionsWidgetState extends State<QuickActionsWidget> {
       routeName: SetorZisWidget.routeName,
     ),
     QuickActionItem(
-      label: 'Kotak Amal',
-      iconPath: 'assets/images/007-charity.png',
-      fallbackIcon: Icons.inventory_2,
-      routeName: KotakAmalWidget.routeName,
+      label: 'Penyerapan Amil',
+      iconPath: 'assets/images/004-zakat-2.png',
+      fallbackIcon: Icons.account_balance,
+      routeName: PenyerapanHakAmilWidget.routeName,
     ),
     QuickActionItem(
       label: 'Laporan',
       iconPath: 'assets/images/012-mosque-1.png',
       fallbackIcon: Icons.assessment,
       routeName: LaporanWidget.routeName,
+    ),
+    QuickActionItem(
+      label: 'Fidyah',
+      iconPath: 'assets/images/008-wheat.png',
+      fallbackIcon: Icons.rice_bowl,
+      routeName: FidyahWidget.routeName,
+    ),
+    QuickActionItem(
+      label: 'Kotak Amal',
+      iconPath: 'assets/images/007-charity.png',
+      fallbackIcon: Icons.inventory_2,
+      routeName: KotakAmalWidget.routeName,
+    ),
+    QuickActionItem(
+      label: 'Kurban',
+      iconPath: 'assets/images/004-zakat-2.png',
+      fallbackIcon: Icons.pets,
+      routeName: QurbanWidget.routeName,
     ),
   ];
 
@@ -129,15 +147,15 @@ class _QuickActionsWidgetState extends State<QuickActionsWidget> {
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 12.0),
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 12.0,
-                  mainAxisSpacing: 12.0,
-                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio: 0.95,
                 ),
                 itemCount: _quickActions.length,
                 itemBuilder: (context, index) {

@@ -5,25 +5,35 @@ import 'infak_widget.dart' show InfakWidget;
 import 'package:flutter/material.dart';
 
 class InfakModel extends FlutterFlowModel<InfakWidget> {
-  ///  State fields for stateful widgets in this page.
-
   final formKey = GlobalKey<FormState>();
-  // Model for DatePicker component.
   late DatePickerModel datePickerModel;
-  // State field(s) for namaMuzakki widget.
+
+  // Jenis infak: true = terikat program, false = tidak terikat
+  bool isTerikatProgram = false;
+
+  // Selected program
+  int? selectedProgramId;
+  String? selectedProgramName;
+
+  // Loading & error states
+  bool isLoadingPrograms = false;
+  String? programsError;
+
+  // List program dari API
+  List<Map<String, dynamic>> programs = [];
+
+  // Form fields
   FocusNode? namaMuzakkiFocusNode;
   TextEditingController? namaMuzakkiTextController;
   String? Function(BuildContext, String?)? namaMuzakkiTextControllerValidator;
   String? _namaMuzakkiTextControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Nama Muzakki Harus Diisi';
+      return 'Nama Munfik Harus Diisi';
     }
-
     return null;
   }
 
-  // State field(s) for jmlInfak widget.
   FocusNode? jmlInfakFocusNode;
   TextEditingController? jmlInfakTextController;
   String? Function(BuildContext, String?)? jmlInfakTextControllerValidator;
@@ -31,11 +41,9 @@ class InfakModel extends FlutterFlowModel<InfakWidget> {
     if (val == null || val.isEmpty) {
       return 'Jumlah Infak Harus Diisi';
     }
-
     return null;
   }
 
-  // State field(s) for keterangan widget.
   FocusNode? keteranganFocusNode;
   TextEditingController? keteranganTextController;
   String? Function(BuildContext, String?)? keteranganTextControllerValidator;
@@ -52,10 +60,8 @@ class InfakModel extends FlutterFlowModel<InfakWidget> {
     datePickerModel.dispose();
     namaMuzakkiFocusNode?.dispose();
     namaMuzakkiTextController?.dispose();
-
     jmlInfakFocusNode?.dispose();
     jmlInfakTextController?.dispose();
-
     keteranganFocusNode?.dispose();
     keteranganTextController?.dispose();
   }

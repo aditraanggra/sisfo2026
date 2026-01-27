@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';
 
-
 import '/auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/main.dart';
@@ -279,6 +278,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: QurbanWidget.routePath,
           requireAuth: true,
           builder: (context, params) => QurbanWidget(),
+        ),
+        FFRoute(
+          name: FidyahWidget.routeName,
+          path: FidyahWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => FidyahWidget(),
         ),
         FFRoute(
           name: PendistribusianWidget.routeName,

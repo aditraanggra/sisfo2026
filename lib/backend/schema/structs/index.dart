@@ -34,3 +34,5 @@ export 'unit_zis_struct.dart';
 export 'upz_struct.dart';
 export 'user_struct.dart';
 export 'user_data_struct.dart';
+export 'zf_payment_type_struct.dart';
+export 'allocation_config_struct.dart';

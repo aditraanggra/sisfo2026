@@ -1619,6 +1619,9 @@ class MiscEndPointGroup {
   };
   static GetKecamatanCall getKecamatanCall = GetKecamatanCall();
   static GetDesaCall getDesaCall = GetDesaCall();
+  static GetZfPaymentTypesCall getZfPaymentTypesCall = GetZfPaymentTypesCall();
+  static GetAllocationConfigActiveCall getAllocationConfigActiveCall =
+      GetAllocationConfigActiveCall();
 }
 
 class GetKecamatanCall {
@@ -1736,6 +1739,197 @@ class GetDesaCall {
         r'''$.data''',
         true,
       ) as List?;
+}
+
+class GetZfPaymentTypesCall {
+  Future<ApiCallResponse> call({
+    bool? all,
+    String? type,
+  }) async {
+    final baseUrl = MiscEndPointGroup.getBaseUrl();
+
+    final Map<String, dynamic> params = {};
+    if (all != null) {
+      params['all'] = all;
+    }
+    if (type != null && type.isNotEmpty) {
+      params['type'] = type;
+    }
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get ZF Payment Types',
+      apiUrl: '${baseUrl}/zf-payment-types',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      params: params,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  List? listData(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      ) as List?;
+
+  List<int>? listId(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].id''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<int>(x))
+          .withoutNulls
+          .toList();
+
+  List<String>? listName(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].name''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+
+  List<String>? listType(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].type''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+
+  List<double>? listRiceAmount(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].rice_amount''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<double>(x))
+          .withoutNulls
+          .toList();
+
+  List<int>? listMoneyAmount(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].money_amount''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<int>(x))
+          .withoutNulls
+          .toList();
+
+  List<bool>? listIsActive(dynamic response) => (getJsonField(
+        response,
+        r'''$.data[:].is_active''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<bool>(x))
+          .withoutNulls
+          .toList();
+}
+
+class GetAllocationConfigActiveCall {
+  Future<ApiCallResponse> call({
+    String? zisType,
+    int? year,
+    String? token = '',
+  }) async {
+    final baseUrl = MiscEndPointGroup.getBaseUrl();
+
+    final Map<String, dynamic> params = {};
+    if (zisType != null && zisType.isNotEmpty) {
+      params['zis_type'] = zisType;
+    }
+    if (year != null) {
+      params['year'] = year;
+    }
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get Allocation Config Active',
+      apiUrl: '${baseUrl}/allocation-configs-active',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: params,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+
+  int? id(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.id''',
+      ));
+
+  String? zisType(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.zis_type''',
+      ));
+
+  String? zisTypeLabel(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.zis_type_label''',
+      ));
+
+  int? effectiveYear(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.effective_year''',
+      ));
+
+  double? setorPercentage(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.setor_percentage''',
+      ));
+
+  double? kelolaPercentage(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.kelola_percentage''',
+      ));
+
+  double? amilPercentage(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.amil_percentage''',
+      ));
+
+  String? description(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.description''',
+      ));
+
+  bool? isDefault(dynamic response) => castToType<bool>(getJsonField(
+        response,
+        r'''$.data.is_default''',
+      ));
+
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
 }
 
 /// End MiscEndPoint Group Code

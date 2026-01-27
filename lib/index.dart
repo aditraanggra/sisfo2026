@@ -22,6 +22,7 @@ export '/page/transaksi/details_transaksi/details_transaksi_widget.dart'
 export '/page/misc_page/profil_u_p_z/profil_u_p_z_widget.dart'
     show ProfilUPZWidget;
 export '/page/transaksi/qurban/qurban_widget.dart' show QurbanWidget;
+export '/page/transaksi/fidyah/fidyah_widget.dart' show FidyahWidget;
 export '/page/transaksi/pendistribusian/pendistribusian_widget.dart'
     show PendistribusianWidget;
 export '/page/misc_page/setting_z_f/setting_z_f_widget.dart'

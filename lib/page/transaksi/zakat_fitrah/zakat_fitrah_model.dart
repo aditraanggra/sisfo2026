@@ -1,3 +1,4 @@
+import '/backend/schema/structs/index.dart';
 import '/component/date_picker/date_picker_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -17,6 +18,14 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
 
   int? harga2 = 46000;
 
+  /// Payment types from API
+  List<ZfPaymentTypeStruct> paymentTypes = [];
+  List<ZfPaymentTypeStruct> berasTypes = [];
+  List<ZfPaymentTypeStruct> uangTypes = [];
+  bool isLoadingPaymentTypes = true;
+  ZfPaymentTypeStruct? selectedBerasType;
+  ZfPaymentTypeStruct? selectedUangType;
+
   /// Real-time validation error messages
   String? namaMuzakkiError;
   String? jmMuzakkiError;
@@ -34,6 +43,12 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
   FormFieldController<String>? jenisZFValueController;
   // State field(s) for hargaPerKulak widget.
   FormFieldController<String>? hargaPerKulakValueController;
+
+  /// Selected jenis ZF value getter
+  String? get jenisZFValue => jenisZFValueController?.value;
+
+  /// Selected harga per kulak value getter
+  String? get hargaPerKulakValue => hargaPerKulakValueController?.value;
   // State field(s) for namaMuzakki widget.
   FocusNode? namaMuzakkiFocusNode;
   TextEditingController? namaMuzakkiTextController;
@@ -73,6 +88,8 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
   @override
   void initState(BuildContext context) {
     datePickerModel = createModel(context, () => DatePickerModel());
+    jenisZFValueController = FormFieldController<String>('Beras');
+    hargaPerKulakValueController = FormFieldController<String>('Rp. 38.000');
     namaMuzakkiTextControllerValidator = _namaMuzakkiTextControllerValidator;
     jmMuzakkiTextControllerValidator = _jmMuzakkiTextControllerValidator;
     nominalInfakTextControllerValidator = _nominalInfakTextControllerValidator;
@@ -129,9 +146,8 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
 
     keteranganFocusNode?.dispose();
     keteranganTextController?.dispose();
-  }
 
-  /// Additional helper methods.
-  String? get jenisZFValue => jenisZFValueController?.value;
-  String? get hargaPerKulakValue => hargaPerKulakValueController?.value;
+    jenisZFValueController?.dispose();
+    hargaPerKulakValueController?.dispose();
+  }
 }
