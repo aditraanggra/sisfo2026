@@ -1577,6 +1577,9 @@ class GetPendistribusianCall {
 class GetSetorZISCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    String? unitId = '',
+    String? fromDate = '',
+    String? toDate = '',
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1589,7 +1592,11 @@ class GetSetorZISCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'unit_id': unitId,
+        'from_date': fromDate,
+        'to_date': toDate,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,

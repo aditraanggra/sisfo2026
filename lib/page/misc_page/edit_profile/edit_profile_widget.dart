@@ -1,5 +1,5 @@
 import '/auth/custom_auth/auth_util.dart';
-import '/backend/supabase/supabase.dart';
+import '/backend/cloudinary/cloudinary_upload_helper.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -268,8 +268,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                           .toList();
 
                                       downloadUrls =
-                                          await uploadSupabaseStorageFiles(
-                                        bucketName: 'sisfo',
+                                          await uploadProfilePhotoToCloudinary(
                                         selectedFiles: selectedMedia,
                                       );
                                     } finally {

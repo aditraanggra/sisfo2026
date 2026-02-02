@@ -1,5 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
-import '/backend/supabase/supabase.dart';
+import '/backend/cloudinary/cloudinary_upload_helper.dart';
 import '/component/modal_success/modal_success_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_pdf_viewer.dart';
@@ -462,9 +462,7 @@ class _LengkapiProfileSDWidgetState extends State<LengkapiProfileSDWidget> {
                                                                             .toList();
 
                                                                         downloadUrls =
-                                                                            await uploadSupabaseStorageFiles(
-                                                                          bucketName:
-                                                                              'sisfo',
+                                                                            await uploadProfilePhotoToCloudinary(
                                                                           selectedFiles:
                                                                               selectedMedia,
                                                                         );
@@ -2736,9 +2734,7 @@ class _LengkapiProfileSDWidgetState extends State<LengkapiProfileSDWidget> {
                                                                           .toList();
 
                                                                   downloadUrls =
-                                                                      await uploadSupabaseStorageFiles(
-                                                                    bucketName:
-                                                                        'sisfo',
+                                                                      await uploadProfilePhotoToCloudinary(
                                                                     selectedFiles:
                                                                         selectedFiles,
                                                                   );

@@ -1,6 +1,6 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/supabase/supabase.dart';
+import '/backend/cloudinary/cloudinary_upload_helper.dart';
 import '/component/card_setor_zis/card_setor_zis_widget.dart';
 import '/component/card_setor_zis_beras/card_setor_zis_beras_widget.dart';
 import '/component/date_picker/date_picker_widget.dart';
@@ -187,68 +187,138 @@ class _SetorZisWidgetState extends State<SetorZisWidget> {
                                     ),
                               ),
                             ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: Color(0xFFE0E3E7),
+                                  width: 1.0,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today_rounded,
+                                    color: Color(0xFF57636C),
+                                    size: 20,
+                                  ),
+                                  Expanded(
+                                    child: wrapWithModel(
+                                      model: _model.datePickerModel,
+                                      updateCallback: () => safeSetState(() {}),
+                                      child: DatePickerWidget(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Summary Card
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 8.0, 0.0, 0.0),
-                              child: wrapWithModel(
-                                model: _model.datePickerModel,
-                                updateCallback: () => safeSetState(() {}),
-                                child: DatePickerWidget(),
-                              ),
-                            ),
-                            Container(
-                              width: 50.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0.0, -1.0),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 12.0, 0.0, 0.0),
-                                child: Text(
-                                  '${valueOrDefault<String>(
-                                    formatNumber(
-                                      _model.nomSetorZf +
-                                          _model.nomSetorZm +
-                                          _model.nomSetorIfs,
-                                      formatType: FormatType.decimal,
-                                      decimalType: DecimalType.periodDecimal,
-                                      currency: 'Rp. ',
-                                    ),
-                                    '0',
-                                  )}${_model.currentZfBeras! > 0.0 ? valueOrDefault<String>(
-                                      ' & ${valueOrDefault<String>(
-                                        formatNumber(
-                                          _model.nomSetorZfBeras,
-                                          formatType: FormatType.custom,
-                                          format: '###.### Kg',
-                                          locale: 'ID',
-                                        ),
-                                        '0',
-                                      )}',
-                                      '0',
-                                    ) : ''}',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.notoSans(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: Color(0xFF259148),
-                                        fontSize: 22.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
+                                  0.0, 12.0, 0.0, 0.0),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  border: Border.all(
+                                    color: Color(0xFFE0E3E7),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Setoran',
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelMedium,
                                       ),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Uang',
+                                                style: GoogleFonts.notoSans(
+                                                  fontSize: 12,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                ),
+                                              ),
+                                              Text(
+                                                valueOrDefault<String>(
+                                                  formatNumber(
+                                                    _model.nomSetorZf +
+                                                        _model.nomSetorZm +
+                                                        _model.nomSetorIfs,
+                                                    formatType:
+                                                        FormatType.decimal,
+                                                    decimalType: DecimalType
+                                                        .periodDecimal,
+                                                    currency: 'Rp. ',
+                                                  ),
+                                                  '0',
+                                                ),
+                                                style: GoogleFonts.notoSans(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Color(0xFF259148),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                              height: 30,
+                                              width: 1,
+                                              color: Color(0xFFE0E3E7)),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Beras',
+                                                style: GoogleFonts.notoSans(
+                                                  fontSize: 12,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                ),
+                                              ),
+                                              Text(
+                                                valueOrDefault<String>(
+                                                  formatNumber(
+                                                    _model.nomSetorZfBeras,
+                                                    formatType:
+                                                        FormatType.custom,
+                                                    format: '###.### Kg',
+                                                    locale: 'ID',
+                                                  ),
+                                                  '0',
+                                                ),
+                                                style: GoogleFonts.notoSans(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Color(0xFF259148),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -429,8 +499,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget> {
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 16.0, 0.0, 0.0),
-                              child: FFButtonWidget(
-                                onPressed: () async {
+                              child: InkWell(
+                                onTap: () async {
                                   final selectedMedia =
                                       await selectMediaWithSourceBottomSheet(
                                     context: context,
@@ -451,7 +521,6 @@ class _SetorZisWidgetState extends State<SetorZisWidget> {
                                         .isDataUploading_uploadDataF1e = true);
                                     var selectedUploadedFiles =
                                         <FFUploadedFile>[];
-
                                     var downloadUrls = <String>[];
                                     try {
                                       selectedUploadedFiles = selectedMedia
@@ -467,10 +536,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget> {
                                                     m.originalFilename,
                                               ))
                                           .toList();
-
                                       downloadUrls =
-                                          await uploadSupabaseStorageFiles(
-                                        bucketName: 'sisfo',
+                                          await uploadBuktiTransferToCloudinary(
                                         selectedFiles: selectedMedia,
                                       );
                                     } finally {
@@ -492,410 +559,320 @@ class _SetorZisWidgetState extends State<SetorZisWidget> {
                                       return;
                                     }
                                   }
-
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        'Upload Bukti Setor Berhasil',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelSmall
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelSmall
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelSmall
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelSmall
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelSmall
-                                                      .fontStyle,
-                                            ),
-                                      ),
+                                          'Upload Bukti Setor Berhasil',
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                       duration: Duration(milliseconds: 4000),
                                       backgroundColor:
                                           FlutterFlowTheme.of(context).primary,
                                     ),
                                   );
                                 },
-                                text: 'Upload Bukti Setor',
-                                icon: Icon(
-                                  Icons.image_outlined,
-                                  size: 32.0,
-                                ),
-                                options: FFButtonOptions(
-                                  height: 56.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  iconColor: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        font: GoogleFonts.notoSans(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
+                                child: Container(
+                                  width: double.infinity,
+                                  constraints: BoxConstraints(minHeight: 100),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Color(0xFF259148).withOpacity(0.5),
+                                      width: 2,
+                                      style: BorderStyle.solid,
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: _model.uploadedFileUrl_uploadDataF1e
+                                          .isNotEmpty
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.check_circle,
+                                                color: Color(0xFF259148),
+                                                size: 40),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Bukti Setor Terupload',
+                                              style: TextStyle(
+                                                color: Color(0xFF259148),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              _model.uploadedLocalFile_uploadDataF1e
+                                                      .name ??
+                                                  '',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.cloud_upload_outlined,
+                                                color: Color(0xFF259148),
+                                                size: 40),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Tap untuk upload bukti setor',
+                                              style: TextStyle(
+                                                color: Color(0xFF259148),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Format: JPG, PNG',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ),
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 24.0, 0.0, 0.0),
-                              child: FFButtonWidget(
-                                onPressed: () async {
-                                  if ((_model.nomSetorZf == 0) &&
-                                      (_model.nomSetorZm == 0) &&
-                                      (_model.nomSetorIfs == 0) &&
-                                      (_model.nomSetorZfBeras == 0.0)) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Tidak ada dana yang disetor',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelMedium
-                                              .override(
-                                                font: GoogleFonts.notoSans(
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontStyle,
-                                                ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .info,
-                                                letterSpacing: 0.0,
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            FlutterFlowTheme.of(context).error,
-                                      ),
-                                    );
-                                  } else {
-                                    if (_model.formKey.currentState == null ||
-                                        !_model.formKey.currentState!
-                                            .validate()) {
-                                      return;
-                                    }
-                                    if (_model.datePickerModel.datePicked ==
-                                        null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Tanggal belum dipilih',
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  font: GoogleFonts.notoSans(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .alternate,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                          duration:
-                                              Duration(milliseconds: 4000),
-                                          backgroundColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .error,
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    if (_model.uploadedFileUrl_uploadDataF1e
-                                        .isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Harus upload bukti setor',
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  font: GoogleFonts.notoSans(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .info,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                          duration:
-                                              Duration(milliseconds: 4000),
-                                          backgroundColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .error,
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    var confirmDialogResponse =
-                                        await showDialog<bool>(
-                                              context: context,
-                                              builder: (alertDialogContext) {
-                                                return AlertDialog(
-                                                  title: Text('Konfimasi'),
-                                                  content: Text(
-                                                      'Anda menyetorkan ${valueOrDefault<String>(
-                                                    formatNumber(
-                                                      _model.nomSetorZf +
-                                                          _model.nomSetorZm +
-                                                          _model.nomSetorIfs,
-                                                      formatType:
-                                                          FormatType.custom,
-                                                      currency: 'Rp. ',
-                                                      format: '###,###',
-                                                      locale: 'id_ID',
-                                                    ),
-                                                    '0',
-                                                  )} Uang & ${valueOrDefault<String>(
-                                                    formatNumber(
-                                                      _model.nomSetorZfBeras,
-                                                      formatType:
-                                                          FormatType.custom,
-                                                      format: '##.## Kg',
-                                                      locale: 'id_ID',
-                                                    ),
-                                                    '0',
-                                                  )} Beras, apakah ingin diproses?'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              alertDialogContext,
-                                                              false),
-                                                      child: Text('Batal'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              alertDialogContext,
-                                                              true),
-                                                      child: Text('Setor'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ) ??
-                                            false;
-                                    await TransactionEndPointGroup
-                                        .addSetorZISCall
-                                        .call(
-                                      token: currentAuthenticationToken,
-                                      unitId: FFAppState().profileUPZ.id,
-                                      trxDate: _model.datePickerModel.datePicked
-                                          ?.toString(),
-                                      zfAmountDeposit: _model.nomSetorZf,
-                                      zfRiceDeposit: _model.nomSetorZfBeras,
-                                      zmAmountDeposit: _model.nomSetorZm,
-                                      ifsAmountDeposit: _model.nomSetorIfs,
-                                      totalDeposit: valueOrDefault<int>(
-                                        _model.nomSetorZf +
-                                            _model.nomSetorZm +
-                                            _model.nomSetorIfs,
-                                        0,
-                                      ),
-                                      status: 'Tunai',
-                                      validation: 'Belum Valid',
-                                      upload:
-                                          _model.uploadedFileUrl_uploadDataF1e,
-                                    );
-
-                                    ScaffoldMessenger.of(context)
-                                        .clearSnackBars();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Setor Dana ZIS Berhasil',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelMedium
-                                              .override(
-                                                font: GoogleFonts.notoSans(
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontStyle,
-                                                ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .info,
-                                                letterSpacing: 0.0,
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor: Color(0xFF259148),
-                                      ),
-                                    );
-                                    _model.nomSetorIfs = 0;
-                                    _model.nomSetorZm = 0;
-                                    _model.nomSetorZf = 0;
-                                    _model.nomSetorZfBeras = 0.0;
-                                    _model.currentIfs = 0;
-                                    _model.currentZm = 0;
-                                    _model.currentZf = 0;
-                                    _model.currentZfBeras = 0.0;
-                                    safeSetState(() {});
-
-                                    context.goNamed(
-                                      HomeWidget.routeName,
-                                      extra: <String, dynamic>{
-                                        kTransitionInfoKey: TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.leftToRight,
-                                        ),
-                                      },
-                                    );
-                                  }
-                                },
-                                text: 'Setor Dana',
-                                icon: Icon(
-                                  Icons.play_for_work_rounded,
-                                  size: 32.0,
-                                ),
-                                options: FFButtonOptions(
-                                  height: 48.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        font: GoogleFonts.notoSans(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: Colors.white,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                  elevation: 3.0,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1.0,
+                              child: Container(
+                                width: double.infinity,
+                                height: 56.0,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF259148),
+                                      Color(0xFF1B6A34)
+                                    ],
+                                    stops: [0.0, 1.0],
+                                    begin: AlignmentDirectional(0.0, -1.0),
+                                    end: AlignmentDirectional(0, 1.0),
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(28.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Color(0x33000000),
+                                      offset: Offset(0.0, 2.0),
+                                    )
+                                  ],
+                                ),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    if ((_model.nomSetorZf == 0) &&
+                                        (_model.nomSetorZm == 0) &&
+                                        (_model.nomSetorIfs == 0) &&
+                                        (_model.nomSetorZfBeras == 0.0)) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Tidak ada dana yang disetor',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .error,
+                                        ),
+                                      );
+                                    } else {
+                                      if (_model.formKey.currentState == null ||
+                                          !_model.formKey.currentState!
+                                              .validate()) {
+                                        return;
+                                      }
+                                      if (_model.datePickerModel.datePicked ==
+                                          null) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Tanggal belum dipilih',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .error,
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      if (_model.uploadedFileUrl_uploadDataF1e
+                                          .isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Harus upload bukti setor',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .error,
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      var confirmDialogResponse =
+                                          await showDialog<bool>(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Konfirmasi'),
+                                                    content: Text(
+                                                        'Anda menyetorkan ${valueOrDefault<String>(
+                                                      formatNumber(
+                                                        _model.nomSetorZf +
+                                                            _model.nomSetorZm +
+                                                            _model.nomSetorIfs,
+                                                        formatType:
+                                                            FormatType.custom,
+                                                        currency: 'Rp. ',
+                                                        format: '###,###',
+                                                        locale: 'id_ID',
+                                                      ),
+                                                      '0',
+                                                    )} Uang & ${valueOrDefault<String>(
+                                                      formatNumber(
+                                                        _model.nomSetorZfBeras,
+                                                        formatType:
+                                                            FormatType.custom,
+                                                        format: '##.## Kg',
+                                                        locale: 'id_ID',
+                                                      ),
+                                                      '0',
+                                                    )} Beras, apakah ingin diproses?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext,
+                                                                false),
+                                                        child: Text('Batal',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey)),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext,
+                                                                true),
+                                                        child: Text('Setor',
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xFF259148),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ) ??
+                                              false;
+                                      if (confirmDialogResponse) {
+                                        await TransactionEndPointGroup
+                                            .addSetorZISCall
+                                            .call(
+                                          token: currentAuthenticationToken,
+                                          unitId: FFAppState().profileUPZ.id,
+                                          trxDate: _model
+                                              .datePickerModel.datePicked
+                                              ?.toString(),
+                                          zfAmountDeposit: _model.nomSetorZf,
+                                          zfRiceDeposit: _model.nomSetorZfBeras,
+                                          zmAmountDeposit: _model.nomSetorZm,
+                                          ifsAmountDeposit: _model.nomSetorIfs,
+                                          totalDeposit: valueOrDefault<int>(
+                                            _model.nomSetorZf +
+                                                _model.nomSetorZm +
+                                                _model.nomSetorIfs,
+                                            0,
+                                          ),
+                                          status: 'Tunai',
+                                          validation: 'Belum Valid',
+                                          upload: _model
+                                              .uploadedFileUrl_uploadDataF1e,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .clearSnackBars();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Setor Dana ZIS Berhasil',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor: Color(0xFF259148),
+                                          ),
+                                        );
+                                        _model.nomSetorIfs = 0;
+                                        _model.nomSetorZm = 0;
+                                        _model.nomSetorZf = 0;
+                                        _model.nomSetorZfBeras = 0.0;
+                                        _model.currentIfs = 0;
+                                        _model.currentZm = 0;
+                                        _model.currentZf = 0;
+                                        _model.currentZfBeras = 0.0;
+                                        safeSetState(() {});
+                                        context.goNamed(
+                                          HomeWidget.routeName,
+                                          extra: <String, dynamic>{
+                                            kTransitionInfoKey: TransitionInfo(
+                                              hasTransition: true,
+                                              transitionType: PageTransitionType
+                                                  .leftToRight,
+                                            ),
+                                          },
+                                        );
+                                      }
+                                    }
+                                  },
+                                  text: 'Setor Dana',
+                                  icon: Icon(
+                                    Icons.play_for_work_rounded,
+                                    size: 24.0,
+                                  ),
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: 56.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: Colors.transparent,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          font: GoogleFonts.notoSans(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0,
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                    elevation: 0.0,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 0.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(28.0),
+                                  ),
                                 ),
                               ),
                             ),

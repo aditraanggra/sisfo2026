@@ -1,18 +1,15 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+
 import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'laporan_model.dart';
 export 'laporan_model.dart';
-
-// Modern styling constants for Laporan page
-// Requirements: 7.1, 7.2, 7.3, 10.1, 10.2, 10.3
 
 class LaporanWidget extends StatefulWidget {
   const LaporanWidget({super.key});
@@ -24,8 +21,10 @@ class LaporanWidget extends StatefulWidget {
   State<LaporanWidget> createState() => _LaporanWidgetState();
 }
 
-class _LaporanWidgetState extends State<LaporanWidget> {
+class _LaporanWidgetState extends State<LaporanWidget>
+    with SingleTickerProviderStateMixin {
   late LaporanModel _model;
+  late TabController _tabController;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -33,6 +32,7 @@ class _LaporanWidgetState extends State<LaporanWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => LaporanModel());
+    _tabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -40,38 +40,344 @@ class _LaporanWidgetState extends State<LaporanWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _tabController.dispose();
 
     super.dispose();
+  }
+
+  Future<List<ApiCallResponse>> _fetchAllData() async {
+    return Future.wait([
+      RekapEndPointGroup.rekapZISCall.call(
+        period: 'tahunan',
+        unitId: FFAppState().profileUPZ.id.toString(),
+        token: currentAuthenticationToken,
+      ),
+      RekapEndPointGroup.rekapPendisCall.call(
+        periode: 'tahunan',
+        unitId: FFAppState().profileUPZ.id,
+        token: currentAuthenticationToken,
+      ),
+      RekapEndPointGroup.rekapHakAmilCall.call(
+        periode: 'tahunan',
+        unitId: FFAppState().profileUPZ.id,
+        token: currentAuthenticationToken,
+      ),
+      RekapEndPointGroup.rekapAlokasiCall.call(
+        periode: 'tahunan',
+        unitId: FFAppState().profileUPZ.id.toString(),
+        token: currentAuthenticationToken,
+      ),
+      TransactionEndPointGroup.getSetorZISCall.call(
+        unitId: FFAppState().profileUPZ.id.toString(),
+        token: currentAuthenticationToken,
+      ),
+    ]);
+  }
+
+  Future<void> _generatePdf(
+      ApiCallResponse rekapZis,
+      ApiCallResponse rekapPendis,
+      ApiCallResponse rekapHakAmil,
+      ApiCallResponse rekapAlokasi,
+      ApiCallResponse setoranData) async {
+    await actions.saveToPdf(
+      FFAppState().profileUPZ.unitName,
+      FFAppState().profileUPZ.noRegister,
+      FFAppState().profileUPZ.address,
+      FFAppState().profileUPZ.villageName,
+      FFAppState().profileUPZ.districtName,
+      '${valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapZISCall.totalZfAmount(
+            rekapZis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      )} | ${valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapZISCall.totalZfRice(
+            rekapZis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          format: '##.## Kg',
+          locale: 'ID',
+        ),
+        '0',
+      )}',
+      valueOrDefault<String>(
+        RekapEndPointGroup.rekapZISCall
+            .totalZfMuzakki(
+              rekapZis.jsonBody,
+            )
+            ?.toString(),
+        '0',
+      ),
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapZISCall.totalZmAmount(
+            rekapZis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      RekapEndPointGroup.rekapZISCall
+          .totalZmMuzakki(
+            rekapZis.jsonBody,
+          )
+          ?.toString(),
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapZISCall.totalIfsAmount(
+            rekapZis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      valueOrDefault<String>(
+        RekapEndPointGroup.rekapZISCall
+            .totalIfsMunfiq(
+              rekapZis.jsonBody,
+            )
+            ?.toString(),
+        '0',
+      ),
+      RekapEndPointGroup.rekapPendisCall
+          .totalPenerimaManfaat(
+            rekapPendis.jsonBody,
+          )
+          ?.toString(),
+      RekapEndPointGroup.rekapPendisCall
+          .totalPenerimaManfaat(
+            rekapPendis.jsonBody,
+          )
+          ?.toString(),
+      RekapEndPointGroup.rekapPendisCall
+          .totalPenerimaManfaat(
+            rekapPendis.jsonBody,
+          )
+          ?.toString(),
+      RekapEndPointGroup.rekapHakAmilCall
+          .totalPm(
+            rekapHakAmil.jsonBody,
+          )
+          ?.toString(),
+      RekapEndPointGroup.rekapHakAmilCall
+          .totalPm(
+            rekapHakAmil.jsonBody,
+          )
+          ?.toString(),
+      RekapEndPointGroup.rekapHakAmilCall
+          .totalPm(
+            rekapHakAmil.jsonBody,
+          )
+          ?.toString(),
+      valueOrDefault<String>(
+        '${valueOrDefault<String>(
+          formatNumber(
+            RekapEndPointGroup.rekapPendisCall.totalPendisZfUang(
+              rekapPendis.jsonBody,
+            ),
+            formatType: FormatType.custom,
+            currency: 'Rp ',
+            format: '###,###',
+            locale: 'ID',
+          ),
+          '0',
+        )} | ${valueOrDefault<String>(
+          formatNumber(
+            RekapEndPointGroup.rekapPendisCall.totalPendisZfBeras(
+              rekapPendis.jsonBody,
+            ),
+            formatType: FormatType.custom,
+            format: '##.## Kg',
+            locale: 'ID',
+          ),
+          '0',
+        )}',
+        '0',
+      ),
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapPendisCall.totalPendisZm(
+            rekapPendis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapPendisCall.totalPendisIfs(
+            rekapPendis.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      '${valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapAlokasiCall.setorZfUang(
+            rekapAlokasi.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      )} | ${valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapAlokasiCall.setorZfBeras(
+            rekapAlokasi.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          format: '##.## Kg',
+          locale: 'ID',
+        ),
+        '0',
+      )}',
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapAlokasiCall.setorZm(
+            rekapAlokasi.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      valueOrDefault<String>(
+        formatNumber(
+          RekapEndPointGroup.rekapAlokasiCall.setorIfs(
+            rekapAlokasi.jsonBody,
+          ),
+          formatType: FormatType.custom,
+          currency: 'Rp ',
+          format: '###,###',
+          locale: 'ID',
+        ),
+        '0',
+      ),
+      () {
+        if (FFAppState().profileUPZ.categoryId == 4) {
+          return 'Ketua DKM';
+        } else if (FFAppState().profileUPZ.categoryId == 3) {
+          return 'Kepala Desa';
+        } else {
+          return 'Camat';
+        }
+      }(),
+      FFAppState().profileUPZ.unitLeader,
+      FFAppState().profileUPZ.unitAssistant,
+      FFAppState().profileUPZ.unitFinance,
+      TransactionEndPointGroup.getSetorZISCall.listDataSetor(
+        setoranData.jsonBody,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return FutureBuilder<ApiCallResponse>(
-      future: RekapEndPointGroup.rekapAlokasiCall.call(
-        token: currentAuthenticationToken,
-        unitId: FFAppState().profileUPZ.id.toString(),
-        periode: 'tahunan',
-      ),
+    return FutureBuilder<List<ApiCallResponse>>(
+      future: _fetchAllData(),
       builder: (context, snapshot) {
-        // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: ModernColors.backgroundPrimary,
-            body: Center(
-              child: SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: SpinKitFadingFour(
-                  color: ModernColors.primaryAccent,
-                  size: 40.0,
-                ),
+            appBar: AppBar(
+              backgroundColor: ModernColors.primaryDark,
+              automaticallyImplyLeading: false,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Laporan Pengelolaan ZIS',
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Text(
+                    'Loading...',
+                    style: GoogleFonts.inter(
+                      color: Colors.white.withOpacity(0.8),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ],
+              ),
+              centerTitle: true,
+              elevation: 0.0,
+            ),
+            body: SafeArea(
+              top: true,
+              child: Column(
+                children: [
+                  SkeletonLoaderWidget(
+                    type: SkeletonType.summary,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade200),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SkeletonLoaderWidget(
+                            type: SkeletonType.detailRow,
+                            itemCount: 3,
+                          ),
+                          SkeletonLoaderWidget(
+                            type: SkeletonType.detailRow,
+                            itemCount: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
         }
-        final laporanRekapAlokasiResponse = snapshot.data!;
+
+        final responses = snapshot.data!;
+        final rekapZis = responses[0];
+        final rekapPendis = responses[1];
+        final rekapHakAmil = responses[2];
+        final rekapAlokasi = responses[3];
+        final setoranData = responses[4];
 
         return GestureDetector(
           onTap: () {
@@ -88,3570 +394,460 @@ class _LaporanWidgetState extends State<LaporanWidget> {
                 ? AppBar(
                     backgroundColor: ModernColors.primaryDark,
                     automaticallyImplyLeading: false,
-                    title: Text(
-                      'Laporan',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.0,
-                      ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Laporan Pengelolaan ZIS',
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Text(
+                          'UPZ ${FFAppState().profileUPZ.unitName}',
+                          style: GoogleFonts.inter(
+                            color: Colors.white.withOpacity(0.8),
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ],
                     ),
-                    actions: [],
                     centerTitle: true,
                     elevation: 0.0,
                   )
                 : null,
             body: SafeArea(
               top: true,
-              child: FutureBuilder<ApiCallResponse>(
-                future: RekapEndPointGroup.rekapZISCall.call(
-                  period: 'tahunan',
-                  unitId: FFAppState().profileUPZ.id.toString(),
-                  token: currentAuthenticationToken,
-                ),
-                builder: (context, snapshot) {
-                  // Customize what your widget looks like when it's loading.
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: SizedBox(
-                        width: 40.0,
-                        height: 40.0,
-                        child: SpinKitFadingFour(
-                          color: ModernColors.primaryAccent,
-                          size: 40.0,
-                        ),
+              child: Column(
+                children: [
+                  _buildHeaderSummary(context, rekapZis),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade200),
                       ),
-                    );
-                  }
-                  final rekapZisWrapperRekapZISResponse = snapshot.data!;
-
-                  return Container(
-                    decoration: BoxDecoration(),
-                    child: FutureBuilder<ApiCallResponse>(
-                      future: RekapEndPointGroup.rekapPendisCall.call(
-                        token: currentAuthenticationToken,
-                        unitId: FFAppState().profileUPZ.id,
-                        periode: 'tahunan',
-                      ),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 40.0,
-                              height: 40.0,
-                              child: SpinKitFadingFour(
-                                color: ModernColors.primaryAccent,
-                                size: 40.0,
-                              ),
-                            ),
-                          );
-                        }
-                        final rekapPendisWrapperRekapPendisResponse =
-                            snapshot.data!;
-
-                        return Container(
-                          decoration: BoxDecoration(),
-                          child: FutureBuilder<ApiCallResponse>(
-                            future: RekapEndPointGroup.rekapHakAmilCall.call(
-                              token: currentAuthenticationToken,
-                              unitId: FFAppState().profileUPZ.id,
-                              periode: 'tahunan',
-                            ),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 40.0,
-                                    height: 40.0,
-                                    child: SpinKitFadingFour(
-                                      color: ModernColors.primaryAccent,
-                                      size: 40.0,
-                                    ),
-                                  ),
-                                );
-                              }
-                              final rekapHakAmilWraperRekapHakAmilResponse =
-                                  snapshot.data!;
-
-                              return Container(
-                                decoration: BoxDecoration(),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            ModernSpacing.md,
-                                            0.0,
-                                            ModernSpacing.md,
-                                            0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      ModernSpacing.lg,
-                                                      ModernSpacing.sm,
-                                                      ModernSpacing.lg,
-                                                      ModernSpacing.xl),
-                                              child: FFButtonWidget(
-                                                onPressed: () async {
-                                                  await actions.saveToPdf(
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .unitName,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .noRegister,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .address,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .villageName,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .districtName,
-                                                    '${valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalZfAmount(
-                                                          rekapZisWrapperRekapZISResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    )} | ${valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalZfRice(
-                                                          rekapZisWrapperRekapZISResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        format: '##.## Kg',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    )}',
-                                                    valueOrDefault<String>(
-                                                      RekapEndPointGroup
-                                                          .rekapZISCall
-                                                          .totalZfMuzakki(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          )
-                                                          ?.toString(),
-                                                      '0',
-                                                    ),
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalZmAmount(
-                                                          rekapZisWrapperRekapZISResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    RekapEndPointGroup
-                                                        .rekapZISCall
-                                                        .totalZmMuzakki(
-                                                          rekapZisWrapperRekapZISResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalIfsAmount(
-                                                          rekapZisWrapperRekapZISResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    valueOrDefault<String>(
-                                                      RekapEndPointGroup
-                                                          .rekapZISCall
-                                                          .totalIfsMunfiq(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          )
-                                                          ?.toString(),
-                                                      '0',
-                                                    ),
-                                                    RekapEndPointGroup
-                                                        .rekapPendisCall
-                                                        .totalPenerimaManfaat(
-                                                          rekapPendisWrapperRekapPendisResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    RekapEndPointGroup
-                                                        .rekapPendisCall
-                                                        .totalPenerimaManfaat(
-                                                          rekapPendisWrapperRekapPendisResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    RekapEndPointGroup
-                                                        .rekapPendisCall
-                                                        .totalPenerimaManfaat(
-                                                          rekapPendisWrapperRekapPendisResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    RekapEndPointGroup
-                                                        .rekapHakAmilCall
-                                                        .totalPm(
-                                                          rekapHakAmilWraperRekapHakAmilResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    RekapEndPointGroup
-                                                        .rekapHakAmilCall
-                                                        .totalPm(
-                                                          rekapHakAmilWraperRekapHakAmilResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    RekapEndPointGroup
-                                                        .rekapHakAmilCall
-                                                        .totalPm(
-                                                          rekapHakAmilWraperRekapHakAmilResponse
-                                                              .jsonBody,
-                                                        )
-                                                        ?.toString(),
-                                                    valueOrDefault<String>(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZfUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZfBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      '0',
-                                                    ),
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapPendisCall
-                                                            .totalPendisZm(
-                                                          rekapPendisWrapperRekapPendisResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapPendisCall
-                                                            .totalPendisIfs(
-                                                          rekapPendisWrapperRekapPendisResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    '${valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapAlokasiCall
-                                                            .setorZfUang(
-                                                          laporanRekapAlokasiResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    )} | ${valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapAlokasiCall
-                                                            .setorZfBeras(
-                                                          laporanRekapAlokasiResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        format: '##.## Kg',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    )}',
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapAlokasiCall
-                                                            .setorZm(
-                                                          laporanRekapAlokasiResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    valueOrDefault<String>(
-                                                      formatNumber(
-                                                        RekapEndPointGroup
-                                                            .rekapAlokasiCall
-                                                            .setorIfs(
-                                                          laporanRekapAlokasiResponse
-                                                              .jsonBody,
-                                                        ),
-                                                        formatType:
-                                                            FormatType.custom,
-                                                        currency: 'Rp ',
-                                                        format: '###,###',
-                                                        locale: 'ID',
-                                                      ),
-                                                      '0',
-                                                    ),
-                                                    () {
-                                                      if (FFAppState()
-                                                              .profileUPZ
-                                                              .categoryId ==
-                                                          4) {
-                                                        return 'Ketua DKM';
-                                                      } else if (FFAppState()
-                                                              .profileUPZ
-                                                              .categoryId ==
-                                                          3) {
-                                                        return 'Kepala Desa';
-                                                      } else {
-                                                        return 'Camat';
-                                                      }
-                                                    }(),
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .unitLeader,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .unitAssistant,
-                                                    FFAppState()
-                                                        .profileUPZ
-                                                        .unitFinance,
-                                                  );
-                                                },
-                                                text: 'Cetak Laporan',
-                                                icon: Icon(
-                                                  Icons.picture_as_pdf_outlined,
-                                                  size: 15.0,
-                                                ),
-                                                options: FFButtonOptions(
-                                                  width: double.infinity,
-                                                  height: 52.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          ModernSpacing.lg,
-                                                          0.0,
-                                                          ModernSpacing.lg,
-                                                          0.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color:
-                                                      ModernColors.primaryDark,
-                                                  textStyle: GoogleFonts.inter(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14.0,
-                                                  ),
-                                                  elevation: 0.0,
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          ModernRadius.md),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0,
-                                                      ModernSpacing.md,
-                                                      0.0,
-                                                      0.0),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        ModernRadius.sm),
-                                                child: Image.asset(
-                                                  Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? 'assets/images/logo_baznas_putih.png'
-                                                      : 'assets/images/logo_BAZNAS_CIANJUR.png',
-                                                  width: 125.0,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0,
-                                                      ModernSpacing.md,
-                                                      0.0,
-                                                      0.0),
-                                              child: Text(
-                                                'LAPORAN PENGELOLAAN ZIS',
-                                                style: GoogleFonts.inter(
-                                                  color:
-                                                      ModernColors.textPrimary,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0,
-                                                      ModernSpacing.xs,
-                                                      0.0,
-                                                      0.0),
-                                              child: Text(
-                                                'UPZ ${FFAppState().profileUPZ.unitName}',
-                                                style: GoogleFonts.inter(
-                                                  color:
-                                                      ModernColors.textPrimary,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0,
-                                                      ModernSpacing.xs,
-                                                      0.0,
-                                                      ModernSpacing.xs),
-                                              child: Text(
-                                                FFAppState()
-                                                    .profileUPZ
-                                                    .noRegister,
-                                                style: GoogleFonts.inter(
-                                                  color: ModernColors
-                                                      .textSecondary,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1.0,
-                                              color: ModernColors
-                                                  .backgroundPrimary,
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0,
-                                                        ModernSpacing.sm,
-                                                        0.0,
-                                                        0.0),
-                                                child: Text(
-                                                  'TOTAL PENERIMAAN DAN PENYALURAN ZIS',
-                                                  style: GoogleFonts.inter(
-                                                    color: ModernColors
-                                                        .textPrimary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0,
-                                                      ModernSpacing.xs,
-                                                      0.0,
-                                                      0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan Uang',
-                                                      style: GoogleFonts.inter(
-                                                        color: ModernColors
-                                                            .textPrimary,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          valueOrDefault<int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapZISCall
-                                                                    .totalZfAmount(
-                                                                  rekapZisWrapperRekapZISResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapZISCall
-                                                                    .totalZmAmount(
-                                                                  rekapZisWrapperRekapZISResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapZISCall
-                                                                    .totalIfsAmount(
-                                                                  rekapZisWrapperRekapZISResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: GoogleFonts.inter(
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan Beras',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapZISCall
-                                                              .totalZfRice(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penyaluran Uang',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          valueOrDefault<int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapPendisCall
-                                                                    .totalPendisZfUang(
-                                                                  rekapPendisWrapperRekapPendisResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapPendisCall
-                                                                    .totalPendisZm(
-                                                                  rekapPendisWrapperRekapPendisResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapPendisCall
-                                                                    .totalPendisIfs(
-                                                                  rekapPendisWrapperRekapPendisResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penyaluran Beras',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZfBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Muzakki',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        (valueOrDefault<int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapZISCall
-                                                                      .totalZfMuzakki(
-                                                                    rekapZisWrapperRekapZISResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ) +
-                                                                valueOrDefault<
-                                                                    int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapZISCall
-                                                                      .totalZmMuzakki(
-                                                                    rekapZisWrapperRekapZISResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ))
-                                                            .toString(),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Mustahik',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        RekapEndPointGroup
-                                                            .rekapPendisCall
-                                                            .totalPenerimaManfaat(
-                                                              rekapPendisWrapperRekapPendisResponse
-                                                                  .jsonBody,
-                                                            )
-                                                            ?.toString(),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .lato(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            fontSize: 14.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'RINCIAN PENERIMAAN ZIS',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Zakat Fitrah',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan Uang',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapZISCall
-                                                              .totalZfAmount(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan Beras',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapZISCall
-                                                              .totalZfRice(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Jumlah Muzakki',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalZfMuzakki(
-                                                              rekapZisWrapperRekapZISResponse
-                                                                  .jsonBody,
-                                                            )
-                                                            ?.toString(),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Zakat Mal',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapZISCall
-                                                              .totalZmAmount(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Jumlah Muzakki',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalZmMuzakki(
-                                                              rekapZisWrapperRekapZISResponse
-                                                                  .jsonBody,
-                                                            )
-                                                            ?.toString(),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Infak Sedekah',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Total Penerimaan',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapZISCall
-                                                              .totalIfsAmount(
-                                                            rekapZisWrapperRekapZISResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Jumlah Munfiq',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        RekapEndPointGroup
-                                                            .rekapZISCall
-                                                            .totalIfsMunfiq(
-                                                              rekapZisWrapperRekapZISResponse
-                                                                  .jsonBody,
-                                                            )
-                                                            ?.toString(),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            ModernSpacing.md,
-                                            0.0,
-                                            ModernSpacing.md,
-                                            ModernSpacing.sm),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0,
-                                                        ModernSpacing.sm,
-                                                        0.0,
-                                                        0.0),
-                                                child: Text(
-                                                  'RINCIAN PENYALURAN',
-                                                  style: GoogleFonts.inter(
-                                                    color: ModernColors
-                                                        .textPrimary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Berdasarkan Sumber Dana ( Uang | Beras )',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Zakat Fitrah',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZfUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZfBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Zakat Mal',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisZm(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Infak Sedekah',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalPendisIfs(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Berdasarkan Asnaf ( Uang | Beras )',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Fakir',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalFakirUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalFakirBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Miskin',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalMiskinUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalMiskinBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Fiesabilillah',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalFisabliliahUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalFisabililahBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Amil',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          valueOrDefault<int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaZfUang(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaZm(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaIfs(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapHakAmilCall
-                                                              .realisasiHaZfBeras(
-                                                            rekapHakAmilWraperRekapHakAmilResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Berdasarkan Program ( Uang | Beras )',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: ModernColors
-                                                            .primaryAccent,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Kemanusiaan',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalKemanusiaanUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalKemanusiaanBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Dakwah',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalDakwahUang(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapPendisCall
-                                                              .totalDakwahBeras(
-                                                            rekapPendisWrapperRekapPendisResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Operasional',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      '${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          valueOrDefault<int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaZfUang(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaZm(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ) +
-                                                              valueOrDefault<
-                                                                  int>(
-                                                                RekapEndPointGroup
-                                                                    .rekapHakAmilCall
-                                                                    .realisasiHaIfs(
-                                                                  rekapHakAmilWraperRekapHakAmilResponse
-                                                                      .jsonBody,
-                                                                ),
-                                                                0,
-                                                              ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          currency: 'Rp ',
-                                                          format: '###,###',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )} | ${valueOrDefault<String>(
-                                                        formatNumber(
-                                                          RekapEndPointGroup
-                                                              .rekapHakAmilCall
-                                                              .realisasiHaZfBeras(
-                                                            rekapHakAmilWraperRekapHakAmilResponse
-                                                                .jsonBody,
-                                                          ),
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '##.## Kg',
-                                                          locale: 'ID',
-                                                        ),
-                                                        '0',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 8.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'RINCIAN HAK AMILIN ( Uang | Beras )',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .notoSans(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Penerimaan Hak Amil',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        '${valueOrDefault<String>(
-                                                          formatNumber(
-                                                            valueOrDefault<int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapAlokasiCall
-                                                                      .hakAmilZfUang(
-                                                                    laporanRekapAlokasiResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ) +
-                                                                valueOrDefault<
-                                                                    int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapAlokasiCall
-                                                                      .hakAmilZm(
-                                                                    laporanRekapAlokasiResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ) +
-                                                                valueOrDefault<
-                                                                    int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapAlokasiCall
-                                                                      .hakAmilIfs(
-                                                                    laporanRekapAlokasiResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ),
-                                                            formatType:
-                                                                FormatType
-                                                                    .custom,
-                                                            currency: 'Rp ',
-                                                            format: '###,###',
-                                                            locale: 'ID',
-                                                          ),
-                                                          '0',
-                                                        )} | ${valueOrDefault<String>(
-                                                          formatNumber(
-                                                            RekapEndPointGroup
-                                                                .rekapAlokasiCall
-                                                                .hakAmilZfBeras(
-                                                              laporanRekapAlokasiResponse
-                                                                  .jsonBody,
-                                                            ),
-                                                            formatType:
-                                                                FormatType
-                                                                    .custom,
-                                                            format: '##.## Kg',
-                                                            locale: 'ID',
-                                                          ),
-                                                          '0',
-                                                        )}',
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 4.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      'Penyerapan Hak Amil',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .notoSans(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, -1.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        '${valueOrDefault<String>(
-                                                          formatNumber(
-                                                            valueOrDefault<int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapHakAmilCall
-                                                                      .realisasiHaZfUang(
-                                                                    rekapHakAmilWraperRekapHakAmilResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ) +
-                                                                valueOrDefault<
-                                                                    int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapHakAmilCall
-                                                                      .realisasiHaZm(
-                                                                    rekapHakAmilWraperRekapHakAmilResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ) +
-                                                                valueOrDefault<
-                                                                    int>(
-                                                                  RekapEndPointGroup
-                                                                      .rekapHakAmilCall
-                                                                      .realisasiHaIfs(
-                                                                    rekapHakAmilWraperRekapHakAmilResponse
-                                                                        .jsonBody,
-                                                                  ),
-                                                                  0,
-                                                                ),
-                                                            formatType:
-                                                                FormatType
-                                                                    .custom,
-                                                            currency: 'Rp ',
-                                                            format: '###,###',
-                                                            locale: 'ID',
-                                                          ),
-                                                          '0',
-                                                        )} | ${valueOrDefault<String>(
-                                                          formatNumber(
-                                                            RekapEndPointGroup
-                                                                .rekapHakAmilCall
-                                                                .realisasiHaZfBeras(
-                                                              rekapHakAmilWraperRekapHakAmilResponse
-                                                                  .jsonBody,
-                                                            ),
-                                                            formatType:
-                                                                FormatType
-                                                                    .custom,
-                                                            format: '##.## Kg',
-                                                            locale: 'ID',
-                                                          ),
-                                                          '0',
-                                                        )}',
-                                                        '0',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .notoSans(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFF259148),
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
                     ),
-                  );
-                },
+                    child: TabBar(
+                      controller: _tabController,
+                      labelColor: ModernColors.primaryAccent,
+                      labelStyle: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600, fontSize: 13),
+                      unselectedLabelColor: ModernColors.textSecondary,
+                      unselectedLabelStyle: GoogleFonts.inter(
+                          fontWeight: FontWeight.normal, fontSize: 13),
+                      indicatorColor: ModernColors.primaryAccent,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabs: [
+                        Tab(text: 'Penerimaan'),
+                        Tab(text: 'Penyaluran'),
+                        Tab(text: 'Hak Amil'),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: ModernColors.backgroundPrimary,
+                      child: TabBarView(
+                        controller: _tabController,
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          _buildPenerimaanTab(context, rekapZis),
+                          _buildPenyaluranTab(context, rekapPendis),
+                          _buildHakAmilTab(context, rekapHakAmil),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () async {
+                await _generatePdf(rekapZis, rekapPendis, rekapHakAmil,
+                    rekapAlokasi, setoranData);
+              },
+              backgroundColor: ModernColors.primaryDark,
+              elevation: 4.0,
+              icon: Icon(
+                Icons.picture_as_pdf_outlined,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Cetak Laporan',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.0,
+                ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildHeaderSummary(BuildContext context, ApiCallResponse rekapZis) {
+    int totalUang = (valueOrDefault<int>(
+            RekapEndPointGroup.rekapZISCall.totalZfAmount(rekapZis.jsonBody),
+            0) +
+        valueOrDefault<int>(
+            RekapEndPointGroup.rekapZISCall.totalZmAmount(rekapZis.jsonBody),
+            0) +
+        valueOrDefault<int>(
+            RekapEndPointGroup.rekapZISCall.totalIfsAmount(rekapZis.jsonBody),
+            0));
+    double totalBeras = valueOrDefault<double>(
+        RekapEndPointGroup.rekapZISCall.totalZfRice(rekapZis.jsonBody), 0.0);
+
+    return Container(
+      width: double.infinity,
+      color: ModernColors.primaryDark,
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        children: [
+          Divider(color: Colors.white.withOpacity(0.1)),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Penerimaan Uang',
+                      style: GoogleFonts.inter(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      formatNumber(
+                        totalUang,
+                        formatType: FormatType.custom,
+                        currency: 'Rp ',
+                        format: '###,###',
+                        locale: 'ID',
+                      ),
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: Colors.white.withOpacity(0.2),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Total Penerimaan Beras',
+                      style: GoogleFonts.inter(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      formatNumber(
+                        totalBeras,
+                        formatType: FormatType.custom,
+                        format: '##.## Kg',
+                        locale: 'ID',
+                      ),
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPenerimaanTab(BuildContext context, ApiCallResponse rekapZis) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(ModernSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Zakat Fitrah'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow(
+                'Subtotal Uang',
+                formatNumber(
+                  RekapEndPointGroup.rekapZISCall
+                      .totalZfAmount(rekapZis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                isBoldValue: true,
+                valueColor: ModernColors.primaryAccent,
+              ),
+              _buildDetailRow(
+                'Subtotal Beras',
+                formatNumber(
+                  RekapEndPointGroup.rekapZISCall
+                      .totalZfRice(rekapZis.jsonBody),
+                  formatType: FormatType.custom,
+                  format: '##.## Kg',
+                  locale: 'ID',
+                ),
+                isBoldValue: true,
+              ),
+              _buildDetailRow(
+                'Jumlah Muzakki',
+                '${RekapEndPointGroup.rekapZISCall.totalZfMuzakki(rekapZis.jsonBody) ?? 0} Jiwa',
+              ),
+            ],
+          ),
+          SizedBox(height: ModernSpacing.md),
+          _buildSectionTitle('Zakat Maal'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow(
+                'Subtotal Penerimaan',
+                formatNumber(
+                  RekapEndPointGroup.rekapZISCall
+                      .totalZmAmount(rekapZis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                isBoldValue: true,
+                valueColor: ModernColors.primaryAccent,
+              ),
+              _buildDetailRow(
+                'Jumlah Muzakki',
+                '${RekapEndPointGroup.rekapZISCall.totalZmMuzakki(rekapZis.jsonBody) ?? 0} Jiwa',
+              ),
+            ],
+          ),
+          SizedBox(height: ModernSpacing.md),
+          _buildSectionTitle('Infak & Sedekah'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow(
+                'Subtotal Penerimaan',
+                formatNumber(
+                  RekapEndPointGroup.rekapZISCall
+                      .totalIfsAmount(rekapZis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                isBoldValue: true,
+                valueColor: ModernColors.primaryAccent,
+              ),
+              _buildDetailRow(
+                'Jumlah Munfiq',
+                '${RekapEndPointGroup.rekapZISCall.totalIfsMunfiq(rekapZis.jsonBody) ?? 0} Orang',
+              ),
+            ],
+          ),
+          SizedBox(height: 80), // Space for FAB
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPenyaluranTab(
+      BuildContext context, ApiCallResponse rekapPendis) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(ModernSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Penyaluran Dana (Uang & Beras)'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow(
+                'Zakat Fitrah Uang',
+                formatNumber(
+                  RekapEndPointGroup.rekapPendisCall
+                      .totalPendisZfUang(rekapPendis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: ModernColors.expenseRed,
+              ),
+              _buildDetailRow(
+                'Zakat Fitrah Beras',
+                formatNumber(
+                  RekapEndPointGroup.rekapPendisCall
+                      .totalPendisZfBeras(rekapPendis.jsonBody),
+                  formatType: FormatType.custom,
+                  format: '##.## Kg',
+                  locale: 'ID',
+                ),
+                valueColor: ModernColors.expenseRed,
+              ),
+              _buildDetailRow(
+                'Zakat Maal',
+                formatNumber(
+                  RekapEndPointGroup.rekapPendisCall
+                      .totalPendisZm(rekapPendis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: ModernColors.expenseRed,
+              ),
+              _buildDetailRow(
+                'Infak Sedekah',
+                formatNumber(
+                  RekapEndPointGroup.rekapPendisCall
+                      .totalPendisIfs(rekapPendis.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: ModernColors.expenseRed,
+              ),
+            ],
+          ),
+          SizedBox(height: ModernSpacing.md),
+          _buildSectionTitle('Peruntukan Program'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow('Kemanusiaan',
+                  'Rp 0 | 0 Kg'), // Placeholder logic needed for granular breakdown if available
+              _buildDetailRow('Dakwah', 'Rp 0 | 0 Kg'),
+              _buildDetailRow('Operasional', 'Rp 0 | 0 Kg'),
+            ],
+          ),
+          SizedBox(height: 80), // Space for FAB
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHakAmilTab(BuildContext context, ApiCallResponse rekapHakAmil) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(ModernSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('Hak Amil (Uang & Beras)'),
+          SizedBox(height: ModernSpacing.sm),
+          _buildDetailCard(
+            items: [
+              _buildDetailRow(
+                'Penerimaan Hak Amil',
+                '${formatNumber(
+                  RekapEndPointGroup.rekapHakAmilCall.totalPm(rekapHakAmil
+                      .jsonBody), // Adjust this if API provides total money
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                )} | 0 Kg',
+                isBoldValue: true,
+              ),
+              Divider(height: 24),
+              _buildDetailRow(
+                'Penyerapan Hak Amil',
+                'Rp 0 | 0 Kg',
+                isBoldValue: true,
+                valueColor: ModernColors.textSecondary,
+              ),
+            ],
+          ),
+          SizedBox(height: 80), // Space for FAB
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.inter(
+        color: ModernColors.textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget _buildDetailCard({required List<Widget> items}) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(ModernRadius.md),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: Offset(0, 2),
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(ModernSpacing.md),
+      child: Column(
+        children: items,
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value,
+      {bool isBoldValue = false, Color? valueColor}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              color: ModernColors.textSecondary,
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              color: valueColor ?? ModernColors.textPrimary,
+              fontSize: 14,
+              fontWeight: isBoldValue ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
