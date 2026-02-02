@@ -4,16 +4,19 @@
 /// 1. Buat akun di https://cloudinary.com (gratis)
 /// 2. Dapatkan cloud_name, api_key, api_secret dari Dashboard
 /// 3. Buat upload preset (unsigned) di Settings > Upload
-/// 4. Isi nilai di bawah ini
+/// 4. Copy .env.example ke .env dan isi credentials
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CloudinaryConfig {
-  // TODO: Ganti dengan credentials Cloudinary Anda
-  static const String cloudName = 'YOUR_CLOUD_NAME';
-  static const String apiKey = 'YOUR_API_KEY';
-  static const String apiSecret = 'YOUR_API_SECRET';
+  // Credentials dari .env file untuk keamanan
+  static String get cloudName => dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
+  static String get apiKey => dotenv.env['CLOUDINARY_API_KEY'] ?? '';
+  static String get apiSecret => dotenv.env['CLOUDINARY_API_SECRET'] ?? '';
 
   // Upload preset untuk unsigned upload (lebih aman untuk mobile)
-  static const String uploadPreset = 'sisfo_upz_preset';
+  static String get uploadPreset =>
+      dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? 'sisfo_upz_preset';
 
   // Folder untuk organisasi assets
   static const String folderBuktiTransfer = 'sisfo_upz/bukti_transfer';
@@ -34,7 +37,7 @@ class CloudinaryConfig {
       if (width != null) params.add('w_$width');
       if (height != null) params.add('h_$height');
       if (crop != null) params.add('c_$crop');
-      transformation = '${params.join(',')}/';
+      transformation = '${params.join(',')}';
     }
     return 'https://res.cloudinary.com/$cloudName/image/upload/$transformation$publicId';
   }

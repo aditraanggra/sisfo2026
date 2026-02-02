@@ -10,6 +10,11 @@ enum SkeletonType {
   card, // For dashboard cards
   profile, // For profile sections
   form, // For form fields
+  summary, // For summary headers
+  detailRow, // For text-only detail rows
+  chips, // For wrapped chips
+  dashboardStats, // For dashboard statistics (Muzakki/Mustahik)
+  dashboardGrid, // For quick actions grid
 }
 
 class SkeletonLoaderWidget extends StatefulWidget {
@@ -77,7 +82,149 @@ class _SkeletonLoaderWidgetState extends State<SkeletonLoaderWidget>
         return _buildProfileSkeleton();
       case SkeletonType.form:
         return _buildFormSkeleton();
+      case SkeletonType.summary:
+        return _buildSummarySkeleton();
+      case SkeletonType.detailRow:
+        return _buildDetailRowSkeleton();
+      case SkeletonType.chips:
+        return _buildChipsSkeleton();
+      case SkeletonType.dashboardStats:
+        return _buildDashboardStatsSkeleton();
+      case SkeletonType.dashboardGrid:
+        return _buildDashboardGridSkeleton();
     }
+  }
+
+  /// Builds skeleton for chips (like payment types or programs)
+  Widget _buildChipsSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: 0.0), // Context usually adds padding
+      child: Wrap(
+        spacing: 12.0,
+        runSpacing: 12.0,
+        children: List.generate(
+          widget.itemCount,
+          (index) => _buildShimmerBox(
+            width: 100.0,
+            height: 48.0,
+            circular: false,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for dashboard stats (Muzakki/Mustahik cards)
+  Widget _buildDashboardStatsSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+                borderRadius: BorderRadius.circular(12.0),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 3.0,
+                    color: Color(0x33000000),
+                    offset: Offset(0.0, 1.0),
+                  )
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildShimmerBox(
+                      width: 40.0, height: 40.0, circular: false), // Icon
+                  const SizedBox(height: 12.0),
+                  _buildShimmerBox(width: 100.0, height: 12.0), // Label
+                  const SizedBox(height: 8.0),
+                  _buildShimmerBox(width: 60.0, height: 24.0), // Count
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 16.0),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+                borderRadius: BorderRadius.circular(12.0),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 3.0,
+                    color: Color(0x33000000),
+                    offset: Offset(0.0, 1.0),
+                  )
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildShimmerBox(
+                      width: 40.0, height: 40.0, circular: false), // Icon
+                  const SizedBox(height: 12.0),
+                  _buildShimmerBox(width: 100.0, height: 12.0), // Label
+                  const SizedBox(height: 8.0),
+                  _buildShimmerBox(width: 60.0, height: 24.0), // Count
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds skeleton for dashboard grid (Quick actions)
+  Widget _buildDashboardGridSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 3.0,
+              color: Color(0x33000000),
+              offset: Offset(0.0, 1.0),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildShimmerBox(width: 120.0, height: 16.0), // Title
+            const SizedBox(height: 16.0),
+            GridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: List.generate(
+                9, // 3x3 grid
+                (index) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildShimmerBox(width: 56.0, height: 56.0, circular: true),
+                    const SizedBox(height: 8.0),
+                    _buildShimmerBox(width: 60.0, height: 10.0),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Builds skeleton for list items (transaction lists)
@@ -238,6 +385,87 @@ class _SkeletonLoaderWidgetState extends State<SkeletonLoaderWidget>
                 // Input field placeholder
                 _buildShimmerBox(width: double.infinity, height: 48.0),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for summary cards (like in Laporan page)
+  Widget _buildSummarySkeleton() {
+    return Container(
+      width: double.infinity,
+      color: FlutterFlowTheme.of(context).primary,
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        children: [
+          Divider(color: Colors.white.withOpacity(0.1)),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildShimmerBox(width: 120.0, height: 12.0),
+                    const SizedBox(height: 4.0),
+                    _buildShimmerBox(width: 160.0, height: 24.0),
+                  ],
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: Colors.white.withOpacity(0.2),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildShimmerBox(width: 120.0, height: 12.0),
+                    const SizedBox(height: 4.0),
+                    _buildShimmerBox(width: 100.0, height: 24.0),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds skeleton for detail rows (text only list items)
+  Widget _buildDetailRowSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10.0,
+              color: const Color(0x0D000000),
+              offset: const Offset(0.0, 2.0),
+            ),
+          ],
+        ),
+        child: Column(
+          children: List.generate(
+            widget.itemCount,
+            (index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildShimmerBox(width: 100.0, height: 14.0),
+                  _buildShimmerBox(width: 120.0, height: 14.0),
+                ],
+              ),
             ),
           ),
         ),
