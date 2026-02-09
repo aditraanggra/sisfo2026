@@ -130,36 +130,10 @@ class _HomeWidgetState extends State<HomeWidget> {
         token: currentAuthenticationToken,
       ),
       builder: (context, snapshot) {
-        // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // Header skeleton
-                    Container(
-                      width: double.infinity,
-                      height: 195.0,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF259148), Color(0xFF1D6935)],
-                          stops: [0.0, 1.0],
-                          begin: AlignmentDirectional(1.0, -1.0),
-                          end: AlignmentDirectional(-1.0, 1.0),
-                        ),
-                      ),
-                    ),
-                    // Card skeletons for dashboard
-                    SkeletonLoaderWidget(
-                      type: SkeletonType.card,
-                      itemCount: 3,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            body: _buildShimmerLoading(),
           );
         }
 
@@ -177,10 +151,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               builder: (context, snapshot) {
                 // Customize what your widget looks like when it's loading.
                 if (!snapshot.hasData) {
-                  return SkeletonLoaderWidget(
-                    type: SkeletonType.card,
-                    itemCount: 2,
-                  );
+                  return _buildShimmerLoading();
                 }
                 // UPZ data loaded successfully
 
@@ -195,10 +166,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
                       if (!snapshot.hasData) {
-                        return SkeletonLoaderWidget(
-                          type: SkeletonType.card,
-                          itemCount: 2,
-                        );
+                        return _buildShimmerLoading();
                       }
                       final pendisWrapperRekapPendisResponse = snapshot.data!;
 
@@ -213,10 +181,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           builder: (context, snapshot) {
                             // Customize what your widget looks like when it's loading.
                             if (!snapshot.hasData) {
-                              return SkeletonLoaderWidget(
-                                type: SkeletonType.card,
-                                itemCount: 2,
-                              );
+                              return _buildShimmerLoading();
                             }
 
                             return Container(
@@ -453,6 +418,47 @@ class _HomeWidgetState extends State<HomeWidget> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            // Header skeleton
+            Container(
+              width: double.infinity,
+              height: 195.0,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF259148), Color(0xFF1D6935)],
+                  stops: [0.0, 1.0],
+                  begin: AlignmentDirectional(1.0, -1.0),
+                  end: AlignmentDirectional(-1.0, 1.0),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            // Dashboard Stats properties
+            SkeletonLoaderWidget(
+              type: SkeletonType.dashboardStats,
+            ),
+            const SizedBox(height: 16.0),
+            // Quick Actions
+            SkeletonLoaderWidget(
+              type: SkeletonType.dashboardGrid,
+            ),
+            const SizedBox(height: 24.0),
+            // Recent Transactions
+            SkeletonLoaderWidget(
+              type: SkeletonType.listItem,
+              itemCount: 2,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -59,37 +59,48 @@ class _CardSetorZisBerasWidgetState extends State<CardSetorZisBerasWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool isSelected = _model.checkboxValue ?? false;
+
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-      child: Container(
-        width: 402.0,
-        height: 80.0,
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 8.0),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        width: double.infinity,
         decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.transparent
+              : FlutterFlowTheme.of(context).secondaryBackground,
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [Color(0xFF259148), Color(0xFF124F23)],
+                  stops: [0.0, 1.0],
+                  begin: AlignmentDirectional(0.5, -1.0),
+                  end: AlignmentDirectional(-0.5, 1.0),
+                )
+              : null,
           boxShadow: [
             BoxShadow(
               blurRadius: 4.0,
               color: Color(0x33000000),
-              offset: Offset(
-                0.0,
-                2.0,
-              ),
+              offset: Offset(0.0, 2.0),
             )
           ],
-          gradient: LinearGradient(
-            colors: [Color(0xFF259148), Color(0xFF124F23)],
-            stops: [0.0, 1.0],
-            begin: AlignmentDirectional(0.5, -1.0),
-            end: AlignmentDirectional(-0.5, 1.0),
-          ),
           borderRadius: BorderRadius.circular(12.0),
+          border: isSelected
+              ? null
+              : Border.all(
+                  color: Color(0xFF259148),
+                  width: 1.0,
+                ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-              child: Column(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,16 +110,9 @@ class _CardSetorZisBerasWidgetState extends State<CardSetorZisBerasWidget> {
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           font: GoogleFonts.notoSans(
                             fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
                           ),
-                          color: FlutterFlowTheme.of(context).info,
+                          color: isSelected ? Colors.white : Color(0xFF259148),
                           fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FontWeight.w600,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                         ),
                   ),
                   Padding(
@@ -125,31 +129,18 @@ class _CardSetorZisBerasWidgetState extends State<CardSetorZisBerasWidget> {
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             font: GoogleFonts.notoSans(
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
+                              fontWeight: FontWeight.bold,
                             ),
-                            color: FlutterFlowTheme.of(context).info,
-                            fontSize: 20.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
+                            color: isSelected
+                                ? Colors.white
+                                : FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 18.0,
                           ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 12.0, 0.0),
-              child: Theme(
+              Theme(
                 data: ThemeData(
                   checkboxTheme: CheckboxThemeData(
                     visualDensity: VisualDensity.compact,
@@ -158,7 +149,7 @@ class _CardSetorZisBerasWidgetState extends State<CardSetorZisBerasWidget> {
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                   ),
-                  unselectedWidgetColor: FlutterFlowTheme.of(context).info,
+                  unselectedWidgetColor: Color(0xFF259148),
                 ),
                 child: Checkbox(
                   value: _model.checkboxValue ??= false,
@@ -178,18 +169,16 @@ class _CardSetorZisBerasWidgetState extends State<CardSetorZisBerasWidget> {
                       );
                     }
                   },
-                  side: (FlutterFlowTheme.of(context).info != null)
-                      ? BorderSide(
-                          width: 2,
-                          color: FlutterFlowTheme.of(context).info,
-                        )
-                      : null,
-                  activeColor: Color(0xFFFDC727),
+                  side: BorderSide(
+                    width: 2,
+                    color: isSelected ? Colors.white : Color(0xFF259148),
+                  ),
+                  activeColor: Colors.white,
                   checkColor: Color(0xFF259148),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

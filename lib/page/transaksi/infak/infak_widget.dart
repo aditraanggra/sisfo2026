@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import 'infak_model.dart';
 export 'infak_model.dart';
 
@@ -291,10 +292,10 @@ class _InfakWidgetState extends State<InfakWidget>
           ),
           const SizedBox(height: 12),
           if (_model.isLoadingPrograms)
-            const Center(
-                child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator()))
+            const SkeletonLoaderWidget(
+              type: SkeletonType.chips,
+              itemCount: 5,
+            )
           else if (_model.programsError != null)
             Center(
               child: Column(

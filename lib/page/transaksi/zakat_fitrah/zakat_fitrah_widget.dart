@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import 'zakat_fitrah_model.dart';
 export 'zakat_fitrah_model.dart';
 
@@ -441,15 +442,9 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
     if (_model.isLoadingPaymentTypes) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-        child: Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: ModernColors.primaryAccent,
-            ),
-          ),
+        child: SkeletonLoaderWidget(
+          type: SkeletonType.chips,
+          itemCount: 6,
         ),
       );
     }
