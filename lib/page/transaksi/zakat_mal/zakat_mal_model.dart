@@ -24,6 +24,18 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
     return null;
   }
 
+  // State field(s) for muzakkiPhone widget.
+  FocusNode? muzakkiPhoneFocusNode;
+  TextEditingController? muzakkiPhoneTextController;
+  String? Function(BuildContext, String?)? muzakkiPhoneTextControllerValidator;
+  String? _muzakkiPhoneTextControllerValidator(
+      BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'No Telp Muzakki Belum Diisi';
+    }
+    return null;
+  }
+
   // State field(s) for jenisZM widget.
   String? jenisZMValue;
   FormFieldController<String>? jenisZMValueController;
@@ -55,6 +67,7 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
   void initState(BuildContext context) {
     datePickerModel = createModel(context, () => DatePickerModel());
     namaMuzakkiTextControllerValidator = _namaMuzakkiTextControllerValidator;
+    muzakkiPhoneTextControllerValidator = _muzakkiPhoneTextControllerValidator;
     jmlZakatMalTextControllerValidator = _jmlZakatMalTextControllerValidator;
   }
 
@@ -63,6 +76,9 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
     datePickerModel.dispose();
     namaMuzakkiFocusNode?.dispose();
     namaMuzakkiTextController?.dispose();
+
+    muzakkiPhoneFocusNode?.dispose();
+    muzakkiPhoneTextController?.dispose();
 
     jmlZakatMalFocusNode?.dispose();
     jmlZakatMalTextController?.dispose();

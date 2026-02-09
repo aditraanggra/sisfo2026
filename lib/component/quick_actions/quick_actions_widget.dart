@@ -66,10 +66,10 @@ class _QuickActionsWidgetState extends State<QuickActionsWidget> {
       routeName: PenyerapanHakAmilWidget.routeName,
     ),
     QuickActionItem(
-      label: 'Laporan',
-      iconPath: 'assets/images/012-mosque-1.png',
-      fallbackIcon: Icons.assessment,
-      routeName: LaporanWidget.routeName,
+      label: 'Pendistribusian',
+      iconPath: 'assets/images/004-zakat-2.png',
+      fallbackIcon: Icons.people,
+      routeName: PendistribusianWidget.routeName,
     ),
     QuickActionItem(
       label: 'Fidyah',

@@ -226,52 +226,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: ProfilUPZWidget.routeName,
           path: ProfilUPZWidget.routePath,
-          builder: (context, params) => ProfilUPZWidget(
-            katUpz: params.getParam(
-              'katUpz',
-              ParamType.String,
-            ),
-            namaUpz: params.getParam(
-              'namaUpz',
-              ParamType.String,
-            ),
-            alamatUpz: params.getParam(
-              'alamatUpz',
-              ParamType.String,
-            ),
-            registerUpz: params.getParam(
-              'registerUpz',
-              ParamType.String,
-            ),
-            ketua: params.getParam(
-              'ketua',
-              ParamType.String,
-            ),
-            sekretaris: params.getParam(
-              'sekretaris',
-              ParamType.String,
-            ),
-            bendahara: params.getParam(
-              'bendahara',
-              ParamType.String,
-            ),
-            desa: params.getParam(
-              'desa',
-              ParamType.String,
-            ),
-            kecamatan: params.getParam(
-              'kecamatan',
-              ParamType.String,
-            ),
-            operator: params.getParam(
-              'operator',
-              ParamType.String,
-            ),
-            noSk: params.getParam(
-              'noSk',
-              ParamType.String,
-            ),
-          ),
+          builder: (context, params) => ProfilUPZWidget(),
         ),
         FFRoute(
           name: QurbanWidget.routeName,

@@ -1,4 +1,3 @@
-import '/auth/custom_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -54,52 +53,6 @@ class _ProfileMenuWidgetState extends State<ProfileMenuWidget> {
         onTap: () async {
           context.pushNamed(
             ProfilUPZWidget.routeName,
-            queryParameters: {
-              'katUpz': serializeParam(
-                FFAppState().profileUPZ.categoryId.toString(),
-                ParamType.String,
-              ),
-              'namaUpz': serializeParam(
-                FFAppState().profileUPZ.unitName,
-                ParamType.String,
-              ),
-              'alamatUpz': serializeParam(
-                FFAppState().profileUPZ.address,
-                ParamType.String,
-              ),
-              'registerUpz': serializeParam(
-                FFAppState().profileUPZ.noRegister,
-                ParamType.String,
-              ),
-              'ketua': serializeParam(
-                FFAppState().profileUPZ.unitLeader,
-                ParamType.String,
-              ),
-              'sekretaris': serializeParam(
-                FFAppState().profileUPZ.unitAssistant,
-                ParamType.String,
-              ),
-              'bendahara': serializeParam(
-                FFAppState().profileUPZ.unitFinance,
-                ParamType.String,
-              ),
-              'desa': serializeParam(
-                FFAppState().profileUPZ.villageName,
-                ParamType.String,
-              ),
-              'kecamatan': serializeParam(
-                FFAppState().profileUPZ.districtName,
-                ParamType.String,
-              ),
-              'operator': serializeParam(
-                currentUserData?.name,
-                ParamType.String,
-              ),
-              'noSk': serializeParam(
-                FFAppState().profileUPZ.noSk,
-                ParamType.String,
-              ),
-            }.withoutNulls,
           );
         },
         child: Column(

@@ -84,10 +84,10 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
       routeName: PenyerapanHakAmilWidget.routeName,
     ),
     ModernQuickActionItem(
-      label: 'Laporan',
-      iconPath: 'assets/images/012-mosque-1.png',
-      fallbackIcon: Icons.assessment,
-      routeName: LaporanWidget.routeName,
+      label: 'Pendistribusian',
+      iconPath: 'assets/images/004-zakat-2.png',
+      fallbackIcon: Icons.people,
+      routeName: PendistribusianWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Fidyah',
