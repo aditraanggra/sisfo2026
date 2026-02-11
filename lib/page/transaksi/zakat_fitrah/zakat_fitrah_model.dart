@@ -29,7 +29,6 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
   /// Real-time validation error messages
   String? namaMuzakkiError;
   String? jmMuzakkiError;
-  String? nominalInfakError;
 
   /// Form submission state
   bool isSubmitting = false;
@@ -74,12 +73,6 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
     return null;
   }
 
-  // State field(s) for Switch widget.
-  bool? switchValue;
-  // State field(s) for nominalInfak widget.
-  FocusNode? nominalInfakFocusNode;
-  TextEditingController? nominalInfakTextController;
-  String? Function(BuildContext, String?)? nominalInfakTextControllerValidator;
   // State field(s) for keterangan widget.
   FocusNode? keteranganFocusNode;
   TextEditingController? keteranganTextController;
@@ -92,7 +85,6 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
     hargaPerKulakValueController = FormFieldController<String>('Rp. 38.000');
     namaMuzakkiTextControllerValidator = _namaMuzakkiTextControllerValidator;
     jmMuzakkiTextControllerValidator = _jmMuzakkiTextControllerValidator;
-    nominalInfakTextControllerValidator = _nominalInfakTextControllerValidator;
   }
 
   /// Validates Nama Muzakki field in real-time
@@ -105,33 +97,6 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
     jmMuzakkiError = FormValidators.validateNumeric(value, 'Jumlah Muzakki');
   }
 
-  /// Validates Nominal Infak field in real-time
-  void validateNominalInfak(String? value) {
-    nominalInfakError = FormValidators.validateCurrency(
-      value,
-      fieldName: 'Nominal Infak',
-      minValue: 1000,
-    );
-  }
-
-  /// Private validator for Nominal Infak
-  String? _nominalInfakTextControllerValidator(
-      BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Nominal Infak wajib diisi';
-    }
-    // Parse the formatted currency value
-    final cleanValue = val.replaceAll('.', '').trim();
-    final numValue = int.tryParse(cleanValue);
-    if (numValue == null) {
-      return 'Nominal Infak harus berupa angka';
-    }
-    if (numValue < 1000) {
-      return 'Nominal Infak minimal Rp 1.000';
-    }
-    return null;
-  }
-
   @override
   void dispose() {
     datePickerModel.dispose();
@@ -140,9 +105,6 @@ class ZakatFitrahModel extends FlutterFlowModel<ZakatFitrahWidget> {
 
     jmMuzakkiFocusNode?.dispose();
     jmMuzakkiTextController?.dispose();
-
-    nominalInfakFocusNode?.dispose();
-    nominalInfakTextController?.dispose();
 
     keteranganFocusNode?.dispose();
     keteranganTextController?.dispose();

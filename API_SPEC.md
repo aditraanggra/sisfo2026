@@ -43,9 +43,9 @@ POST /api/register
 
 ```json
 {
-  "message": "Registration successful",
-  "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
-  "token": "1|abc123..."
+    "message": "Registration successful",
+    "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
+    "token": "1|abc123..."
 }
 ```
 
@@ -66,9 +66,9 @@ POST /api/login
 
 ```json
 {
-  "message": "Login successful",
-  "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
-  "token": "1|abc123..."
+    "message": "Login successful",
+    "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
+    "token": "1|abc123..."
 }
 ```
 
@@ -114,9 +114,9 @@ GET /api/kecamatan
 
 ```json
 {
-  "success": true,
-  "message": "List Data Kecamatan",
-  "data": [{ "id": 1, "name": "Kecamatan A" }]
+    "success": true,
+    "message": "List Data Kecamatan",
+    "data": [{ "id": 1, "name": "Kecamatan A" }]
 }
 ```
 
@@ -136,46 +136,13 @@ GET /api/desa
 
 ```json
 {
-  "success": true,
-  "message": "List Data Desa",
-  "data": [{ "id": 1, "name": "Desa A", "district_id": 1 }]
+    "success": true,
+    "message": "List Data Desa",
+    "data": [{ "id": 1, "name": "Desa A", "district_id": 1 }]
 }
 ```
 
-### 2.3 Program Infak/Sedekah
-
-```
-GET /api/programs
-GET /api/programs/{id}
-```
-
-**Query Parameters:**
-
-| Parameter | Type    | Description                                         |
-| --------- | ------- | --------------------------------------------------- |
-| all       | boolean | `true` untuk menampilkan semua (termasuk non-aktif) |
-
-**Response (200):**
-
-```json
-{
-  "success": true,
-  "message": "List Data Program",
-  "data": [
-    {
-      "id": 1,
-      "name": "Kemanusiaan",
-      "description": "Program kemanusiaan",
-      "icon": "favorite",
-      "is_active": true,
-      "created_at": "2025-01-01T00:00:00.000000Z",
-      "updated_at": "2025-01-01T00:00:00.000000Z"
-    }
-  ]
-}
-```
-
-### 2.4 Jenis Pembayaran Zakat Fitrah
+### 2.3 Jenis Pembayaran Zakat Fitrah
 
 ```
 GET /api/zf-payment-types
@@ -193,19 +160,19 @@ GET /api/zf-payment-types/{id}
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "name": "Beras Premium",
-      "type": "beras",
-      "rice_amount": 2.5,
-      "money_amount": null,
-      "sk_reference": "SK/001/2025",
-      "is_active": true,
-      "created_at": "2025-01-01T00:00:00.000000Z",
-      "updated_at": "2025-01-01T00:00:00.000000Z"
-    }
-  ]
+    "data": [
+        {
+            "id": 1,
+            "name": "Beras Premium",
+            "type": "beras",
+            "rice_amount": 2.5,
+            "money_amount": null,
+            "sk_reference": "SK/001/2025",
+            "is_active": true,
+            "created_at": "2025-01-01T00:00:00.000000Z",
+            "updated_at": "2025-01-01T00:00:00.000000Z"
+        }
+    ]
 }
 ```
 
@@ -248,29 +215,29 @@ DELETE /api/unit-zis/{id}     # Delete
 
 ```json
 {
-  "success": true,
-  "message": "List Data UPZ",
-  "data": [
-    {
-      "id": 1,
-      "user_id": 1,
-      "category_id": 1,
-      "village_id": 1,
-      "district_id": 1,
-      "no_sk": "SK/001/2025",
-      "unit_name": "UPZ Masjid Al-Ikhlas",
-      "no_register": "REG001",
-      "address": "Jl. Masjid No. 1",
-      "unit_leader": "Ahmad",
-      "unit_assistant": "Budi",
-      "unit_finance": "Citra",
-      "operator_phone": "08123456789",
-      "rice_price": 15000,
-      "is_verified": true,
-      "village_name": "Desa A",
-      "district_name": "Kecamatan A"
-    }
-  ]
+    "success": true,
+    "message": "List Data UPZ",
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "category_id": 1,
+            "village_id": 1,
+            "district_id": 1,
+            "no_sk": "SK/001/2025",
+            "unit_name": "UPZ Masjid Al-Ikhlas",
+            "no_register": "REG001",
+            "address": "Jl. Masjid No. 1",
+            "unit_leader": "Ahmad",
+            "unit_assistant": "Budi",
+            "unit_finance": "Citra",
+            "operator_phone": "08123456789",
+            "rice_price": 15000,
+            "is_verified": true,
+            "village_name": "Desa A",
+            "district_name": "Kecamatan A"
+        }
+    ]
 }
 ```
 
@@ -282,11 +249,19 @@ DELETE /api/unit-zis/{id}     # Delete
 
 **Common Query Parameters:**
 
-| Parameter  | Type   | Description          |
-| ---------- | ------ | -------------------- |
-| search     | string | Pencarian teks       |
-| start_date | date   | Filter tanggal mulai |
-| end_date   | date   | Filter tanggal akhir |
+| Parameter  | Type   | Description                    |
+| ---------- | ------ | ---------------------------- |
+| search     | string | Pencarian teks               |
+| start_date | date   | Filter tanggal mulai           |
+| end_date   | date   | Filter tanggal akhir           |
+| no_telp    | string | Filter exact phone number      |
+| sort_by     | string  | Sort by field (e.g., no_telp) |
+| sort_direction | string  | Sort direction: `asc` atau `desc` |
+| per_page    | integer | Items per page (default: 15) |
+| page        | integer | Page number (default: 1)      |
+| total_munfiq | integer | Filter exact total munfiq     |
+| min_munfiq | integer | Filter minimum total munfiq    |
+| max_munfiq | integer | Filter maksimum total munfiq   |
 
 ### 4.1 Zakat Fitrah (ZF)
 
@@ -322,14 +297,15 @@ DELETE /api/zm/{id}     # Delete
 
 **Request Body:**
 
-| Field         | Type    | Required | Description         |
-| ------------- | ------- | -------- | ------------------- |
-| unit_id       | integer | Yes      | ID unit ZIS         |
-| trx_date      | date    | Yes      | Tanggal transaksi   |
-| category_maal | string  | Yes      | Kategori zakat maal |
-| muzakki_name  | string  | Yes      | Nama muzakki        |
-| amount        | integer | Yes      | Jumlah (Rp)         |
-| desc          | string  | No       | Keterangan          |
+| Field         | Type    | Required | Description                    |
+| ------------- | ------- | -------- | ------------------------------ |
+| unit_id       | integer | Yes      | ID unit ZIS                   |
+| trx_date      | date    | Yes      | Tanggal transaksi              |
+| category_maal | string  | Yes      | Kategori zakat maal            |
+| muzakki_name  | string  | Yes      | Nama muzakki                 |
+| no_telp       | string  | No       | No. telepon muzakki          |
+| amount        | integer | Yes      | Jumlah (Rp)                  |
+| desc          | string  | No       | Keterangan                     |
 
 ### 4.3 Infak/Sedekah (IFS)
 
@@ -343,14 +319,14 @@ DELETE /api/ifs/{id}     # Delete
 
 **Request Body:**
 
-| Field       | Type    | Required | Description                             |
-| ----------- | ------- | -------- | --------------------------------------- |
-| unit_id     | integer | Yes      | ID unit ZIS                             |
-| trx_date    | date    | Yes      | Tanggal transaksi                       |
-| munfiq_name | string  | Yes      | Nama munfiq                             |
-| amount      | integer | Yes      | Jumlah (Rp)                             |
-| program_id  | integer | No       | ID program (null = infak tidak terikat) |
-| desc        | string  | No       | Keterangan                              |
+| Field          | Type    | Required | Description                    |
+| -------------- | ------- | -------- | ------------------------------ |
+| unit_id        | integer | Yes      | ID unit ZIS                   |
+| trx_date       | date    | Yes      | Tanggal transaksi              |
+| munfiq_name   | string  | Yes      | Nama munfiq                  |
+| amount         | integer | Yes      | Jumlah (Rp)                  |
+| total_munfiq  | integer | Yes      | Total jumlah munfiq (min: 1)    |
+| desc           | string  | No       | Keterangan                     |
 
 ### 4.4 Fidyah
 
@@ -478,20 +454,20 @@ GET /api/allocation-configs
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "zis_type": "zf",
-      "zis_type_label": "Zakat Fitrah",
-      "effective_year": 2025,
-      "setor_percentage": 30.0,
-      "kelola_percentage": 70.0,
-      "amil_percentage": 12.5,
-      "description": "Konfigurasi ZF 2025",
-      "created_at": "2025-01-01T00:00:00.000000Z",
-      "updated_at": "2025-01-01T00:00:00.000000Z"
-    }
-  ]
+    "data": [
+        {
+            "id": 1,
+            "zis_type": "zf",
+            "zis_type_label": "Zakat Fitrah",
+            "effective_year": 2025,
+            "setor_percentage": 30.0,
+            "kelola_percentage": 70.0,
+            "amil_percentage": 12.5,
+            "description": "Konfigurasi ZF 2025",
+            "created_at": "2025-01-01T00:00:00.000000Z",
+            "updated_at": "2025-01-01T00:00:00.000000Z"
+        }
+    ]
 }
 ```
 
@@ -529,16 +505,16 @@ POST /api/allocation-configs
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "zis_type": "zf",
-    "zis_type_label": "Zakat Fitrah",
-    "effective_year": 2025,
-    "setor_percentage": 30.0,
-    "kelola_percentage": 70.0,
-    "amil_percentage": 12.5,
-    "description": "Konfigurasi ZF 2025"
-  }
+    "data": {
+        "id": 1,
+        "zis_type": "zf",
+        "zis_type_label": "Zakat Fitrah",
+        "effective_year": 2025,
+        "setor_percentage": 30.0,
+        "kelola_percentage": 70.0,
+        "amil_percentage": 12.5,
+        "description": "Konfigurasi ZF 2025"
+    }
 }
 ```
 
@@ -579,15 +555,15 @@ GET /api/allocation-configs-active
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "zis_type": "zf",
-    "zis_type_label": "Zakat Fitrah",
-    "effective_year": 2025,
-    "setor_percentage": 30.0,
-    "kelola_percentage": 70.0,
-    "amil_percentage": 12.5
-  }
+    "data": {
+        "id": 1,
+        "zis_type": "zf",
+        "zis_type_label": "Zakat Fitrah",
+        "effective_year": 2025,
+        "setor_percentage": 30.0,
+        "kelola_percentage": 70.0,
+        "amil_percentage": 12.5
+    }
 }
 ```
 
@@ -595,15 +571,15 @@ GET /api/allocation-configs-active
 
 ```json
 {
-  "message": "No configuration found, using defaults",
-  "data": {
-    "zis_type": "zf",
-    "effective_year": 2025,
-    "setor_percentage": 30.0,
-    "kelola_percentage": 70.0,
-    "amil_percentage": 12.5,
-    "is_default": true
-  }
+    "message": "No configuration found, using defaults",
+    "data": {
+        "zis_type": "zf",
+        "effective_year": 2025,
+        "setor_percentage": 30.0,
+        "kelola_percentage": 70.0,
+        "amil_percentage": 12.5,
+        "is_default": true
+    }
 }
 ```
 
@@ -612,6 +588,35 @@ GET /api/allocation-configs-active
 - `setor_percentage`: 30%
 - `kelola_percentage`: 70%
 - `amil_percentage`: 12.5% (ZF/ZM), 20% (IFS)
+
+### 4.4 IFS Statistics
+
+```
+GET /api/ifs/statistics
+```
+
+**Query Parameters:**
+
+| Parameter  | Type    | Description                    |
+| ---------- | ------- | ---------------------------- |
+| unit_id   | integer | Filter by specific unit ID     |
+| start_date | date    | Filter tanggal mulai           |
+| end_date   | date    | Filter tanggal akhir           |
+
+**Response (200):**
+
+```json
+{
+    "total_transactions": 14761,
+    "total_amount": 7694450000,
+    "total_munfiq": 14771,
+    "average_amount": 521234,
+    "average_munfiq": 1,
+    "highest_munfiq": 5,
+    "individual_donors": 14759,
+    "group_donors": 2
+}
+```
 
 ---
 
@@ -644,28 +649,28 @@ GET /api/rekap/zis-monthly      # Monthly statistics
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "unit_id": 1,
-      "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
-      "period": "bulanan",
-      "period_date": "2025-03-01",
-      "total_zf_rice": 100.5,
-      "total_zf_amount": 5000000,
-      "total_zf_muzakki": 50,
-      "total_zm_amount": 2000000,
-      "total_zm_muzakki": 10,
-      "total_ifs_amount": 1000000,
-      "total_ifs_munfiq": 20
+    "data": [
+        {
+            "id": 1,
+            "unit_id": 1,
+            "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
+            "period": "bulanan",
+            "period_date": "2025-03-01",
+            "total_zf_rice": 100.5,
+            "total_zf_amount": 5000000,
+            "total_zf_muzakki": 50,
+            "total_zm_amount": 2000000,
+            "total_zm_muzakki": 10,
+            "total_ifs_amount": 1000000,
+            "total_ifs_munfiq": 20
+        }
+    ],
+    "meta": {
+        "total": 100,
+        "per_page": 15,
+        "current_page": 1,
+        "total_pages": 7
     }
-  ],
-  "meta": {
-    "total": 100,
-    "per_page": 15,
-    "current_page": 1,
-    "total_pages": 7
-  }
 }
 ```
 
@@ -673,13 +678,13 @@ GET /api/rekap/zis-monthly      # Monthly statistics
 
 ```json
 {
-  "total_zf_amount": 50000000,
-  "total_zf_rice": 1000.5,
-  "total_zf_muzakki": 500,
-  "total_zm_amount": 20000000,
-  "total_zm_muzakki": 100,
-  "total_ifs_amount": 10000000,
-  "total_ifs_munfiq": 200
+    "total_zf_amount": 50000000,
+    "total_zf_rice": 1000.5,
+    "total_zf_muzakki": 500,
+    "total_zm_amount": 20000000,
+    "total_zm_muzakki": 100,
+    "total_ifs_amount": 10000000,
+    "total_ifs_munfiq": 200
 }
 ```
 
@@ -689,40 +694,17 @@ Query params: `year`, `unit_id`
 
 ```json
 [
-  {
-    "month": "2025-01",
-    "zf_amount": 5000000,
-    "zf_rice": 100.5,
-    "zm_amount": 2000000,
-    "ifs_amount": 1000000
-  }
+    {
+        "month": "2025-01",
+        "zf_amount": 5000000,
+        "zf_rice": 100.5,
+        "zm_amount": 2000000,
+        "ifs_amount": 1000000
+    }
 ]
 ```
 
-### 8.2 Rekap Alokasi
-
-```
-GET /api/rekap/alokasi              # List
-GET /api/rekap/alokasi/{id}         # Detail
-GET /api/rekap/alokasi-summary      # Summary
-GET /api/rekap/alokasi-monthly      # Monthly stats
-```
-
-### 8.3 Rekap Pendis (Distribusi)
-
-```
-GET /api/rekap/pendis               # List
-GET /api/rekap/pendis/{id}          # Detail
-GET /api/rekap/pendis-summary       # Summary
-GET /api/rekap/pendis-monthly       # Monthly stats
-GET /api/rekap/pendis-distribution  # Distribution by asnaf/program
-```
-
-### 8.4 Rekap Hak Amil
-
-```
-GET /api/rekap/hak-amil               # List
-GET /api/rekap/hak-amil/{id}          # Detail
+### 4.5 ZM Statistics
 GET /api/rekap/hak-amil-summary       # Summary
 GET /api/rekap/hak-amil-monthly       # Monthly stats
 GET /api/rekap/hak-amil-distribution  # Distribution stats
@@ -781,8 +763,8 @@ DELETE /api/zf-payment-types/{id}         # Delete
 
 ```json
 {
-  "message": "Error creating transaction",
-  "error": "Error message details"
+    "message": "Error creating transaction",
+    "error": "Error message details"
 }
 ```
 
@@ -802,8 +784,8 @@ DELETE /api/zf-payment-types/{id}         # Delete
 
 ```json
 {
-  "message": "Error retrieving transaction",
-  "error": "No query results for model"
+    "message": "Error retrieving transaction",
+    "error": "No query results for model"
 }
 ```
 
@@ -811,8 +793,8 @@ DELETE /api/zf-payment-types/{id}         # Delete
 
 ```json
 {
-  "message": "The given data was invalid.",
-  "errors": { "field_name": ["Error message"] }
+    "message": "The given data was invalid.",
+    "errors": { "field_name": ["Error message"] }
 }
 ```
 
@@ -875,3 +857,7 @@ DELETE /api/zf-payment-types/{id}         # Delete
 2. Admin dapat mengakses semua data, user biasa hanya data unit miliknya.
 3. Rekap data di-generate otomatis via observer saat transaksi dibuat/diupdate/dihapus.
 4. Allocation config menentukan persentase pembagian dana ZIS (setor/kelola/amil).
+5. `total_munfiq` field pada IFS merepresentasikan jumlah orang dalam grup donasi.
+   - Minimum value: 1 (individual donor)
+   - Existing records akan otomatis diisi dengan nilai 1
+   - Digunakan untuk analisis pola donasi individu vs kelompok

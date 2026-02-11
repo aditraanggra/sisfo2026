@@ -466,6 +466,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
       unitId: FFAppState().profileUPZ.id,
       munfiqName: _model.namaMuzakkiTextController?.text,
       amount: _model.totalFidyah,
+      totalMunfiq: 1,
       desc: desc,
     );
 

@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ class ModernHeaderWidget extends StatefulWidget {
     this.onNotificationTap,
     this.notificationCount = 0,
     this.onAvatarTap,
+    this.totalPenerimaanUang,
+    this.totalPenerimaanBeras,
+    this.noRegister,
   });
 
   /// User's display name
@@ -37,6 +41,15 @@ class ModernHeaderWidget extends StatefulWidget {
 
   /// Callback when avatar is tapped
   final VoidCallback? onAvatarTap;
+
+  /// Total Money Received
+  final String? totalPenerimaanUang;
+
+  /// Total Rice Received
+  final String? totalPenerimaanBeras;
+
+  /// Unit Registration Number
+  final String? noRegister;
 
   @override
   State<ModernHeaderWidget> createState() => _ModernHeaderWidgetState();
@@ -90,19 +103,114 @@ class _ModernHeaderWidgetState extends State<ModernHeaderWidget> {
             ModernSpacing.md,
             ModernSpacing.lg,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Left side: Greeting with Verified badge (no avatar)
-              Expanded(
-                child: GestureDetector(
-                  onTap: widget.onAvatarTap,
-                  child: _buildGreeting(isVerified),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left side: Greeting, Name, and Info
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: widget.onAvatarTap,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildGreeting(isVerified),
+                          if (widget.noRegister != null &&
+                              widget.noRegister!.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                'No. Reg: ${widget.noRegister}',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Right side: Notification icon
+                  _buildNotificationIcon(),
+                ],
               ),
-              // Right side: Notification icon
-              // Requirements: 3.5 - Notification icon with badge indicator
-              _buildNotificationIcon(),
+              // Reception Data Section (Now moved here, below unit name)
+              if (widget.totalPenerimaanUang != null ||
+                  widget.totalPenerimaanBeras != null) ...[
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(ModernSpacing.md),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(ModernRadius.md),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Total Penerimaan Uang',
+                              style: GoogleFonts.inter(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              widget.totalPenerimaanUang ?? 'Rp 0',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 30,
+                        color: Colors.white.withOpacity(0.2),
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Total Penerimaan Beras',
+                              style: GoogleFonts.inter(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              widget.totalPenerimaanBeras ?? '0 Kg',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

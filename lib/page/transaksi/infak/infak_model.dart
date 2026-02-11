@@ -44,6 +44,21 @@ class InfakModel extends FlutterFlowModel<InfakWidget> {
     return null;
   }
 
+  FocusNode? totalMunfiqFocusNode;
+  TextEditingController? totalMunfiqTextController;
+  String? Function(BuildContext, String?)? totalMunfiqTextControllerValidator;
+  String? _totalMunfiqTextControllerValidator(
+      BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Total Munfiq Harus Diisi';
+    }
+    final number = int.tryParse(val);
+    if (number == null || number < 1) {
+      return 'Total Munfiq minimal 1';
+    }
+    return null;
+  }
+
   FocusNode? keteranganFocusNode;
   TextEditingController? keteranganTextController;
   String? Function(BuildContext, String?)? keteranganTextControllerValidator;
@@ -53,6 +68,7 @@ class InfakModel extends FlutterFlowModel<InfakWidget> {
     datePickerModel = createModel(context, () => DatePickerModel());
     namaMuzakkiTextControllerValidator = _namaMuzakkiTextControllerValidator;
     jmlInfakTextControllerValidator = _jmlInfakTextControllerValidator;
+    totalMunfiqTextControllerValidator = _totalMunfiqTextControllerValidator;
   }
 
   @override
@@ -62,6 +78,8 @@ class InfakModel extends FlutterFlowModel<InfakWidget> {
     namaMuzakkiTextController?.dispose();
     jmlInfakFocusNode?.dispose();
     jmlInfakTextController?.dispose();
+    totalMunfiqFocusNode?.dispose();
+    totalMunfiqTextController?.dispose();
     keteranganFocusNode?.dispose();
     keteranganTextController?.dispose();
   }

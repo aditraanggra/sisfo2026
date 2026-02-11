@@ -4,23 +4,28 @@ import 'package:flutter/material.dart';
 import 'modern_dana_overview_model.dart';
 export 'modern_dana_overview_model.dart';
 
-/// Modern overview component displaying Muzakki and Mustahik counts
+/// Modern overview component displaying Muzakki, Munfiq, and Mustahik counts
 /// Requirements: 4.6, 4.7, 4.8
 ///
 /// Features:
-/// - Two clean cards side by side (Req 4.6, 4.7)
+/// - Three clean cards side by side (Req 4.6, 4.7)
 /// - Show Jumlah Muzakki (icon + count) (Req 4.6)
+/// - Show Jumlah Munfiq (icon + count)
 /// - Show Jumlah Mustahik (icon + count) (Req 4.7)
 /// - Clean card layout with icon and count only (Req 4.8)
 class ModernDanaOverviewWidget extends StatefulWidget {
   const ModernDanaOverviewWidget({
     super.key,
     required this.jumlahMuzakki,
+    required this.jumlahMunfiq,
     required this.jumlahMustahik,
   });
 
   /// Total number of Muzakki (zakat payers)
   final int jumlahMuzakki;
+
+  /// Total number of Munfiq (infak/sedekah donors)
+  final int jumlahMunfiq;
 
   /// Total number of Mustahik (zakat recipients)
   final int jumlahMustahik;
@@ -65,10 +70,10 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Requirements: 4.6, 4.7 - Two clean cards side by side
+    // Requirements: 4.6, 4.7 - Three clean cards side by side
     return Row(
       children: [
-        // Requirements: 4.6 - Jumlah Muzakki
+        // Jumlah Muzakki
         Expanded(
           child: _buildCountCard(
             context: context,
@@ -79,8 +84,20 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             iconColor: ModernColors.primaryAccent,
           ),
         ),
-        const SizedBox(width: ModernSpacing.md),
-        // Requirements: 4.7 - Jumlah Mustahik
+        const SizedBox(width: ModernSpacing.sm),
+        // Jumlah Munfiq
+        Expanded(
+          child: _buildCountCard(
+            context: context,
+            title: 'Jumlah Munfiq',
+            count: widget.jumlahMunfiq,
+            icon: Icons.card_giftcard_rounded,
+            iconBackgroundColor: const Color(0xFFE8F0FE),
+            iconColor: const Color(0xFF4285F4),
+          ),
+        ),
+        const SizedBox(width: ModernSpacing.sm),
+        // Jumlah Mustahik
         Expanded(
           child: _buildCountCard(
             context: context,
@@ -112,22 +129,22 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
         boxShadow: ModernShadows.cardShadow,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(ModernSpacing.md),
+        padding: const EdgeInsets.all(ModernSpacing.sm),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             // Icon with rounded background
             Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: iconBackgroundColor,
                 borderRadius: BorderRadius.circular(ModernRadius.md),
               ),
               child: Icon(
                 icon,
-                size: 22,
+                size: 20,
                 color: iconColor,
               ),
             ),
@@ -138,7 +155,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: 'Inter',
                     color: ModernColors.textSecondary,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.normal,
                   ),
               maxLines: 1,
@@ -151,7 +168,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
               style: FlutterFlowTheme.of(context).titleMedium.override(
                     fontFamily: 'Inter',
                     color: ModernColors.textPrimary,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
               maxLines: 1,

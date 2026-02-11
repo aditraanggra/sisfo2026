@@ -1,6 +1,7 @@
 import '/component/date_picker/date_picker_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/flutter_flow/form_validators.dart';
 import '/index.dart';
 import 'zakat_mal_widget.dart' show ZakatMalWidget;
 import 'package:flutter/material.dart';
@@ -30,8 +31,9 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
   String? Function(BuildContext, String?)? muzakkiPhoneTextControllerValidator;
   String? _muzakkiPhoneTextControllerValidator(
       BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'No Telp Muzakki Belum Diisi';
+    // Phone is optional according to API spec, but validate if provided
+    if (val != null && val.isNotEmpty) {
+      return FormValidators.validatePhone(val);
     }
     return null;
   }
@@ -52,12 +54,6 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
     return null;
   }
 
-  // State field(s) for Switch widget.
-  bool? switchValue;
-  // State field(s) for jmlInfak widget.
-  FocusNode? jmlInfakFocusNode;
-  TextEditingController? jmlInfakTextController;
-  String? Function(BuildContext, String?)? jmlInfakTextControllerValidator;
   // State field(s) for keterangan widget.
   FocusNode? keteranganFocusNode;
   TextEditingController? keteranganTextController;
@@ -82,9 +78,6 @@ class ZakatMalModel extends FlutterFlowModel<ZakatMalWidget> {
 
     jmlZakatMalFocusNode?.dispose();
     jmlZakatMalTextController?.dispose();
-
-    jmlInfakFocusNode?.dispose();
-    jmlInfakTextController?.dispose();
 
     keteranganFocusNode?.dispose();
     keteranganTextController?.dispose();

@@ -289,7 +289,7 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
                 ),
                 const SizedBox(height: 2.0),
                 Text(
-                  '${item.category} • ${item.formattedDate}',
+                  '${item.category}${item.amount == 0 && item.rice > 0 ? ' (Beras)' : ''} • ${item.formattedDate}',
                   style: GoogleFonts.inter(
                     color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 12.0,
@@ -304,7 +304,7 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${item.isIncome ? '+' : '-'} Rp ${_formatNumber(item.amount)}',
+                '${item.isIncome ? '+' : '-'} ${item.amount > 0 ? 'Rp ${_formatNumber(item.amount)}' : (item.rice > 0 ? '${item.rice % 1 == 0 ? item.rice.toInt() : item.rice} Kg Beras' : 'Rp 0')}',
                 style: GoogleFonts.inter(
                   color: item.isIncome
                       ? const Color(0xFF259148)

@@ -43,6 +43,8 @@ class _InfakWidgetState extends State<InfakWidget>
     _model.namaMuzakkiFocusNode ??= FocusNode();
     _model.jmlInfakTextController ??= TextEditingController();
     _model.jmlInfakFocusNode ??= FocusNode();
+    _model.totalMunfiqTextController ??= TextEditingController();
+    _model.totalMunfiqFocusNode ??= FocusNode();
     _model.keteranganTextController ??= TextEditingController();
     _model.keteranganFocusNode ??= FocusNode();
 
@@ -514,6 +516,31 @@ class _InfakWidgetState extends State<InfakWidget>
                   _model.jmlInfakTextControllerValidator?.asValidator(context),
             ),
 
+            // Total Munfiq
+            const SizedBox(height: 16),
+            Text(
+              'TOTAL MUNFIQ',
+              style: GoogleFonts.inter(
+                color: ModernColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _model.totalMunfiqTextController,
+              focusNode: _model.totalMunfiqFocusNode,
+              decoration: _buildInputDecoration(labelText: 'Jumlah Munfiq'),
+              style: GoogleFonts.inter(
+                  color: ModernColors.textPrimary, fontSize: 16),
+              cursorColor: ModernColors.primaryAccent,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: _model.totalMunfiqTextControllerValidator
+                  ?.asValidator(context),
+            ),
+
             // Keterangan
             const SizedBox(height: 16),
             TextFormField(
@@ -628,6 +655,8 @@ class _InfakWidgetState extends State<InfakWidget>
       unitId: FFAppState().profileUPZ.id,
       munfiqName: _model.namaMuzakkiTextController?.text,
       amount: int.tryParse(_model.jmlInfakTextController?.text ?? ''),
+      totalMunfiq:
+          int.tryParse(_model.totalMunfiqTextController?.text ?? '1') ?? 1,
       desc: desc,
       // TODO: Tambahkan programId setelah backend support
       // programId: _model.selectedProgramId,
@@ -661,6 +690,7 @@ class _InfakWidgetState extends State<InfakWidget>
     // Reset form
     _model.namaMuzakkiTextController?.clear();
     _model.jmlInfakTextController?.clear();
+    _model.totalMunfiqTextController?.clear();
     _model.keteranganTextController?.clear();
     setState(() {
       _model.isTerikatProgram = false;

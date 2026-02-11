@@ -5,7 +5,7 @@ import '/component/date_picker/date_picker_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/form_validators.dart';
+
 import '/services/dialog_service.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -100,16 +100,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
     _model.jmMuzakkiFocusNode!.addListener(() {
       if (!_model.jmMuzakkiFocusNode!.hasFocus) {
         _model.validateJmMuzakki(_model.jmMuzakkiTextController?.text);
-        safeSetState(() {});
-      }
-    });
-
-    _model.switchValue = false;
-    _model.nominalInfakTextController ??= TextEditingController();
-    _model.nominalInfakFocusNode ??= FocusNode();
-    _model.nominalInfakFocusNode!.addListener(() {
-      if (!_model.nominalInfakFocusNode!.hasFocus) {
-        _model.validateNominalInfak(_model.nominalInfakTextController?.text);
         safeSetState(() {});
       }
     });
@@ -265,26 +255,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               ),
             ),
           ),
-          if (_model.switchValue == true &&
-              (_model.nominalInfakTextController?.text.isNotEmpty ?? false))
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                children: [
-                  Icon(Icons.add_circle_outline,
-                      color: ModernColors.goldAccent, size: 16),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Infak: Rp ${_model.nominalInfakTextController?.text ?? '0'}',
-                    style: GoogleFonts.inter(
-                      color: ModernColors.goldAccent,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
     );
@@ -308,7 +278,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             _buildDivider(),
             _buildMuzakkiDataSection(),
             _buildDivider(),
-            _buildInfakSection(),
             _buildDivider(),
             _buildKeteranganSection(),
             _buildSubmitButton(),
@@ -709,104 +678,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
     safeSetState(() {});
   }
 
-  Widget _buildInfakSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-          child: GestureDetector(
-            onTap: () =>
-                safeSetState(() => _model.switchValue = !_model.switchValue!),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: _model.switchValue!
-                    ? ModernColors.primaryAccent.withOpacity(0.08)
-                    : ModernColors.backgroundPrimary,
-                borderRadius: BorderRadius.circular(ModernRadius.md),
-                border: Border.all(
-                  color: _model.switchValue!
-                      ? ModernColors.primaryAccent.withOpacity(0.3)
-                      : Colors.grey.shade200,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: _model.switchValue!
-                          ? ModernColors.primaryAccent.withOpacity(0.15)
-                          : Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.volunteer_activism_rounded,
-                      color: _model.switchValue!
-                          ? ModernColors.primaryAccent
-                          : ModernColors.textSecondary,
-                      size: 22,
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Tambah Infak',
-                          style: GoogleFonts.inter(
-                            color: ModernColors.textPrimary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Tambahkan infak bersamaan dengan zakat',
-                          style: GoogleFonts.inter(
-                            color: ModernColors.textSecondary,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Switch(
-                    value: _model.switchValue!,
-                    onChanged: (val) =>
-                        safeSetState(() => _model.switchValue = val),
-                    activeColor: ModernColors.primaryAccent,
-                    activeTrackColor: ModernColors.backgroundMint,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        if (_model.switchValue!)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-            child: _buildModernTextField(
-              controller: _model.nominalInfakTextController!,
-              focusNode: _model.nominalInfakFocusNode!,
-              label: 'Nominal Infak',
-              hint: '100.000',
-              prefixText: 'Rp ',
-              keyboardType: TextInputType.number,
-              inputFormatters: [CurrencyInputFormatter()],
-              hasError: _model.nominalInfakError != null,
-              errorText: _model.nominalInfakError,
-              validator: _model.nominalInfakTextControllerValidator
-                  .asValidator(context),
-            ),
-          ),
-        if (!_model.switchValue!) const SizedBox(height: 16),
-      ],
-    );
-  }
-
   Widget _buildKeteranganSection() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -1035,12 +906,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
       return;
     }
 
-    final nominalInfak = _model.switchValue == true
-        ? CurrencyInputFormatter.parseFormattedCurrency(
-            _model.nominalInfakTextController!.text)
-        : null;
-
-    final confirmed = await _showConfirmationDialog(nominalInfak);
+    final confirmed = await _showConfirmationDialog(null);
     if (!confirmed) return;
 
     _model.isSubmitting = true;
@@ -1060,21 +926,10 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             : _model.keteranganTextController!.text,
       );
 
-      if (_model.switchValue!) {
-        await TransactionEndPointGroup.addSedekahCall.call(
-          token: currentAuthenticationToken,
-          unitId: FFAppState().profileUPZ.id,
-          trxDate: _model.datePickerModel.datePicked?.toString(),
-          munfiqName: _model.namaMuzakkiTextController!.text,
-          amount: nominalInfak,
-          desc: _model.keteranganTextController!.text,
-        );
-      }
-
       _model.isSubmitting = false;
       safeSetState(() {});
 
-      await _showSuccessModal(nominalInfak);
+      await _showSuccessModal(null);
     } catch (e) {
       _model.isSubmitting = false;
       safeSetState(() {});
@@ -1129,11 +984,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                 _buildConfirmRow(
                     'Jumlah', '${_model.jmMuzakkiTextController!.text} Orang'),
                 _buildConfirmRow('Total', totalText),
-                if (_model.switchValue == true && nominalInfak != null)
-                  _buildConfirmRow(
-                      'Infak',
-                      CurrencyInputFormatter.formatToCurrencyWithPrefix(
-                          nominalInfak)),
               ],
             ),
             actions: [
@@ -1204,11 +1054,6 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
           locale: 'id_ID');
     }
 
-    if (_model.switchValue == true && nominalInfak != null) {
-      transactionSummary['Infak'] =
-          CurrencyInputFormatter.formatToCurrencyWithPrefix(nominalInfak);
-    }
-
     await DialogService.showSuccessModal(
       context: context,
       title: 'Transaksi Berhasil',
@@ -1219,11 +1064,9 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
         _model.totalUang = 0;
         _model.namaMuzakkiError = null;
         _model.jmMuzakkiError = null;
-        _model.nominalInfakError = null;
         safeSetState(() {
           _model.namaMuzakkiTextController?.clear();
           _model.jmMuzakkiTextController?.clear();
-          _model.nominalInfakTextController?.clear();
           _model.keteranganTextController?.clear();
         });
       },

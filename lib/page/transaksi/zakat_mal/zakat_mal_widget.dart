@@ -47,12 +47,11 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
     _model.namaMuzakkiTextController ??= TextEditingController();
     _model.namaMuzakkiFocusNode ??= FocusNode();
 
+    _model.muzakkiPhoneTextController ??= TextEditingController();
+    _model.muzakkiPhoneFocusNode ??= FocusNode();
+
     _model.jmlZakatMalTextController ??= TextEditingController();
     _model.jmlZakatMalFocusNode ??= FocusNode();
-
-    _model.switchValue = false;
-    _model.jmlInfakTextController ??= TextEditingController();
-    _model.jmlInfakFocusNode ??= FocusNode();
 
     _model.keteranganTextController ??= TextEditingController();
     _model.keteranganFocusNode ??= FocusNode();
@@ -218,9 +217,6 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                             _buildMuzakkiDataSection(),
                             _buildJenisZakatDropdown(),
                             _buildNominalZakatMalSection(),
-                            _buildTambahInfakSwitch(),
-                            if (_model.switchValue ?? true)
-                              _buildNominalInfakSection(),
                             _buildKeteranganSection(),
                             _buildSubmitButton(),
                             SizedBox(height: ModernSpacing.md),
@@ -317,6 +313,52 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
               cursorColor: ModernColors.primaryAccent,
               validator: _model.namaMuzakkiTextControllerValidator
                   .asValidator(context),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          child: SizedBox(
+            height: 56.0,
+            child: TextFormField(
+              controller: _model.muzakkiPhoneTextController,
+              focusNode: _model.muzakkiPhoneFocusNode,
+              onChanged: (_) => EasyDebounce.debounce(
+                '_model.muzakkiPhoneTextController',
+                Duration(milliseconds: 2000),
+                () => safeSetState(() {}),
+              ),
+              autofocus: false,
+              obscureText: false,
+              decoration: _buildModernInputDecoration(
+                labelText: 'No Handphone',
+                hintText: '08xxxxxxxxxx',
+                suffixIcon: _model.muzakkiPhoneTextController!.text.isNotEmpty
+                    ? InkWell(
+                        onTap: () async {
+                          _model.muzakkiPhoneTextController?.clear();
+                          safeSetState(() {});
+                        },
+                        child: Icon(
+                          Icons.clear,
+                          color: ModernColors.textSecondary,
+                          size: 22,
+                        ),
+                      )
+                    : null,
+              ),
+              style: GoogleFonts.inter(
+                color: ModernColors.textPrimary,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+              ),
+              cursorColor: ModernColors.primaryAccent,
+              keyboardType: TextInputType.phone,
+              validator: _model.muzakkiPhoneTextControllerValidator
+                  .asValidator(context),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+              ],
             ),
           ),
         ),
@@ -467,117 +509,6 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
     );
   }
 
-  Widget _buildTambahInfakSwitch() {
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Switch(
-            value: _model.switchValue!,
-            onChanged: (newValue) async {
-              safeSetState(() => _model.switchValue = newValue);
-            },
-            activeColor: ModernColors.primaryAccent,
-            activeTrackColor: ModernColors.backgroundMint,
-            inactiveTrackColor: Color(0xFFDDDDDD),
-            inactiveThumbColor: Color(0xFFC9C9C9),
-          ),
-          Text(
-            'Tambah Infak',
-            style: GoogleFonts.inter(
-              color: ModernColors.textPrimary,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNominalInfakSection() {
-    return TextFormField(
-      controller: _model.jmlInfakTextController,
-      focusNode: _model.jmlInfakFocusNode,
-      onChanged: (_) => EasyDebounce.debounce(
-        '_model.jmlInfakTextController',
-        Duration(milliseconds: 2000),
-        () => safeSetState(() {}),
-      ),
-      autofocus: false,
-      obscureText: false,
-      decoration: InputDecoration(
-        labelText: 'Nominal Infak',
-        labelStyle: GoogleFonts.inter(
-          color: ModernColors.textSecondary,
-          fontSize: 16.0,
-          fontWeight: FontWeight.w400,
-        ),
-        hintStyle: GoogleFonts.inter(
-          color: ModernColors.textSecondary.withOpacity(0.7),
-          fontSize: 16.0,
-          fontWeight: FontWeight.w400,
-        ),
-        floatingLabelStyle: GoogleFonts.inter(
-          color: ModernColors.primaryAccent,
-          fontSize: 14.0,
-          fontWeight: FontWeight.w500,
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: FlutterFlowTheme.of(context).alternate,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.circular(ModernRadius.sm),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: ModernColors.primaryAccent,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.circular(ModernRadius.sm),
-        ),
-        errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: ModernColors.expenseRed,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.circular(ModernRadius.sm),
-        ),
-        focusedErrorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: ModernColors.expenseRed,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.circular(ModernRadius.sm),
-        ),
-        suffixIcon: _model.jmlInfakTextController!.text.isNotEmpty
-            ? InkWell(
-                onTap: () async {
-                  _model.jmlInfakTextController?.clear();
-                  safeSetState(() {});
-                },
-                child: Icon(
-                  Icons.clear,
-                  color: ModernColors.primaryAccent,
-                  size: 22,
-                ),
-              )
-            : null,
-      ),
-      style: GoogleFonts.inter(
-        color: ModernColors.textPrimary,
-        fontSize: 22.0,
-        fontWeight: FontWeight.w500,
-      ),
-      cursorColor: ModernColors.primaryAccent,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      validator: _model.jmlInfakTextControllerValidator.asValidator(context),
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
-    );
-  }
-
   Widget _buildKeteranganSection() {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 16.0),
@@ -688,21 +619,11 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                 unitId: FFAppState().profileUPZ.id,
                 trxDate: _model.datePickerModel.datePicked?.toString(),
                 muzakkiName: _model.namaMuzakkiTextController.text,
+                noTelp: _model.muzakkiPhoneTextController.text,
                 categoryMaal: _model.jenisZMValue,
                 amount: int.tryParse(_model.jmlZakatMalTextController.text),
                 desc: _model.keteranganTextController.text,
               );
-
-              if (_model.switchValue!) {
-                await TransactionEndPointGroup.addSedekahCall.call(
-                  token: currentAuthenticationToken,
-                  unitId: FFAppState().profileUPZ.id,
-                  trxDate: _model.datePickerModel.datePicked?.toString(),
-                  munfiqName: _model.namaMuzakkiTextController.text,
-                  amount: int.tryParse(_model.jmlInfakTextController.text),
-                  desc: _model.keteranganTextController.text,
-                );
-              }
               var confirmDialogResponse = await showDialog<bool>(
                     context: context,
                     builder: (alertDialogContext) {
@@ -721,20 +642,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                             currency: 'Rp ',
                             format: '###,###',
                             locale: 'ID',
-                          )}${_model.switchValue == true ? valueOrDefault<String>(
-                              ' dan Infak Sebesar ${valueOrDefault<String>(
-                                formatNumber(
-                                  functions.strToInt(
-                                      _model.jmlInfakTextController.text),
-                                  formatType: FormatType.custom,
-                                  currency: 'Rp ',
-                                  format: '###,###',
-                                  locale: 'id_ID',
-                                ),
-                                '0',
-                              )}',
-                              '0',
-                            ) : ''}',
+                          )}',
                           style: GoogleFonts.inter(),
                         ),
                         actions: [
