@@ -74,3 +74,6 @@ coverage/
 
 # Local configuration
 local.properties
+
+# Local Netlify folder
+.netlify

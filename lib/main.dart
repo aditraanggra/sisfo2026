@@ -23,7 +23,7 @@ void main() async {
   usePathUrlStrategy();
 
   // Load environment variables
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: 'assets/env');
 
   await SupaFlow.initialize();
 
