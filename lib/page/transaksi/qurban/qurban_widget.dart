@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_validators.dart';
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,33 @@ class QurbanWidget extends StatefulWidget {
   State<QurbanWidget> createState() => _QurbanWidgetState();
 }
 
-class _QurbanWidgetState extends State<QurbanWidget> {
+class _QurbanWidgetState extends State<QurbanWidget>
+    with TickerProviderStateMixin {
   late QurbanModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late AnimationController _buttonAnimationController;
+  late Animation<double> _buttonScaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => QurbanModel());
+
+    // Initialize button animation
+    _buttonAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+    _buttonScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(
+      CurvedAnimation(
+        parent: _buttonAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _model.namaMuzakkiTextController ??= TextEditingController();
     _model.namaMuzakkiFocusNode ??= FocusNode();
@@ -64,6 +83,7 @@ class _QurbanWidgetState extends State<QurbanWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _buttonAnimationController.dispose();
 
     super.dispose();
   }
@@ -77,13 +97,13 @@ class _QurbanWidgetState extends State<QurbanWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: ModernColors.backgroundPrimary,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: Color(0xFF259148),
+                backgroundColor: ModernColors.primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -101,19 +121,11 @@ class _QurbanWidgetState extends State<QurbanWidget> {
                 ),
                 title: Text(
                   'Penerimaan Qurban',
-                  style: FlutterFlowTheme.of(context).titleMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .fontStyle,
-                        ),
-                        fontSize: 14.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                      ),
+                  style: GoogleFonts.inter(
+                    color: ModernColors.textOnDark,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 actions: [],
                 centerTitle: false,
@@ -129,11 +141,22 @@ class _QurbanWidgetState extends State<QurbanWidget> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Info Card
+                  _buildInfoCard(),
+                  SizedBox(height: ModernSpacing.lg),
+
+                  // Form Card
                   Container(
                     width: double.infinity,
+                    padding: EdgeInsets.all(ModernSpacing.md),
+                    decoration: BoxDecoration(
+                      color: ModernColors.backgroundCard,
+                      borderRadius: BorderRadius.circular(ModernRadius.xl),
+                      boxShadow: ModernShadows.cardShadow,
+                    ),
                     child: Form(
                       key: _model.formKey,
-                      autovalidateMode: AutovalidateMode.always,
+                      autovalidateMode: AutovalidateMode.disabled,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1611,6 +1634,42 @@ class _QurbanWidgetState extends State<QurbanWidget> {
                                   .asValidator(context),
                             ),
                           ),
+
+                          // Calculation Summaries
+                          _buildAnimalSummary(
+                              'Sapi',
+                              int.tryParse(_model.jmlSapiTextController?.text ??
+                                      '0') ??
+                                  0,
+                              int.tryParse(_model.hargaSapiTextController?.text
+                                          .replaceAll('.', '') ??
+                                      '0') ??
+                                  0),
+                          _buildAnimalSummary(
+                              'Kambing',
+                              int.tryParse(
+                                      _model.jmlKambingTextController?.text ??
+                                          '0') ??
+                                  0,
+                              int.tryParse(_model
+                                          .hargaKambingTextController?.text
+                                          .replaceAll('.', '') ??
+                                      '0') ??
+                                  0),
+                          _buildAnimalSummary(
+                              'Domba',
+                              int.tryParse(
+                                      _model.jmlDombaTextController?.text ??
+                                          '0') ??
+                                  0,
+                              int.tryParse(_model.hargaDombaTextController?.text
+                                          .replaceAll('.', '') ??
+                                      '0') ??
+                                  0),
+                          _buildOverallTotal(),
+
+                          SizedBox(height: ModernSpacing.lg),
+
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 24.0, 0.0, 24.0),
@@ -1742,5 +1801,152 @@ class _QurbanWidgetState extends State<QurbanWidget> {
         ),
       ),
     );
+  }
+
+  // Info card explaining Qurban purpose
+  Widget _buildInfoCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(ModernSpacing.md),
+      decoration: BoxDecoration(
+        color: ModernColors.primaryDark.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(ModernRadius.xl),
+        border: Border.all(
+          color: ModernColors.primaryDark.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: ModernColors.primaryDark,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.campaign,
+              color: ModernColors.textOnDark,
+              size: 24,
+            ),
+          ),
+          SizedBox(width: ModernSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tentang Qurban',
+                  style: GoogleFonts.inter(
+                    color: ModernColors.primaryDark,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Qurban adalah ibadah penyembelihan hewan pada Hari Raya Idul Adha',
+                  style: GoogleFonts.inter(
+                    color: ModernColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Calculation summary for animal types
+  Widget _buildAnimalSummary(String animal, int count, int price) {
+    if (count > 0 && price > 0) {
+      return Container(
+        margin: EdgeInsets.only(bottom: ModernSpacing.sm),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: ModernColors.primaryDark.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(ModernRadius.lg),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Total $animal: $count × Rp ${CurrencyInputFormatter.formatToCurrency(price)}',
+              style: GoogleFonts.inter(
+                color: ModernColors.textPrimary,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              'Rp ${CurrencyInputFormatter.formatToCurrency(count * price)}',
+              style: GoogleFonts.inter(
+                color: ModernColors.primaryDark,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
+
+  // Overall total calculation
+  Widget _buildOverallTotal() {
+    final sapiCount =
+        int.tryParse(_model.jmlSapiTextController?.text ?? '0') ?? 0;
+    final sapiPrice = int.tryParse(
+            _model.hargaSapiTextController?.text.replaceAll('.', '') ?? '0') ??
+        0;
+    final kambingCount =
+        int.tryParse(_model.jmlKambingTextController?.text ?? '0') ?? 0;
+    final kambingPrice = int.tryParse(
+            _model.hargaKambingTextController?.text.replaceAll('.', '') ??
+                '0') ??
+        0;
+    final dombaCount =
+        int.tryParse(_model.jmlDombaTextController?.text ?? '0') ?? 0;
+    final dombaPrice = int.tryParse(
+            _model.hargaDombaTextController?.text.replaceAll('.', '') ?? '0') ??
+        0;
+
+    final total = (sapiCount * sapiPrice) +
+        (kambingCount * kambingPrice) +
+        (dombaCount * dombaPrice);
+
+    if (total > 0) {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: ModernSpacing.md),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: ModernColors.primaryDark.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(ModernRadius.lg),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Total Keseluruhan',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              'Rp ${CurrencyInputFormatter.formatToCurrency(total)}',
+              style: GoogleFonts.inter(
+                color: ModernColors.primaryDark,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return SizedBox.shrink();
   }
 }

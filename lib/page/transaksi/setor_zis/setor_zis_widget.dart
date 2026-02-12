@@ -226,10 +226,11 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: ModernColors.backgroundCard,
+                                    borderRadius: BorderRadius.circular(16.0),
                                     border: Border.all(
-                                      color: Color(0xFFE0E3E7),
+                                      color: ModernColors.primaryAccent
+                                          .withOpacity(0.1),
                                     ),
                                   ),
                                   child: Padding(
@@ -368,6 +369,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
                               wrapWithModel(
                                 model: _model.cardSetorZisModel1,
                                 updateCallback: () => safeSetState(() {}),
@@ -413,6 +415,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
                               wrapWithModel(
                                 model: _model.cardSetorZisModel2,
                                 updateCallback: () => safeSetState(() {}),
@@ -458,6 +461,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
                               wrapWithModel(
                                 model: _model.cardSetorZisModel3,
                                 updateCallback: () => safeSetState(() {}),
@@ -582,16 +586,25 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   },
                                   child: Container(
                                     width: double.infinity,
-                                    constraints: BoxConstraints(minHeight: 100),
+                                    constraints:
+                                        const BoxConstraints(minHeight: 120),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
+                                      color: ModernColors.backgroundCard,
+                                      borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color:
-                                            Color(0xFF259148).withOpacity(0.5),
+                                        color: ModernColors.primaryAccent
+                                            .withOpacity(0.3),
                                         width: 2,
                                         style: BorderStyle.solid,
                                       ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: ModernColors.primaryAccent
+                                              .withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
                                     ),
                                     child: _model.uploadedFileUrl_uploadDataF1e
                                             .isNotEmpty
@@ -599,24 +612,33 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Icon(Icons.check_circle,
-                                                  color: Color(0xFF259148),
-                                                  size: 40),
-                                              SizedBox(height: 8),
                                               Text(
-                                                'Bukti Setor Terupload',
-                                                style: TextStyle(
-                                                  color: Color(0xFF259148),
-                                                  fontWeight: FontWeight.bold,
+                                                'Bukti Setor Berhasil',
+                                                style: GoogleFonts.notoSans(
+                                                  color: ModernColors
+                                                      .primaryAccent,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
                                                 ),
                                               ),
-                                              Text(
-                                                _model.uploadedLocalFile_uploadDataF1e
-                                                        .name ??
-                                                    '',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey),
+                                              const SizedBox(height: 20),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
+                                                child: Text(
+                                                  _model.uploadedLocalFile_uploadDataF1e
+                                                          .name ??
+                                                      '',
+                                                  style: GoogleFonts.notoSans(
+                                                      fontSize: 13,
+                                                      color: ModernColors
+                                                          .textSecondary),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
                                             ],
                                           )
@@ -624,22 +646,45 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Icon(Icons.cloud_upload_outlined,
-                                                  color: Color(0xFF259148),
-                                                  size: 40),
-                                              SizedBox(height: 8),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                decoration: BoxDecoration(
+                                                  color: ModernColors
+                                                      .primaryAccent
+                                                      .withOpacity(0.1),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                    Icons.cloud_upload_outlined,
+                                                    color: ModernColors
+                                                        .primaryAccent,
+                                                    size: 40),
+                                              ),
+                                              const SizedBox(height: 16),
                                               Text(
-                                                'Tap untuk upload bukti setor',
-                                                style: TextStyle(
-                                                  color: Color(0xFF259148),
+                                                'Upload Bukti Setoran',
+                                                style: GoogleFonts.notoSans(
+                                                  color: ModernColors
+                                                      .primaryAccent,
                                                   fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
                                                 ),
                                               ),
+                                              const SizedBox(height: 4),
                                               Text(
-                                                'Format: JPG, PNG',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey),
+                                                'Klik untuk memilih file',
+                                                style: GoogleFonts.notoSans(
+                                                    fontSize: 13,
+                                                    color: ModernColors
+                                                        .textSecondary),
+                                              ),
+                                              Text(
+                                                'Maks: 5MB • Format: JPG, PNG',
+                                                style: GoogleFonts.notoSans(
+                                                    fontSize: 11,
+                                                    color: ModernColors
+                                                        .textSecondary),
                                               ),
                                             ],
                                           ),
@@ -655,19 +700,21 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Color(0xFF259148),
-                                        Color(0xFF1B6A34)
+                                        ModernColors.primaryAccent,
+                                        ModernColors.primaryDark
                                       ],
-                                      stops: [0.0, 1.0],
-                                      begin: AlignmentDirectional(0.0, -1.0),
-                                      end: AlignmentDirectional(0, 1.0),
+                                      stops: const [0.0, 1.0],
+                                      begin:
+                                          const AlignmentDirectional(0.0, -1.0),
+                                      end: const AlignmentDirectional(0, 1.0),
                                     ),
-                                    borderRadius: BorderRadius.circular(28.0),
+                                    borderRadius: BorderRadius.circular(16.0),
                                     boxShadow: [
                                       BoxShadow(
-                                        blurRadius: 4.0,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0.0, 2.0),
+                                        blurRadius: 8.0,
+                                        color: ModernColors.primaryAccent
+                                            .withOpacity(0.3),
+                                        offset: const Offset(0.0, 4.0),
                                       )
                                     ],
                                   ),
@@ -864,10 +911,10 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         }
                                       }
                                     },
-                                    text: 'Setor Dana',
+                                    text: 'Proses Setoran',
                                     icon: Icon(
-                                      Icons.play_for_work_rounded,
-                                      size: 24.0,
+                                      Icons.send_rounded,
+                                      size: 20.0,
                                     ),
                                     options: FFButtonOptions(
                                       width: double.infinity,
@@ -892,7 +939,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         color: Colors.transparent,
                                         width: 0.0,
                                       ),
-                                      borderRadius: BorderRadius.circular(28.0),
+                                      borderRadius: BorderRadius.circular(16.0),
                                     ),
                                   ),
                                 ),

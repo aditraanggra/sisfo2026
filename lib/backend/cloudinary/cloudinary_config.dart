@@ -4,19 +4,18 @@
 /// 1. Buat akun di https://cloudinary.com (gratis)
 /// 2. Dapatkan cloud_name, api_key, api_secret dari Dashboard
 /// 3. Buat upload preset (unsigned) di Settings > Upload
-/// 4. Copy .env.example ke .env dan isi credentials
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CloudinaryConfig {
-  // Credentials dari .env file untuk keamanan
-  static String get cloudName => dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
-  static String get apiKey => dotenv.env['CLOUDINARY_API_KEY'] ?? '';
-  static String get apiSecret => dotenv.env['CLOUDINARY_API_SECRET'] ?? '';
+  // Public identifiers only - safe for client-side
+  static const String cloudName =
+      String.fromEnvironment('CLOUDINARY_CLOUD_NAME', defaultValue: '');
+
+  // Upload preset for unsigned uploads (no secret required)
+  static const String uploadPreset =
+      String.fromEnvironment('CLOUDINARY_UPLOAD_PRESET', defaultValue: '');
 
   // Upload preset untuk unsigned upload (lebih aman untuk mobile)
-  static String get uploadPreset =>
-      dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? 'sisfo_upz_preset';
+  static const String uploadPreset = 'sisfo_zis';
 
   // Folder untuk organisasi assets
   static const String folderBuktiTransfer = 'sisfo_upz/bukti_transfer';
