@@ -47,6 +47,9 @@ class FFAppState extends ChangeNotifier {
         }
       }
     });
+    _safeInit(() {
+      _year = prefs.getInt('ff_year') ?? DateTime.now().year;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -114,6 +117,13 @@ class FFAppState extends ChangeNotifier {
   void updateProfileUPZStruct(Function(UpzStruct) updateFn) {
     updateFn(_profileUPZ);
     prefs.setString('ff_profileUPZ', _profileUPZ.serialize());
+  }
+
+  int _year = DateTime.now().year;
+  int get year => _year;
+  set year(int value) {
+    _year = value;
+    prefs.setInt('ff_year', value);
   }
 }
 

@@ -11,7 +11,7 @@ import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'pendistribusian_model.dart';
@@ -20,37 +20,7 @@ export 'pendistribusian_model.dart';
 class PendistribusianWidget extends StatefulWidget {
   const PendistribusianWidget({
     super.key,
-    int? sisaDanaZf,
-    int? sisaDanaZm,
-    int? sisaDanaIfs,
-    double? sisaBerasZf,
-    int? sisaUangZf,
-    int? sisaSaldoAmil,
-    double? sisaAmilZfBeras,
-    int? sisaAmilZfUang,
-    int? sisaAmilZm,
-    int? sisaAmilIfs,
-  })  : this.sisaDanaZf = sisaDanaZf ?? 0,
-        this.sisaDanaZm = sisaDanaZm ?? 0,
-        this.sisaDanaIfs = sisaDanaIfs ?? 0,
-        this.sisaBerasZf = sisaBerasZf ?? 0.0,
-        this.sisaUangZf = sisaUangZf ?? 0,
-        this.sisaSaldoAmil = sisaSaldoAmil ?? 0,
-        this.sisaAmilZfBeras = sisaAmilZfBeras ?? 0.0,
-        this.sisaAmilZfUang = sisaAmilZfUang ?? 0,
-        this.sisaAmilZm = sisaAmilZm ?? 0,
-        this.sisaAmilIfs = sisaAmilIfs ?? 0;
-
-  final int sisaDanaZf;
-  final int sisaDanaZm;
-  final int sisaDanaIfs;
-  final double sisaBerasZf;
-  final int sisaUangZf;
-  final int sisaSaldoAmil;
-  final double sisaAmilZfBeras;
-  final int sisaAmilZfUang;
-  final int sisaAmilZm;
-  final int sisaAmilIfs;
+  });
 
   static String routeName = 'Pendistribusian';
   static String routePath = '/pendistribusian';
@@ -72,12 +42,6 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
     _model.namaMustahikTextController ??= TextEditingController();
     _model.namaMustahikFocusNode ??= FocusNode();
 
-    _model.nomorNIKTextController ??= TextEditingController();
-    _model.nomorNIKFocusNode ??= FocusNode();
-
-    _model.berasTextController ??= TextEditingController();
-    _model.berasFocusNode ??= FocusNode();
-
     _model.jumlaUangTextController ??= TextEditingController();
     _model.jumlaUangFocusNode ??= FocusNode();
 
@@ -87,7 +51,15 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
     _model.keteranganTextController ??= TextEditingController();
     _model.keteranganFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {
+          _model.rekapAlokasi =
+              TransactionEndPointGroup.getRekapAlokasiCall.call(
+            token: currentAuthenticationToken,
+            periode: 'tahunan',
+            unitId: FFAppState().profileUPZ.id,
+            year: FFAppState().year,
+          );
+        }));
   }
 
   @override
@@ -114,7 +86,7 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: Color(0xFF259148),
+                backgroundColor: Color(0xFF1A3C34),
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -131,12 +103,9 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                   },
                 ),
                 title: Text(
-                  'Input Data Pendistribusian',
+                  'Pendistribusian ZIS',
                   style: FlutterFlowTheme.of(context).titleSmall.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18.0,
-                        ),
+                        fontFamily: 'Inter',
                         color: Colors.white,
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
@@ -157,680 +126,735 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                 child: Form(
                   key: _model.formKey,
                   autovalidateMode: AutovalidateMode.disabled,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 8.0),
-                        child: Text(
-                          'TANGGAL TRANSAKSI',
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    letterSpacing: 0.5,
-                                  ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 3.0,
-                              color: Color(0x33000000),
-                              offset: Offset(0.0, 1.0),
-                            )
-                          ],
-                        ),
-                        child: wrapWithModel(
-                          model: _model.datePickerModel,
-                          updateCallback: () => safeSetState(() {}),
-                          child: DatePickerWidget(),
-                        ),
-                      ),
-                      SizedBox(height: 24.0),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 8.0),
-                        child: Text(
-                          'DATA MUSTAHIK',
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    letterSpacing: 0.5,
-                                  ),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4.0,
-                              color: Color(0x33000000),
-                              offset: Offset(0.0, 2.0),
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                controller: _model.namaMustahikTextController,
-                                focusNode: _model.namaMustahikFocusNode,
-                                onChanged: (_) => EasyDebounce.debounce(
-                                  '_model.namaMustahikTextController',
-                                  Duration(milliseconds: 2000),
-                                  () => safeSetState(() {}),
+                  child: FutureBuilder<ApiCallResponse>(
+                    future: _model.rekapAlokasi,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 50.0),
+                            child: SizedBox(
+                              width: 40.0,
+                              height: 40.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF1A3C34),
                                 ),
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                  labelText: 'Nama Mustahik',
-                                  labelStyle:
-                                      FlutterFlowTheme.of(context).labelMedium,
-                                  hintText: 'Masukkan nama lengkap',
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        font: GoogleFonts.notoSans(),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                      ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF259148),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  filled: true,
-                                  fillColor: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  prefixIcon: Icon(
-                                    Icons.person_outline,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    size: 20.0,
-                                  ),
-                                  suffixIcon: _model.namaMustahikTextController!
-                                          .text.isNotEmpty
-                                      ? InkWell(
-                                          onTap: () async {
-                                            _model.namaMustahikTextController
-                                                ?.clear();
-                                            safeSetState(() {});
-                                          },
-                                          child: Icon(
-                                            Icons.clear,
-                                            size: 20,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyMedium,
-                                validator: _model
-                                    .namaMustahikTextControllerValidator
-                                    .asValidator(context),
                               ),
-                              SizedBox(height: 16.0),
-                              TextFormField(
-                                controller: _model.nomorNIKTextController,
-                                focusNode: _model.nomorNIKFocusNode,
-                                onChanged: (_) => EasyDebounce.debounce(
-                                  '_model.nomorNIKTextController',
-                                  Duration(milliseconds: 2000),
-                                  () => safeSetState(() {}),
-                                ),
-                                autofocus: false,
-                                maxLength: 16,
-                                decoration: InputDecoration(
-                                  labelText: 'Nomor NIK',
-                                  labelStyle:
-                                      FlutterFlowTheme.of(context).labelMedium,
-                                  hintText: '16 digit NIK',
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        font: GoogleFonts.notoSans(),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                      ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF259148),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  filled: true,
-                                  fillColor: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  prefixIcon: Icon(
-                                    Icons.badge_outlined,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    size: 20.0,
-                                  ),
-                                  suffixIcon: _model.nomorNIKTextController!
-                                          .text.isNotEmpty
-                                      ? InkWell(
-                                          onTap: () async {
-                                            _model.nomorNIKTextController
-                                                ?.clear();
-                                            safeSetState(() {});
-                                          },
-                                          child: Icon(
-                                            Icons.clear,
-                                            size: 20,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyMedium,
-                                keyboardType: TextInputType.number,
-                                validator: _model
-                                    .nomorNIKTextControllerValidator
-                                    .asValidator(context),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 24.0),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 8.0),
-                        child: Text(
-                          'DETAIL TRANSAKSI',
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    letterSpacing: 0.5,
-                                  ),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4.0,
-                              color: Color(0x33000000),
-                              offset: Offset(0.0, 2.0),
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FlutterFlowDropDown<String>(
-                                controller:
-                                    _model.jenisTransaksiValueController ??=
-                                        FormFieldController<String>(
-                                  _model.jenisTransaksiValue ??= '',
-                                ),
-                                options: List<String>.from(
-                                    ['zakat fitrah', 'zakat mal', 'infak']),
-                                optionLabels: [
-                                  'Zakat Fitrah',
-                                  'Zakat Mal',
-                                  'Infak Sedekah'
-                                ],
-                                onChanged: (val) async {
-                                  safeSetState(
-                                      () => _model.jenisTransaksiValue = val);
-                                  _model.currentUang = 0;
-                                  safeSetState(() {});
-                                  safeSetState(() {
-                                    _model.jumlaUangTextController?.clear();
-                                  });
-                                },
-                                width: double.infinity,
-                                height: 50.0,
-                                textStyle:
-                                    FlutterFlowTheme.of(context).bodyMedium,
-                                hintText: 'Pilih Sumber Dana',
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 24.0,
-                                ),
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                elevation: 2.0,
-                                borderColor:
-                                    FlutterFlowTheme.of(context).alternate,
-                                borderWidth: 1.0,
-                                borderRadius: 8.0,
-                                margin: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 4.0, 16.0, 4.0),
-                                hidesUnderline: true,
-                                isSearchable: false,
-                                isMultiSelect: false,
-                              ),
-                              if (_model.jenisTransaksiValue != 'infak') ...[
-                                SizedBox(height: 16.0),
-                                FlutterFlowDropDown<String>(
-                                  controller:
-                                      _model.jenisAsnafValueController ??=
-                                          FormFieldController<String>(null),
-                                  options: List<String>.from(
-                                      ['fakir', 'miskin', 'fisabililah']),
-                                  optionLabels: [
-                                    'Fakir',
-                                    'Miskin',
-                                    'Fisabililah'
-                                  ],
-                                  onChanged: (val) => safeSetState(
-                                      () => _model.jenisAsnafValue = val),
-                                  width: double.infinity,
-                                  height: 50.0,
-                                  textStyle:
-                                      FlutterFlowTheme.of(context).bodyMedium,
-                                  hintText: 'Pilih Asnaf',
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    size: 24.0,
-                                  ),
-                                  fillColor: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  elevation: 2.0,
-                                  borderColor:
-                                      FlutterFlowTheme.of(context).alternate,
-                                  borderWidth: 1.0,
-                                  borderRadius: 8.0,
-                                  margin: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 4.0, 16.0, 4.0),
-                                  hidesUnderline: true,
-                                  isSearchable: false,
-                                  isMultiSelect: false,
-                                ),
-                              ],
-                              SizedBox(height: 16.0),
-                              FlutterFlowDropDown<String>(
-                                controller:
-                                    _model.jenisProgramValueController ??=
-                                        FormFieldController<String>(
-                                  _model.jenisProgramValue ??= '',
-                                ),
-                                options: List<String>.from(
-                                    ['kemanusiaan', 'dakwah']),
-                                optionLabels: ['Kemanusiaan', 'Dakwah'],
-                                onChanged: (val) => safeSetState(
-                                    () => _model.jenisProgramValue = val),
-                                width: double.infinity,
-                                height: 50.0,
-                                textStyle:
-                                    FlutterFlowTheme.of(context).bodyMedium,
-                                hintText: 'Pilih Program',
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 24.0,
-                                ),
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                elevation: 2.0,
-                                borderColor:
-                                    FlutterFlowTheme.of(context).alternate,
-                                borderWidth: 1.0,
-                                borderRadius: 8.0,
-                                margin: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 4.0, 16.0, 4.0),
-                                hidesUnderline: true,
-                                isSearchable: false,
-                                isMultiSelect: false,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 24.0),
-                      if ((_model.jenisTransaksiValue != 'zakat fitrah') &&
-                          (_model.jenisAsnafValue != 'Amil') &&
-                          (_model.jenisProgramValue != 'Operasional'))
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 24.0),
-                          child: Container(
+                        );
+                      }
+                      final rekapBody = snapshot.data!.jsonBody;
+                      final sisaDanaZfUang = TransactionEndPointGroup
+                              .getRekapAlokasiCall
+                              .alokasiZakatFitrahUang(rekapBody) ??
+                          0;
+                      final sisaBerasZf = TransactionEndPointGroup
+                              .getRekapAlokasiCall
+                              .alokasiZakatFitrahBeras(rekapBody) ??
+                          0.0;
+                      final sisaDanaZm = TransactionEndPointGroup
+                              .getRekapAlokasiCall
+                              .alokasiZakatMal(rekapBody) ??
+                          0;
+                      final sisaDanaIfs = TransactionEndPointGroup
+                              .getRekapAlokasiCall
+                              .alokasiInfakSedekah(rekapBody) ??
+                          0;
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFFE8F5E9), Colors.white],
-                                stops: [0.0, 1.0],
-                                begin: AlignmentDirectional(0.0, -1.0),
-                                end: AlignmentDirectional(0.0, 1.0),
-                              ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 10.0,
+                                  color: Color(0x1A000000),
+                                  offset: Offset(0.0, 4.0),
+                                )
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12.0, horizontal: 16.0),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF1A3C34),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16.0),
+                                      topRight: Radius.circular(16.0),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.info_outline,
+                                          color: Colors.white, size: 20.0),
+                                      SizedBox(width: 8.0),
+                                      Text(
+                                        'Informasi Alokasi Dana',
+                                        style: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily: 'Inter',
+                                              color: Colors.white,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: GridView(
+                                    padding: EdgeInsets.zero,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 12.0,
+                                      mainAxisSpacing: 12.0,
+                                      childAspectRatio: 2.2,
+                                    ),
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    children: [
+                                      _buildAlokasiItem(
+                                        context,
+                                        'Zakat Fitrah (Uang)',
+                                        sisaDanaZfUang,
+                                        Icons.payments_outlined,
+                                        formatType: FormatType.decimal,
+                                        currency: 'Rp ',
+                                      ),
+                                      _buildAlokasiItem(
+                                        context,
+                                        'Zakat Fitrah (Beras)',
+                                        sisaBerasZf,
+                                        Icons.eco_outlined,
+                                        formatType: FormatType.custom,
+                                        format: '##.##',
+                                        suffix: ' Kg',
+                                      ),
+                                      _buildAlokasiItem(
+                                        context,
+                                        'Zakat Mal',
+                                        sisaDanaZm,
+                                        Icons.account_balance_wallet_outlined,
+                                        formatType: FormatType.decimal,
+                                        currency: 'Rp ',
+                                      ),
+                                      _buildAlokasiItem(
+                                        context,
+                                        'Infak Sedekah',
+                                        sisaDanaIfs,
+                                        Icons.volunteer_activism_outlined,
+                                        formatType: FormatType.decimal,
+                                        currency: 'Rp ',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 24.0),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                4.0, 0.0, 0.0, 8.0),
+                            child: Text(
+                              'TANGGAL TRANSAKSI',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF1A3C34),
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.0,
+                                  ),
+                            ),
+                          ),
+                          wrapWithModel(
+                            model: _model.datePickerModel,
+                            updateCallback: () => safeSetState(() {}),
+                            child: DatePickerWidget(),
+                          ),
+                          SizedBox(height: 24.0),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                4.0, 0.0, 0.0, 8.0),
+                            child: Text(
+                              'IDENTITAS MUSTAHIK',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF1A3C34),
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.0,
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                color: Color(0xFF259148),
-                                width: 1.0,
-                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 10.0,
+                                  color: Color(0x0D000000),
+                                  offset: Offset(0.0, 4.0),
+                                )
+                              ],
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Sisa Alokasi Dana',
+                                  TextFormField(
+                                    controller:
+                                        _model.namaMustahikTextController,
+                                    focusNode: _model.namaMustahikFocusNode,
+                                    autofocus: false,
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      labelText: 'Nama Lengkap Mustahik',
+                                      labelStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .override(
+                                            fontFamily: 'Inter',
+                                            fontSize: 14.0,
+                                          ),
+                                      hintText: 'Masukkan nama mustahik',
+                                      hintStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFE0E3E7),
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFF1A3C34),
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      contentPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              16.0, 20.0, 16.0, 20.0),
+                                      prefixIcon: Icon(
+                                        Icons.person_outline,
+                                        color: Color(0xFF1A3C34),
+                                        size: 20.0,
+                                      ),
+                                    ),
                                     style: FlutterFlowTheme.of(context)
-                                        .labelMedium
+                                        .bodyMedium
                                         .override(
-                                          font: GoogleFonts.notoSans(),
-                                          color: Color(0xFF259148),
-                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Inter',
+                                          fontSize: 14.0,
                                         ),
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        _model.jenisTransaksiValue ==
-                                                'zakat mal'
-                                            ? 'Zakat Mal'
-                                            : 'Infak',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyLarge
-                                            .override(
-                                              font: GoogleFonts.notoSans(),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                      Text(
-                                        formatNumber(
-                                          _model.jenisTransaksiValue ==
-                                                  'zakat mal'
-                                              ? widget.sisaDanaZm
-                                              : widget.sisaDanaIfs,
-                                          formatType: FormatType.decimal,
-                                          decimalType:
-                                              DecimalType.periodDecimal,
-                                          currency: 'Rp. ',
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .override(
-                                              font: GoogleFonts.notoSans(),
-                                              color: Color(0xFF259148),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
+                                    validator: _model
+                                        .namaMustahikTextControllerValidator
+                                        .asValidator(context),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                        ),
-                      if (_model.jenisTransaksiValue == 'zakat fitrah') ...[
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              4.0, 0.0, 0.0, 12.0),
-                          child: FlutterFlowRadioButton(
-                            options: ['Beras', 'Uang'].toList(),
-                            onChanged: (val) async {
-                              safeSetState(() {});
-                              if (_model.jenisZFValue == 'Beras') {
-                                _model.currentUang = 0;
-                                safeSetState(() {});
-                                safeSetState(() {
-                                  _model.berasTextController?.clear();
-                                });
-                              } else {
-                                _model.currentBeras = 0.0;
-                                safeSetState(() {});
-                                safeSetState(() {
-                                  _model.jumlaUangTextController?.clear();
-                                });
-                              }
-                            },
-                            controller: _model.jenisZFValueController ??=
-                                FormFieldController<String>('Uang'),
-                            optionHeight: 40.0,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  font: GoogleFonts.notoSans(),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                            selectedTextStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.notoSans(),
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                            buttonPosition: RadioButtonPosition.left,
-                            direction: Axis.horizontal,
-                            radioButtonColor: Color(0xFF259148),
-                            inactiveRadioButtonColor:
-                                FlutterFlowTheme.of(context).secondaryText,
-                            toggleable: false,
-                            horizontalAlignment: WrapAlignment.start,
-                            verticalAlignment: WrapCrossAlignment.start,
-                          ),
-                        ),
-                        if (_model.jenisZFValue == 'Beras')
+                          SizedBox(height: 24.0),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 24.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4.0,
-                                    color: Color(0x33000000),
-                                    offset: Offset(0.0, 2.0),
-                                  )
-                                ],
-                              ),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                4.0, 0.0, 0.0, 8.0),
+                            child: Text(
+                              'DETAIL TRANSAKSI',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF1A3C34),
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.0,
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(0.0, 2.0),
+                                )
+                              ],
+                            ),
+                            child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          controller:
-                                              _model.berasTextController,
-                                          focusNode: _model.berasFocusNode,
-                                          decoration: InputDecoration(
-                                            labelText: 'Jumlah Beras',
-                                            hintText: '0.0',
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .alternate),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFF259148)),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                          ),
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  decimal: true),
-                                          validator: _model
-                                              .berasTextControllerValidator
-                                              .asValidator(context),
-                                          onChanged: (_) =>
-                                              EasyDebounce.debounce(
-                                            '_model.berasTextController',
-                                            Duration(milliseconds: 200),
-                                            () async {
-                                              if (_model.berasTextController
-                                                      .text !=
-                                                  '') {
-                                                _model.currentBeras =
-                                                    double.tryParse(_model
-                                                        .berasTextController
-                                                        .text);
-                                                safeSetState(() {});
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 18.0),
-                                        child: Text(
-                                          'Kg',
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleMedium,
-                                        ),
-                                      ),
+                                  FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.jenisTransaksiValueController ??=
+                                            FormFieldController<String>(
+                                      _model.jenisTransaksiValue ??= '',
+                                    ),
+                                    options: List<String>.from(
+                                        ['zakat fitrah', 'zakat mal', 'infak']),
+                                    optionLabels: [
+                                      'Zakat Fitrah',
+                                      'Zakat Mal',
+                                      'Infak Sedekah'
                                     ],
+                                    onChanged: (val) async {
+                                      safeSetState(() =>
+                                          _model.jenisTransaksiValue = val);
+                                      _model.currentUang = 0;
+                                      safeSetState(() {});
+                                      safeSetState(() {
+                                        _model.jumlaUangTextController?.clear();
+                                      });
+                                    },
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    textStyle:
+                                        FlutterFlowTheme.of(context).bodyMedium,
+                                    hintText: 'Pilih Sumber Dana',
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 24.0,
+                                    ),
+                                    fillColor: Colors.white,
+                                    elevation: 0.0,
+                                    borderColor: Color(0xFFE0E3E7),
+                                    borderWidth: 1.0,
+                                    borderRadius: 12.0,
+                                    margin: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 4.0, 16.0, 4.0),
+                                    hidesUnderline: true,
+                                    isSearchable: false,
+                                    isMultiSelect: false,
                                   ),
-                                  if (_model.currentBeras! > widget.sisaBerasZf)
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 8),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.error_outline,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                              size: 16),
-                                          SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              'Jumlah beras tidak boleh melebihi alokasi',
-                                              style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .error,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                        ],
+                                  if (_model.jenisTransaksiValue !=
+                                      'infak') ...[
+                                    SizedBox(height: 16.0),
+                                    FlutterFlowDropDown<String>(
+                                      controller:
+                                          _model.jenisAsnafValueController ??=
+                                              FormFieldController<String>(null),
+                                      options: List<String>.from(
+                                          ['fakir', 'miskin', 'fisabililah']),
+                                      optionLabels: [
+                                        'Fakir',
+                                        'Miskin',
+                                        'Fisabililah'
+                                      ],
+                                      onChanged: (val) => safeSetState(
+                                          () => _model.jenisAsnafValue = val),
+                                      width: double.infinity,
+                                      height: 50.0,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium,
+                                      hintText: 'Pilih Asnaf',
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 24.0,
                                       ),
+                                      fillColor: Colors.white,
+                                      elevation: 0.0,
+                                      borderColor: Color(0xFFE0E3E7),
+                                      borderWidth: 1.0,
+                                      borderRadius: 12.0,
+                                      margin: EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 4.0, 16.0, 4.0),
+                                      hidesUnderline: true,
+                                      isSearchable: false,
+                                      isMultiSelect: false,
                                     ),
-                                  if ((_model.jenisAsnafValue != 'Amil') &&
-                                      (_model.jenisProgramValue !=
-                                          'Operasional'))
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 12),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Sisa Beras',
-                                            style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                fontStyle: FontStyle.italic),
-                                          ),
-                                          Text(
-                                            formatNumber(
-                                              widget.sisaBerasZf,
-                                              formatType: FormatType.custom,
-                                              format: '##.## Kg',
-                                              locale: 'id_ID',
-                                            ),
-                                            style: TextStyle(
-                                                color: Color(0xFF259148),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
+                                  ],
+                                  SizedBox(height: 16.0),
+                                  FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.jenisProgramValueController ??=
+                                            FormFieldController<String>(
+                                      _model.jenisProgramValue ??= '',
                                     ),
+                                    options: List<String>.from(
+                                        ['kemanusiaan', 'dakwah']),
+                                    optionLabels: ['Kemanusiaan', 'Dakwah'],
+                                    onChanged: (val) => safeSetState(
+                                        () => _model.jenisProgramValue = val),
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    textStyle:
+                                        FlutterFlowTheme.of(context).bodyMedium,
+                                    hintText: 'Pilih Program',
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 24.0,
+                                    ),
+                                    fillColor: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    elevation: 2.0,
+                                    borderColor:
+                                        FlutterFlowTheme.of(context).alternate,
+                                    borderWidth: 1.0,
+                                    borderRadius: 8.0,
+                                    margin: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 4.0, 16.0, 4.0),
+                                    hidesUnderline: true,
+                                    isSearchable: false,
+                                    isMultiSelect: false,
+                                  ),
                                 ],
                               ),
                             ),
                           ),
-                      ],
-                      if ((_model.jenisTransaksiValue != 'zakat fitrah') ||
-                          (_model.jenisZFValue == 'Uang'))
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 24.0),
-                          child: Container(
+                          SizedBox(height: 24.0),
+                          if (_model.jenisTransaksiValue == 'zakat fitrah') ...[
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  4.0, 0.0, 0.0, 12.0),
+                              child: FlutterFlowRadioButton(
+                                options: ['Beras', 'Uang'].toList(),
+                                onChanged: (val) async {
+                                  safeSetState(() {});
+                                  if (_model.jenisZFValue == 'Beras') {
+                                    _model.currentUang = 0;
+                                    safeSetState(() {});
+                                    safeSetState(() {
+                                      _model.berasTextController?.clear();
+                                    });
+                                  } else {
+                                    _model.currentBeras = 0.0;
+                                    safeSetState(() {});
+                                    safeSetState(() {
+                                      _model.jumlaUangTextController?.clear();
+                                    });
+                                  }
+                                },
+                                controller: _model.jenisZFValueController ??=
+                                    FormFieldController<String>('Uang'),
+                                optionHeight: 40.0,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      font: GoogleFonts.inter(),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                selectedTextStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.inter(),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                buttonPosition: RadioButtonPosition.left,
+                                direction: Axis.horizontal,
+                                radioButtonColor: Color(0xFF1A3C34),
+                                inactiveRadioButtonColor:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                toggleable: false,
+                                horizontalAlignment: WrapAlignment.start,
+                                verticalAlignment: WrapCrossAlignment.start,
+                              ),
+                            ),
+                            if (_model.jenisZFValue == 'Beras')
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 24.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4.0,
+                                        color: Color(0x33000000),
+                                        offset: Offset(0.0, 2.0),
+                                      )
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              controller:
+                                                  _model.berasTextController,
+                                              focusNode: _model.berasFocusNode,
+                                              decoration: InputDecoration(
+                                                labelText: 'Jumlah Beras',
+                                                hintText: '0.0',
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .alternate),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFF1A3C34)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                filled: true,
+                                                fillColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                              ),
+                                              keyboardType: TextInputType
+                                                  .numberWithOptions(
+                                                      decimal: true),
+                                              validator: _model
+                                                  .berasTextControllerValidator
+                                                  .asValidator(context),
+                                              onChanged: (_) =>
+                                                  EasyDebounce.debounce(
+                                                '_model.berasTextController',
+                                                Duration(milliseconds: 200),
+                                                () async {
+                                                  if (_model.berasTextController
+                                                          .text !=
+                                                      '') {
+                                                    _model.currentBeras =
+                                                        double.tryParse(_model
+                                                            .berasTextController
+                                                            .text);
+                                                    safeSetState(() {});
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 18.0),
+                                            child: Text(
+                                              'Kg',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      if (_model.currentBeras! > sisaBerasZf)
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 8),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.error_outline,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
+                                                  size: 16),
+                                              SizedBox(width: 4),
+                                              Expanded(
+                                                child: Text(
+                                                  'Jumlah beras tidak boleh melebihi alokasi',
+                                                  style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .error,
+                                                      fontSize: 12),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      if ((_model.jenisAsnafValue != 'Amil') &&
+                                          (_model.jenisProgramValue !=
+                                              'Operasional'))
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 12),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Sisa Alokasi Beras',
+                                                style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryText,
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                              ),
+                                              Text(
+                                                formatNumber(
+                                                      sisaBerasZf,
+                                                      formatType:
+                                                          FormatType.custom,
+                                                      format: '##.##',
+                                                      locale: 'id_ID',
+                                                    ) +
+                                                    ' Kg',
+                                                style: TextStyle(
+                                                    color: Color(0xFF1A3C34),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                          if ((_model.jenisTransaksiValue != 'zakat fitrah') ||
+                              (_model.jenisZFValue == 'Uang'))
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 24.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Color(0x33000000),
+                                      offset: Offset(0.0, 2.0),
+                                    )
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFormField(
+                                      controller:
+                                          _model.jumlaUangTextController,
+                                      focusNode: _model.jumlaUangFocusNode,
+                                      decoration: InputDecoration(
+                                        labelText: 'Jumlah Uang',
+                                        hintText: 'Rp 0',
+                                        prefixIcon: Icon(Icons.attach_money,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(0xFF1A3C34)),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (_) => EasyDebounce.debounce(
+                                        '_model.jumlaUangTextController',
+                                        Duration(milliseconds: 200),
+                                        () async {
+                                          if (((_model.jumlaUangTextController
+                                                          .text !=
+                                                      '') &&
+                                                  (_model.jenisZFValue ==
+                                                      'Uang')) ||
+                                              ((_model.jumlaUangTextController
+                                                          .text !=
+                                                      '') &&
+                                                  (_model.jenisTransaksiValue ==
+                                                      'Zakat Mal')) ||
+                                              ((_model.jumlaUangTextController
+                                                          .text !=
+                                                      '') &&
+                                                  (_model.jenisTransaksiValue ==
+                                                      'Infak Tidak Terikat'))) {
+                                            _model.currentUang = int.tryParse(
+                                                _model.jumlaUangTextController
+                                                    .text);
+                                            safeSetState(() {});
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                4.0, 0.0, 0.0, 8.0),
+                            child: Text(
+                              'INFO TAMBAHAN',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    font: GoogleFonts.notoSans(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    letterSpacing: 0.5,
+                                  ),
+                            ),
+                          ),
+                          Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12.0),
@@ -844,17 +868,14 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                             ),
                             padding: EdgeInsets.all(16.0),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextFormField(
-                                  controller: _model.jumlaUangTextController,
-                                  focusNode: _model.jumlaUangFocusNode,
+                                  controller:
+                                      _model.penerimaManfaatTextController,
+                                  focusNode: _model.penerimaManfaatFocusNode,
                                   decoration: InputDecoration(
-                                    labelText: 'Jumlah Uang',
-                                    hintText: 'Rp 0',
-                                    prefixIcon: Icon(Icons.attach_money,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText),
+                                    labelText: 'Penerima Manfaat',
+                                    suffixText: 'Orang',
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color: FlutterFlowTheme.of(context)
@@ -867,261 +888,205 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                     filled: true,
                                     fillColor: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
+                                    prefixIcon: Icon(Icons.people_outline,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText),
                                   ),
                                   keyboardType: TextInputType.number,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.jumlaUangTextController',
-                                    Duration(milliseconds: 200),
-                                    () async {
-                                      if (((_model.jumlaUangTextController
-                                                      .text !=
-                                                  '') &&
-                                              (_model.jenisZFValue ==
-                                                  'Uang')) ||
-                                          ((_model.jumlaUangTextController
-                                                      .text !=
-                                                  '') &&
-                                              (_model.jenisTransaksiValue ==
-                                                  'Zakat Mal')) ||
-                                          ((_model.jumlaUangTextController
-                                                      .text !=
-                                                  '') &&
-                                              (_model.jenisTransaksiValue ==
-                                                  'Infak Tidak Terikat'))) {
-                                        _model.currentUang = int.tryParse(_model
-                                            .jumlaUangTextController.text);
-                                        safeSetState(() {});
-                                      }
-                                    },
+                                ),
+                                SizedBox(height: 16),
+                                TextFormField(
+                                  controller: _model.keteranganTextController,
+                                  focusNode: _model.keteranganFocusNode,
+                                  maxLines: 3,
+                                  decoration: InputDecoration(
+                                    labelText: 'Keterangan',
+                                    alignLabelWithHint: true,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFFE0E3E7)),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFF1A3C34),
+                                            width: 2.0),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    filled: true,
+                                    fillColor: Colors.white,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 8.0),
-                        child: Text(
-                          'INFO TAMBAHAN',
-                          style:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    letterSpacing: 0.5,
-                                  ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4.0,
-                              color: Color(0x33000000),
-                              offset: Offset(0.0, 2.0),
-                            )
-                          ],
-                        ),
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: _model.penerimaManfaatTextController,
-                              focusNode: _model.penerimaManfaatFocusNode,
-                              decoration: InputDecoration(
-                                labelText: 'Penerima Manfaat',
-                                suffixText: 'Orang',
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate),
-                                    borderRadius: BorderRadius.circular(8)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF259148)),
-                                    borderRadius: BorderRadius.circular(8)),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                prefixIcon: Icon(Icons.people_outline,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText),
-                              ),
-                              keyboardType: TextInputType.number,
-                            ),
-                            SizedBox(height: 16),
-                            TextFormField(
-                              controller: _model.keteranganTextController,
-                              focusNode: _model.keteranganFocusNode,
-                              maxLines: 3,
-                              decoration: InputDecoration(
-                                labelText: 'Keterangan',
-                                alignLabelWithHint: true,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate),
-                                    borderRadius: BorderRadius.circular(8)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF259148)),
-                                    borderRadius: BorderRadius.circular(8)),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 32),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.formKey.currentState == null ||
-                              !_model.formKey.currentState!.validate()) {
-                            return;
-                          }
+                          SizedBox(height: 32),
+                          FFButtonWidget(
+                            onPressed: () async {
+                              if (_model.formKey.currentState == null ||
+                                  !_model.formKey.currentState!.validate()) {
+                                return;
+                              }
 
-                          if (_model.currentUang! > widget.sisaDanaZm) {
-                            if (_model.jenisTransaksiValue == 'zakat mal') {
-                              await showDialog(
-                                context: context,
-                                builder: (alertDialogContext) {
-                                  return AlertDialog(
-                                    title: Text('Info'),
-                                    content: Text(
-                                        'Nominal melebihi sisa alokasi dana'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(alertDialogContext),
-                                        child: Text('Ok'),
-                                      ),
-                                    ],
+                              if (_model.currentUang! > sisaDanaZm) {
+                                if (_model.jenisTransaksiValue == 'zakat mal') {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (alertDialogContext) {
+                                      return AlertDialog(
+                                        title: Text('Info'),
+                                        content: Text(
+                                            'Nominal melebihi sisa alokasi dana zakat mal'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                alertDialogContext),
+                                            child: Text('Ok'),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                              return;
-                            }
-                          }
+                                  return;
+                                }
+                              }
 
-                          if (_model.currentUang! > widget.sisaDanaIfs) {
-                            if (_model.jenisTransaksiValue == 'infak') {
-                              await showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                          title: Text('Info'),
-                                          content: Text(
-                                              'Nominal melebihi sisa alokasi dana'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(ctx),
-                                                child: Text('Ok'))
-                                          ]));
-                              return;
-                            }
-                          }
+                              if (_model.currentUang! > sisaDanaIfs) {
+                                if (_model.jenisTransaksiValue == 'infak') {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                              title: Text('Info'),
+                                              content: Text(
+                                                  'Nominal melebihi sisa alokasi dana infak'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(ctx),
+                                                    child: Text('Ok'))
+                                              ]));
+                                  return;
+                                }
+                              }
 
-                          if (_model.currentBeras! > widget.sisaBerasZf) {
-                            if (_model.jenisZFValue == 'Beras') {
-                              await showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                          title: Text('Info'),
-                                          content: Text(
-                                              'Nominal melebihi sisa alokasi beras'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(ctx),
-                                                child: Text('Ok'))
-                                          ]));
-                              return;
-                            }
-                          }
+                              if (_model.currentBeras! > sisaBerasZf) {
+                                if (_model.jenisZFValue == 'Beras') {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                              title: Text('Info'),
+                                              content: Text(
+                                                  'Nominal melebihi sisa alokasi beras zakat fitrah'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(ctx),
+                                                    child: Text('Ok'))
+                                              ]));
+                                  return;
+                                }
+                              }
 
-                          var _shouldSetState = false;
-                          _model.responsePendisAdd =
-                              await TransactionEndPointGroup
-                                  .addPendistribusianCall
-                                  .call(
-                            token: currentAuthenticationToken,
-                            unitId: FFAppState().profileUPZ.id,
-                            trxDate:
-                                _model.datePickerModel.datePicked?.toString(),
-                            mustahikName:
-                                _model.namaMustahikTextController.text,
-                            nik: _model.nomorNIKTextController.text,
-                            fundType: _model.jenisTransaksiValue,
-                            asnaf: _model.jenisAsnafValue,
-                            program: _model.jenisProgramValue,
-                            totalAmount: valueOrDefault<int>(
-                              int.tryParse(_model.jumlaUangTextController.text),
-                              0,
-                            ),
-                            // keterangan: _model.keteranganTextController.text, // API does not support this yet
-                            totalRice: valueOrDefault<double>(
-                              double.tryParse(_model.berasTextController.text),
-                              0.0,
-                            ),
-                            beneficiary: valueOrDefault<int>(
-                              int.tryParse(
-                                  _model.penerimaManfaatTextController.text),
-                              0,
-                            ),
-                          );
+                              if (_model.currentUang! > sisaDanaZfUang) {
+                                if (_model.jenisZFValue == 'Uang') {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                              title: Text('Info'),
+                                              content: Text(
+                                                  'Nominal melebihi sisa alokasi uang zakat fitrah'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(ctx),
+                                                    child: Text('Ok'))
+                                              ]));
+                                  return;
+                                }
+                              }
 
-                          _shouldSetState = true;
-                          if ((_model.responsePendisAdd?.succeeded ?? true)) {
-                            await showDialog(
-                              context: context,
-                              builder: (alertDialogContext) {
-                                return AlertDialog(
-                                  title: Text('Info'),
-                                  content: Text('Transaksi Berhasil'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(alertDialogContext),
-                                      child: Text('Ok'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-
-                            context.goNamed(
-                              HomeWidget.routeName,
-                              extra: <String, dynamic>{
-                                kTransitionInfoKey: TransitionInfo(
-                                  hasTransition: true,
-                                  transitionType:
-                                      PageTransitionType.rightToLeft,
+                              var _shouldSetState = false;
+                              _model.responsePendisAdd =
+                                  await TransactionEndPointGroup
+                                      .addPendistribusianCall
+                                      .call(
+                                token: currentAuthenticationToken,
+                                unitId: FFAppState().profileUPZ.id,
+                                trxDate: _model.datePickerModel.datePicked
+                                    ?.toString(),
+                                mustahikName:
+                                    _model.namaMustahikTextController.text,
+                                nik: '',
+                                fundType: _model.jenisTransaksiValue,
+                                asnaf: _model.jenisAsnafValue,
+                                program: _model.jenisProgramValue,
+                                totalAmount: valueOrDefault<int>(
+                                  int.tryParse(
+                                      _model.jumlaUangTextController.text),
+                                  0,
                                 ),
-                              },
-                            );
-                          } else {
-                            if (_shouldSetState) safeSetState(() {});
-                            return;
-                          }
+                                // keterangan: _model.keteranganTextController.text, // API does not support this yet
+                                totalRice: valueOrDefault<double>(
+                                  double.tryParse(
+                                      _model.berasTextController.text),
+                                  0.0,
+                                ),
+                                beneficiary: valueOrDefault<int>(
+                                  int.tryParse(_model
+                                      .penerimaManfaatTextController.text),
+                                  0,
+                                ),
+                              );
 
-                          if (_shouldSetState) safeSetState(() {});
-                        },
-                        text: 'Proses Transaksi',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF259148),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                              _shouldSetState = true;
+                              if ((_model.responsePendisAdd?.succeeded ??
+                                  true)) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (alertDialogContext) {
+                                    return AlertDialog(
+                                      title: Text('Info'),
+                                      content: Text('Transaksi Berhasil'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(alertDialogContext),
+                                          child: Text('Ok'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                context.goNamed(
+                                  HomeWidget.routeName,
+                                  extra: <String, dynamic>{
+                                    kTransitionInfoKey: TransitionInfo(
+                                      hasTransition: true,
+                                      transitionType:
+                                          PageTransitionType.rightToLeft,
+                                    ),
+                                  },
+                                );
+                              } else {
+                                if (_shouldSetState) safeSetState(() {});
+                                return;
+                              }
+
+                              if (_shouldSetState) safeSetState(() {});
+                            },
+                            text: 'Proses Transaksi',
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Color(0xFF1A3C34),
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
                                     font: GoogleFonts.notoSans(
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -1130,21 +1095,89 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 0.5,
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
+                              elevation: 3.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAlokasiItem(
+    BuildContext context,
+    String label,
+    dynamic value,
+    IconData icon, {
+    FormatType formatType = FormatType.decimal,
+    String? currency,
+    String? format,
+    String? suffix,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Color(0xFFF1F4F8),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Color(0xFF1A3C34), size: 16.0),
+          ),
+          SizedBox(width: 8.0),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                        fontFamily: 'Inter',
+                        fontSize: 10.0,
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  formatNumber(
+                        value,
+                        formatType: formatType,
+                        format: format,
+                        decimalType: DecimalType.periodDecimal,
+                        currency: currency,
+                      ) +
+                      (suffix ?? ''),
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Inter',
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A3C34),
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

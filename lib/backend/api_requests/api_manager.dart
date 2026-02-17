@@ -220,6 +220,8 @@ class ApiCallResponse {
 class ApiManager {
   ApiManager._();
 
+  static Function? onUnauthenticatedResponse;
+
   // Cache that will ensure identical calls are not repeatedly made.
   static Map<ApiCallOptions, ApiCallResponse> _apiCache = {};
 
@@ -569,6 +571,15 @@ class ApiManager {
       // If caching is on, cache the result (if present).
       if (cache) {
         _apiCache[callOptions] = result;
+      }
+
+      // Check for unauthenticated response
+      if (result.statusCode == 401 ||
+          (result.jsonBody is Map &&
+              result.jsonBody['message']?.toString().toLowerCase() ==
+                  'unauthenticated') ||
+          result.bodyText.toLowerCase().contains('unauthenticated')) {
+        onUnauthenticatedResponse?.call();
       }
     } catch (e) {
       result = ApiCallResponse(null, {}, -1, exception: e);

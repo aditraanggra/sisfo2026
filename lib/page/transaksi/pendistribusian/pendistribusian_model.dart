@@ -13,6 +13,9 @@ class PendistribusianModel extends FlutterFlowModel<PendistribusianWidget> {
 
   int? currentUang = 0;
 
+  // Stores action output result for [Backend Call - API (Get Rekap Alokasi)] action in Pendistribusian widget.
+  Future<ApiCallResponse>? rekapAlokasi;
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -24,18 +27,6 @@ class PendistribusianModel extends FlutterFlowModel<PendistribusianWidget> {
   String? Function(BuildContext, String?)? namaMustahikTextControllerValidator;
   String? _namaMustahikTextControllerValidator(
       BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Harus diisi!';
-    }
-
-    return null;
-  }
-
-  // State field(s) for NomorNIK widget.
-  FocusNode? nomorNIKFocusNode;
-  TextEditingController? nomorNIKTextController;
-  String? Function(BuildContext, String?)? nomorNIKTextControllerValidator;
-  String? _nomorNIKTextControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'Harus diisi!';
     }
@@ -87,7 +78,6 @@ class PendistribusianModel extends FlutterFlowModel<PendistribusianWidget> {
   void initState(BuildContext context) {
     datePickerModel = createModel(context, () => DatePickerModel());
     namaMustahikTextControllerValidator = _namaMustahikTextControllerValidator;
-    nomorNIKTextControllerValidator = _nomorNIKTextControllerValidator;
     penerimaManfaatTextControllerValidator =
         _penerimaManfaatTextControllerValidator;
   }
@@ -97,9 +87,6 @@ class PendistribusianModel extends FlutterFlowModel<PendistribusianWidget> {
     datePickerModel.dispose();
     namaMustahikFocusNode?.dispose();
     namaMustahikTextController?.dispose();
-
-    nomorNIKFocusNode?.dispose();
-    nomorNIKTextController?.dispose();
 
     berasFocusNode?.dispose();
     berasTextController?.dispose();

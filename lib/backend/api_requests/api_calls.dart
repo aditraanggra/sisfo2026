@@ -710,6 +710,74 @@ class TransactionEndPointGroup {
   static GetPendistribusianCall getPendistribusianCall =
       GetPendistribusianCall();
   static GetSetorZISCall getSetorZISCall = GetSetorZISCall();
+  static GetRekapAlokasiCall getRekapAlokasiCall = GetRekapAlokasiCall();
+}
+
+class GetRekapAlokasiCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    String? periode = 'tahunan',
+    int? unitId,
+    int? year,
+  }) async {
+    final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get Rekap Alokasi',
+      apiUrl: '${baseUrl}/rekap/alokasi',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        'periode': periode,
+        'unit_id': unitId,
+        'year': year,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  int? alokasiZakatFitrahUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].alokasi_pendis.zf_amount''',
+      ));
+  double? alokasiZakatFitrahBeras(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.data[:1].alokasi_pendis.zf_rice''',
+      ));
+  int? alokasiZakatMal(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].alokasi_pendis.zm''',
+      ));
+  int? alokasiInfakSedekah(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].alokasi_pendis.ifs''',
+      ));
+  int? hakAmilZfAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].hak_amil.zf_amount''',
+      ));
+  double? hakAmilZfRice(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data[:1].hak_amil.zf_rice''',
+      ));
+  int? hakAmilZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].hak_amil.zm''',
+      ));
+  int? hakAmilIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data[:1].hak_amil.ifs''',
+      ));
 }
 
 class AddZakatMalCall {
@@ -1961,6 +2029,7 @@ class RekapEndPointGroup {
   static RekapHakAmilCall rekapHakAmilCall = RekapHakAmilCall();
   static RekapSetorCall rekapSetorCall = RekapSetorCall();
   static RekapAlokasiCall rekapAlokasiCall = RekapAlokasiCall();
+  static RekapZisReportCall rekapZisReportCall = RekapZisReportCall();
 }
 
 class RekapZISCall {
@@ -2244,6 +2313,7 @@ class RekapAlokasiCall {
     String? token = '',
     String? unitId = '',
     String? periodDate = '',
+    int? year,
   }) async {
     final baseUrl = RekapEndPointGroup.getBaseUrl();
 
@@ -2260,6 +2330,7 @@ class RekapAlokasiCall {
         'periode': periode,
         'unit_id': unitId,
         'period_date': periodDate,
+        'year': year,
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -2371,6 +2442,141 @@ class RekapAlokasiCall {
         response,
         r'''$.meta.total''',
       ));
+}
+
+class RekapZisReportCall {
+  Future<ApiCallResponse> call({
+    int? unitId,
+    String? periode,
+    int? year,
+    String? fromDate,
+    String? toDate,
+    String? token = '',
+  }) async {
+    final baseUrl = RekapEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Rekap ZIS Report',
+      apiUrl: '${baseUrl}/rekap/zis-report',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        'unit_id': unitId,
+        'periode': periode,
+        'year': year,
+        'from_date': fromDate,
+        'to_date': toDate,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  int? totalZfAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_zf_amount''',
+      ));
+  double? totalZfRice(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.total_zf_rice''',
+      ));
+  int? totalZfMuzakki(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_zf_muzakki''',
+      ));
+  int? totalZmAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_zm_amount''',
+      ));
+  int? totalZmMuzakki(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_zm_muzakki''',
+      ));
+  int? totalIfsAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_ifs_amount''',
+      ));
+  int? totalIfsMunfiq(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_ifs_munfiq''',
+      ));
+  int? totalPendisZfAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_pendis_zf_amount''',
+      ));
+  double? totalPendisZfRice(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.data.total_pendis_zf_rice''',
+      ));
+  int? totalPendisZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_pendis_zm''',
+      ));
+  int? totalPendisIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_pendis_ifs''',
+      ));
+  int? totalPendisAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_pendis_amount''',
+      ));
+  double? totalPendisRice(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.total_pendis_rice''',
+      ));
+  int? totalPm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_pm''',
+      ));
+  int? totalHakAmil(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_hak_amil''',
+      ));
+  int? totalSetorZfAmount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_setor_zf_amount''',
+      ));
+  double? totalSetorZfRice(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.total_setor_zf_rice''',
+      ));
+  int? totalSetorZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_setor_zm''',
+      ));
+  int? totalSetorIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.total_setor_ifs''',
+      ));
+  String? buktiSetor(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.bukti_setor''',
+      ));
+  String? ketua(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.ketua''',
+      ));
+  String? sekretaris(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.sekretaris''',
+      ));
+  String? bendahara(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.bendahara''',
+      ));
+  dynamic allData(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
 }
 
 /// End RekapEndPoint Group Code

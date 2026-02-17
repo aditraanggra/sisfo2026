@@ -109,6 +109,16 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                     ),
                     SizedBox(height: 12.0),
                     _buildMenuItem(
+                      icon: Icons.calendar_today_rounded,
+                      iconColor: Color(0xFF259148),
+                      title: 'Tahun Pengelolaan ZIS',
+                      subtitle: 'Atur tahun data ZIS',
+                      onTap: () {
+                        context.pushNamed(TahunPengelolaanWidget.routeName);
+                      },
+                    ),
+                    SizedBox(height: 12.0),
+                    _buildMenuItem(
                       icon: Icons.notifications_outlined,
                       iconColor: Color(0xFF259148),
                       title: 'Notifikasi',

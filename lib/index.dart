@@ -40,3 +40,5 @@ export '/page/misc_page/profil_u_p_z_copy/profil_u_p_z_copy_widget.dart'
     show ProfilUPZCopyWidget;
 export '/page/misc_page/regulasi_page/regulasi_page_widget.dart'
     show RegulasiPageWidget;
+export '/page/misc_page/tahun_pengelolaan/tahun_pengelolaan_widget.dart'
+    show TahunPengelolaanWidget;

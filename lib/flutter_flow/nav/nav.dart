@@ -243,48 +243,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PendistribusianWidget.routeName,
           path: PendistribusianWidget.routePath,
-          builder: (context, params) => PendistribusianWidget(
-            sisaDanaZf: params.getParam(
-              'sisaDanaZf',
-              ParamType.int,
-            ),
-            sisaDanaZm: params.getParam(
-              'sisaDanaZm',
-              ParamType.int,
-            ),
-            sisaDanaIfs: params.getParam(
-              'sisaDanaIfs',
-              ParamType.int,
-            ),
-            sisaBerasZf: params.getParam(
-              'sisaBerasZf',
-              ParamType.double,
-            ),
-            sisaUangZf: params.getParam(
-              'sisaUangZf',
-              ParamType.int,
-            ),
-            sisaSaldoAmil: params.getParam(
-              'sisaSaldoAmil',
-              ParamType.int,
-            ),
-            sisaAmilZfBeras: params.getParam(
-              'sisaAmilZfBeras',
-              ParamType.double,
-            ),
-            sisaAmilZfUang: params.getParam(
-              'sisaAmilZfUang',
-              ParamType.int,
-            ),
-            sisaAmilZm: params.getParam(
-              'sisaAmilZm',
-              ParamType.int,
-            ),
-            sisaAmilIfs: params.getParam(
-              'sisaAmilIfs',
-              ParamType.int,
-            ),
-          ),
+          builder: (context, params) => PendistribusianWidget(),
         ),
         FFRoute(
           name: SettingZFWidget.routeName,
@@ -408,6 +367,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: RegulasiPageWidget.routeName,
           path: RegulasiPageWidget.routePath,
           builder: (context, params) => RegulasiPageWidget(),
+        ),
+        FFRoute(
+          name: TahunPengelolaanWidget.routeName,
+          path: TahunPengelolaanWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => TahunPengelolaanWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
