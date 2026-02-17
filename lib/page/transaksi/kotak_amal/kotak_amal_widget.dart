@@ -4,11 +4,10 @@ import '/component/date_picker/date_picker_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_validators.dart';
 import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'kotak_amal_model.dart';
@@ -31,15 +30,33 @@ class KotakAmalWidget extends StatefulWidget {
   State<KotakAmalWidget> createState() => _KotakAmalWidgetState();
 }
 
-class _KotakAmalWidgetState extends State<KotakAmalWidget> {
+class _KotakAmalWidgetState extends State<KotakAmalWidget>
+    with TickerProviderStateMixin {
   late KotakAmalModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late AnimationController _buttonAnimationController;
+  late Animation<double> _buttonScaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => KotakAmalModel());
+
+    // Initialize button animation
+    _buttonAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+    _buttonScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(
+      CurvedAnimation(
+        parent: _buttonAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _model.namaMuzakkiTextController ??=
         TextEditingController(text: FFAppState().profileUPZ.unitName);
@@ -54,6 +71,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _buttonAnimationController.dispose();
 
     super.dispose();
   }
@@ -69,13 +87,13 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: ModernColors.backgroundPrimary,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: Color(0xFF259148),
+                backgroundColor: ModernColors.primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -93,19 +111,11 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget> {
                 ),
                 title: Text(
                   'Penerimaan Kotak Amal',
-                  style: FlutterFlowTheme.of(context).titleMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .titleMedium
-                              .fontStyle,
-                        ),
-                        fontSize: 14.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleMedium.fontStyle,
-                      ),
+                  style: GoogleFonts.inter(
+                    color: ModernColors.textOnDark,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 actions: [],
                 centerTitle: false,
@@ -121,454 +131,246 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Info Card
+                  _buildInfoCard(),
+                  SizedBox(height: ModernSpacing.lg),
+
+                  // Form Card
                   Container(
                     width: double.infinity,
+                    padding: EdgeInsets.all(ModernSpacing.md),
+                    decoration: BoxDecoration(
+                      color: ModernColors.backgroundCard,
+                      borderRadius: BorderRadius.circular(ModernRadius.xl),
+                      boxShadow: ModernShadows.cardShadow,
+                    ),
                     child: Form(
                       key: _model.formKey,
-                      autovalidateMode: AutovalidateMode.always,
+                      autovalidateMode: AutovalidateMode.disabled,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'PILIH TANGGAL',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
+                          Text(
+                            'PILIH TANGGAL',
+                            style: GoogleFonts.inter(
+                              color: ModernColors.textSecondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
                             ),
                           ),
+                          SizedBox(height: ModernSpacing.sm),
                           wrapWithModel(
                             model: _model.datePickerModel,
                             updateCallback: () => safeSetState(() {}),
                             child: DatePickerWidget(),
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'DATA MUZAKKI',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
+                          SizedBox(height: ModernSpacing.lg),
+                          Text(
+                            'DATA PEMBAYAR',
+                            style: GoogleFonts.inter(
+                              color: ModernColors.textSecondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.namaMuzakkiTextController,
-                              focusNode: _model.namaMuzakkiFocusNode,
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nama Muzakki / Donatur ',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .namaMuzakkiTextControllerValidator
-                                  .asValidator(context),
+                          SizedBox(height: ModernSpacing.sm),
+                          TextFormField(
+                            controller: _model.namaMuzakkiTextController,
+                            focusNode: _model.namaMuzakkiFocusNode,
+                            autofocus: false,
+                            obscureText: false,
+                            decoration: _buildInputDecoration(
+                              labelText: 'Nama Muzakki / Donatur',
+                            ),
+                            style: GoogleFonts.inter(
+                              color: ModernColors.textPrimary,
+                              fontSize: 16,
+                            ),
+                            validator: (value) =>
+                                FormValidators.validateRequired(
+                                    value, 'Nama Muzakki'),
+                          ),
+                          SizedBox(height: ModernSpacing.lg),
+                          Text(
+                            'KOTAK AMAL',
+                            style: GoogleFonts.inter(
+                              color: ModernColors.textSecondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Text(
-                                'KOTAK AMAL',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      fontSize: 14.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                              ),
+                          SizedBox(height: ModernSpacing.sm),
+                          TextFormField(
+                            controller: _model.jmlKotakAmalTextController,
+                            focusNode: _model.jmlKotakAmalFocusNode,
+                            onChanged: (_) => EasyDebounce.debounce(
+                              '_model.jmlKotakAmalTextController',
+                              Duration(milliseconds: 500),
+                              () => safeSetState(() {}),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 8.0, 8.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.jmlKotakAmalTextController,
-                              focusNode: _model.jmlKotakAmalFocusNode,
-                              onChanged: (_) => EasyDebounce.debounce(
-                                '_model.jmlKotakAmalTextController',
-                                Duration(milliseconds: 2000),
-                                () => safeSetState(() {}),
-                              ),
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nominal ',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
+                            autofocus: false,
+                            obscureText: false,
+                            decoration: _buildInputDecoration(
+                              labelText: 'Nominal',
+                              prefixText: 'Rp ',
+                              suffixIcon: _model.jmlKotakAmalTextController!
+                                      .text.isNotEmpty
+                                  ? InkWell(
+                                      onTap: () async {
+                                        _model.jmlKotakAmalTextController
+                                            ?.clear();
+                                        safeSetState(() {});
+                                      },
+                                      child: Icon(
+                                        Icons.clear,
+                                        color: ModernColors.primaryAccent,
+                                        size: 22,
                                       ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                suffixIcon: _model.jmlKotakAmalTextController!
-                                        .text.isNotEmpty
-                                    ? InkWell(
-                                        onTap: () async {
-                                          _model.jmlKotakAmalTextController
-                                              ?.clear();
-                                          safeSetState(() {});
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          color: Color(0xFF259148),
-                                          size: 22,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .titleLarge
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleLarge
-                                        .fontStyle,
-                                  ),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              validator: _model
-                                  .jmlKotakAmalTextControllerValidator
-                                  .asValidator(context),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9]'))
-                              ],
+                                    )
+                                  : null,
                             ),
+                            style: GoogleFonts.inter(
+                              color: ModernColors.textPrimary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            keyboardType: TextInputType.number,
+                            validator: (value) =>
+                                FormValidators.validateCurrency(value),
+                            inputFormatters: [
+                              CurrencyInputFormatter(),
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 24.0, 0.0, 24.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                if (_model.formKey.currentState == null ||
-                                    !_model.formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                if (_model.datePickerModel.datePicked == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Belum pilih tanggal!',
-                                        style: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .info,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .fontStyle,
-                                            ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor: Color(0xFFE51010),
-                                    ),
-                                  );
-                                  return;
-                                }
-                                await TransactionEndPointGroup.addKotakAmalCall
-                                    .call(
-                                  token: currentAuthenticationToken,
-                                  unitId: FFAppState().profileUPZ.id,
-                                  trxDate: _model.datePickerModel.datePicked
-                                      ?.toString(),
-                                  amount: int.tryParse(
-                                      _model.jmlKotakAmalTextController.text),
-                                  desc: '-',
-                                );
-
-                                await showDialog(
-                                  context: context,
-                                  builder: (alertDialogContext) {
-                                    return AlertDialog(
-                                      title: Text('Info'),
-                                      content: Text('Transaksi Berhasil'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(alertDialogContext),
-                                          child: Text('Ok'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                context.goNamed(
-                                  HomeWidget.routeName,
-                                  extra: <String, dynamic>{
-                                    kTransitionInfoKey: TransitionInfo(
-                                      hasTransition: true,
-                                      transitionType:
-                                          PageTransitionType.rightToLeft,
-                                    ),
-                                  },
-                                );
-                              },
-                              text: 'Simpan',
-                              options: FFButtonOptions(
+                          SizedBox(height: ModernSpacing.lg),
+                          AnimatedBuilder(
+                            animation: _buttonScaleAnimation,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: _buttonScaleAnimation.value,
+                                child: child,
+                              );
+                            },
+                            child: GestureDetector(
+                              onTapDown: (_) =>
+                                  _buttonAnimationController.forward(),
+                              onTapUp: (_) =>
+                                  _buttonAnimationController.reverse(),
+                              onTapCancel: () =>
+                                  _buttonAnimationController.reverse(),
+                              child: Container(
                                 width: double.infinity,
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF259148),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  color: ModernColors.primaryDark,
+                                  borderRadius:
+                                      BorderRadius.circular(ModernRadius.lg),
+                                  boxShadow: ModernShadows.buttonShadow,
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius:
+                                        BorderRadius.circular(ModernRadius.lg),
+                                    onTap: () async {
+                                      if (_model.formKey.currentState == null ||
+                                          !_model.formKey.currentState!
+                                              .validate()) {
+                                        return;
+                                      }
+                                      if (_model.datePickerModel.datePicked ==
+                                          null) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Tanggal wajib dipilih',
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                ModernColors.expenseRed,
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      final amount = CurrencyInputFormatter
+                                          .parseFormattedCurrency(_model
+                                              .jmlKotakAmalTextController.text);
+
+                                      final response =
+                                          await TransactionEndPointGroup
+                                              .addKotakAmalCall
+                                              .call(
+                                        token: currentAuthenticationToken,
+                                        unitId: FFAppState().profileUPZ.id,
+                                        trxDate: _model
+                                            .datePickerModel.datePicked
+                                            ?.toString(),
+                                        amount: amount ?? 0,
+                                        desc: '-',
+                                      );
+
+                                      if (response.succeeded) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: Text('Berhasil'),
+                                              content: Text(
+                                                  'Transaksi Kotak Amal sebesar Rp ${CurrencyInputFormatter.formatToCurrency(amount ?? 0)} berhasil disimpan'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+
+                                        if (!mounted) return;
+                                        context.pushNamed(HomeWidget.routeName);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Transaksi gagal. Silakan coba lagi.',
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            backgroundColor:
+                                                ModernColors.expenseRed,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Simpan',
+                                        style: GoogleFonts.inter(
+                                          color: ModernColors.textOnDark,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -582,6 +384,117 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  // Info card explaining Kotak Amal purpose
+  Widget _buildInfoCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(ModernSpacing.md),
+      decoration: BoxDecoration(
+        color: ModernColors.primaryDark.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(ModernRadius.xl),
+        border: Border.all(
+          color: ModernColors.primaryDark.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: ModernColors.primaryDark,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.volunteer_activism,
+              color: ModernColors.textOnDark,
+              size: 24,
+            ),
+          ),
+          SizedBox(width: ModernSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tentang Kotak Amal',
+                  style: GoogleFonts.inter(
+                    color: ModernColors.primaryDark,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Kotak Amal untuk infak rutin jamaah masjid',
+                  style: GoogleFonts.inter(
+                    color: ModernColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method for consistent input decoration
+  InputDecoration _buildInputDecoration({
+    required String labelText,
+    String? prefixText,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      labelStyle: GoogleFonts.inter(
+        color: ModernColors.textSecondary,
+        fontSize: 16,
+      ),
+      floatingLabelStyle: GoogleFonts.inter(
+        color: ModernColors.primaryAccent,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+      prefixText: prefixText,
+      prefixStyle: GoogleFonts.inter(
+        color: ModernColors.textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+      suffixIcon: suffixIcon,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.primaryAccent,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.expenseRed,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ModernColors.expenseRed,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(ModernRadius.lg),
+      ),
+      filled: true,
+      fillColor: ModernColors.backgroundPrimary,
+      contentPadding: EdgeInsets.all(16),
     );
   }
 }
