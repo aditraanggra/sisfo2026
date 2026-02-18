@@ -684,7 +684,7 @@ class TransactionEndPointGroup {
       'https://sisfo-upz-sisfoupz-webapp.2rxwkd.easypanel.host/api/v1';
   static Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Content': 'application/json',
+    'Accept': 'application/json',
   };
   static AddZakatMalCall addZakatMalCall = AddZakatMalCall();
   static AddSedekahCall addSedekahCall = AddSedekahCall();
@@ -813,7 +813,7 @@ class AddZakatMalCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -856,7 +856,7 @@ class AddSedekahCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -897,7 +897,7 @@ class AddFidyahCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -936,7 +936,7 @@ class AddKotakAmalCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -987,7 +987,7 @@ class AddPendistribusianCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1038,7 +1038,7 @@ class AddSetorZISCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1090,7 +1090,7 @@ class UpdateSetorZISCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1144,7 +1144,7 @@ class UpdatePendistribusianCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1190,7 +1190,7 @@ class UpdateZakatMalCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1232,7 +1232,7 @@ class UpdateSedekahCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1274,7 +1274,7 @@ class UpdateFidyahCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1314,7 +1314,7 @@ class UpdateKotakAmalCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1343,7 +1343,7 @@ class DeleteZakatMalCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1370,7 +1370,7 @@ class DeleteSedekahCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1397,7 +1397,7 @@ class DeleteFidyahCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1424,7 +1424,7 @@ class DeleteKotakAmalCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1451,7 +1451,7 @@ class DeletePendistribusianCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1478,7 +1478,7 @@ class DeleteSetorZISCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {},
@@ -1505,7 +1505,7 @@ class GetZakatMaalCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {
@@ -1540,7 +1540,7 @@ class GetSedekahCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {
@@ -1575,7 +1575,7 @@ class GetFidyahCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {
@@ -1610,7 +1610,7 @@ class GetKotakAmalCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {
@@ -1645,7 +1645,7 @@ class GetPendistribusianCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {
@@ -1682,7 +1682,7 @@ class GetSetorZISCall {
       callType: ApiCallType.GET,
       headers: {
         'Content-Type': 'application/json',
-        'Content': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
       params: {

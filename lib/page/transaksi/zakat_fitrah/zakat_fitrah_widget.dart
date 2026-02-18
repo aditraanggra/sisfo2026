@@ -1054,23 +1054,36 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
           locale: 'id_ID');
     }
 
-    await DialogService.showSuccessModal(
+    final result = await DialogService.showSuccessModal(
       context: context,
       title: 'Transaksi Berhasil',
       message: 'Data zakat fitrah telah berhasil disimpan.',
       transactionSummary: transactionSummary,
       onAddMore: () {
-        _model.totalBeras = 0.0;
-        _model.totalUang = 0;
-        _model.namaMuzakkiError = null;
-        _model.jmMuzakkiError = null;
-        safeSetState(() {
-          _model.namaMuzakkiTextController?.clear();
-          _model.jmMuzakkiTextController?.clear();
-          _model.keteranganTextController?.clear();
-        });
+        _clearForm();
       },
       onViewHistory: () => context.goNamed(HistoriTransaksiWidget.routeName),
     );
+
+    if (result == null ||
+        result == SuccessModalAction.dismissed ||
+        result == SuccessModalAction.goHome) {
+      _clearForm();
+      if (mounted) {
+        context.goNamed(HomeWidget.routeName);
+      }
+    }
+  }
+
+  void _clearForm() {
+    _model.totalBeras = 0.0;
+    _model.totalUang = 0;
+    _model.namaMuzakkiError = null;
+    _model.jmMuzakkiError = null;
+    safeSetState(() {
+      _model.namaMuzakkiTextController?.clear();
+      _model.jmMuzakkiTextController?.clear();
+      _model.keteranganTextController?.clear();
+    });
   }
 }

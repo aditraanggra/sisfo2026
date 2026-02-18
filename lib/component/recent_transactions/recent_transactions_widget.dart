@@ -1,4 +1,5 @@
 import '/auth/custom_auth/auth_util.dart';
+import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -126,19 +127,18 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
   }
 
   Widget _buildTransactionList(BuildContext context) {
-    // Show loading state
     if (_model.isLoading) {
-      return Container(
-        padding: const EdgeInsets.all(24.0),
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFF259148),
+      return Column(
+        children: [
+          SkeletonLoaderWidget(
+            type: SkeletonType.transactionFilter,
           ),
-        ),
+          const SizedBox(height: 16.0),
+          SkeletonLoaderWidget(
+            type: SkeletonType.listItem,
+            itemCount: 3,
+          ),
+        ],
       );
     }
 

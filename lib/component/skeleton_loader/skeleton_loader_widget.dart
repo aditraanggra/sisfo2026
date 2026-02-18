@@ -15,6 +15,13 @@ enum SkeletonType {
   chips, // For wrapped chips
   dashboardStats, // For dashboard statistics (Muzakki/Mustahik)
   dashboardGrid, // For quick actions grid
+  transactionFilter, // For transaction filter tabs/chips
+  balanceCard, // For gradient balance/summary cards
+  header, // For modern header with avatar
+  tabs, // For tab bar skeleton
+  emptyState, // For empty state placeholder
+  slider, // For slider/carousel skeletons
+  compactListItem, // For compact list items (no card background)
 }
 
 class SkeletonLoaderWidget extends StatefulWidget {
@@ -92,6 +99,20 @@ class _SkeletonLoaderWidgetState extends State<SkeletonLoaderWidget>
         return _buildDashboardStatsSkeleton();
       case SkeletonType.dashboardGrid:
         return _buildDashboardGridSkeleton();
+      case SkeletonType.transactionFilter:
+        return _buildTransactionFilterSkeleton();
+      case SkeletonType.balanceCard:
+        return _buildBalanceCardSkeleton();
+      case SkeletonType.header:
+        return _buildHeaderSkeleton();
+      case SkeletonType.tabs:
+        return _buildTabsSkeleton();
+      case SkeletonType.emptyState:
+        return _buildEmptyStateSkeleton();
+      case SkeletonType.slider:
+        return _buildSliderSkeleton();
+      case SkeletonType.compactListItem:
+        return _buildCompactListItemSkeleton();
     }
   }
 
@@ -467,6 +488,226 @@ class _SkeletonLoaderWidgetState extends State<SkeletonLoaderWidget>
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for transaction filter tabs
+  Widget _buildTransactionFilterSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildShimmerBox(width: 150.0, height: 18.0),
+          const SizedBox(height: 16.0),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            child: Row(
+              children: List.generate(
+                5,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _buildShimmerBox(
+                    width: 80.0 + (index * 10.0),
+                    height: 36.0,
+                    circular: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds skeleton for balance/summary cards with gradient
+  Widget _buildBalanceCardSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: const [Color(0xFF1A3C34), Color(0xFF0D1F1A)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: _buildShimmerBox(width: 40.0, height: 40.0),
+                ),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildShimmerBox(
+                        width: 120.0,
+                        height: 12.0,
+                      ),
+                      const SizedBox(height: 4.0),
+                      _buildShimmerBox(
+                        width: 80.0,
+                        height: 10.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            _buildShimmerBox(width: 180.0, height: 32.0),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for modern header with avatar
+  Widget _buildHeaderSkeleton() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: const [Color(0xFF1A3C34), Color(0xFF0D1F1A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Row(
+          children: [
+            _buildShimmerBox(width: 56.0, height: 56.0, circular: true),
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildShimmerBox(width: 180.0, height: 18.0),
+                  const SizedBox(height: 8.0),
+                  _buildShimmerBox(width: 120.0, height: 12.0),
+                  const SizedBox(height: 12.0),
+                  Row(
+                    children: [
+                      _buildShimmerBox(width: 100.0, height: 14.0),
+                      const SizedBox(width: 16.0),
+                      _buildShimmerBox(width: 100.0, height: 14.0),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            _buildShimmerBox(width: 24.0, height: 24.0, circular: true),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for tab bar
+  Widget _buildTabsSkeleton() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
+        children: List.generate(
+          widget.itemCount.clamp(1, 5),
+          (index) => Padding(
+            padding: const EdgeInsets.only(right: 24.0),
+            child: _buildShimmerBox(
+              width: 60.0 + (index * 15.0),
+              height: 16.0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for empty state placeholder
+  Widget _buildEmptyStateSkeleton() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildShimmerBox(width: 80.0, height: 80.0, circular: true),
+            const SizedBox(height: 16.0),
+            _buildShimmerBox(width: 180.0, height: 16.0),
+            const SizedBox(height: 8.0),
+            _buildShimmerBox(width: 140.0, height: 12.0),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds skeleton for slider/carousel
+  Widget _buildSliderSkeleton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        height: 150.0,
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 8.0,
+              color: const Color(0x1A000000),
+              offset: const Offset(0.0, 2.0),
+            ),
+          ],
+        ),
+        child: _buildShimmerBox(width: double.infinity, height: 150.0),
+      ),
+    );
+  }
+
+  /// Builds skeleton for compact list items (without card background)
+  Widget _buildCompactListItemSkeleton() {
+    return Column(
+      children: List.generate(
+        widget.itemCount,
+        (index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Row(
+            children: [
+              _buildShimmerBox(width: 40.0, height: 40.0, circular: true),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildShimmerBox(width: double.infinity, height: 14.0),
+                    const SizedBox(height: 6.0),
+                    _buildShimmerBox(width: 120.0, height: 10.0),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              _buildShimmerBox(width: 70.0, height: 14.0),
+            ],
           ),
         ),
       ),

@@ -12,6 +12,9 @@ enum SuccessModalAction {
 
   /// Dialog was dismissed (tapped outside or auto-dismissed)
   dismissed,
+
+  /// User tapped on modal content to go home
+  goHome,
 }
 
 /// Enum representing the action taken on an error dialog.
@@ -220,193 +223,203 @@ class DialogService {
           });
         }
 
-        return AlertDialog(
-          backgroundColor: theme.secondaryBackground,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          contentPadding: const EdgeInsets.all(24.0),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 80.0,
-                height: 80.0,
-                decoration: BoxDecoration(
-                  color: theme.success.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.check_circle_rounded,
-                  color: theme.success,
-                  size: 48.0,
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: theme.titleMedium.override(
-                  font: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
-                  color: theme.primaryText,
-                  letterSpacing: 0.0,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: theme.bodyMedium.override(
-                  font: GoogleFonts.notoSans(),
-                  color: theme.secondaryText,
-                  letterSpacing: 0.0,
-                ),
-              ),
-              if (transactionSummary != null &&
-                  transactionSummary.isNotEmpty) ...[
-                const SizedBox(height: 16.0),
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(dialogContext).pop(SuccessModalAction.goHome);
+          },
+          child: AlertDialog(
+            backgroundColor: theme.secondaryBackground,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            contentPadding: const EdgeInsets.all(24.0),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12.0),
+                  width: 80.0,
+                  height: 80.0,
                   decoration: BoxDecoration(
-                    color: theme.primaryBackground,
-                    borderRadius: BorderRadius.circular(8.0),
+                    color: theme.success.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: transactionSummary.entries.map((entry) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              entry.key,
-                              style: theme.labelSmall.override(
-                                font: GoogleFonts.notoSans(),
-                                color: theme.secondaryText,
-                                letterSpacing: 0.0,
-                              ),
-                            ),
-                            Flexible(
-                              child: Text(
-                                entry.value,
-                                textAlign: TextAlign.end,
-                                style: theme.bodySmall.override(
-                                  font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600),
-                                  color: theme.primaryText,
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: theme.success,
+                    size: 48.0,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: theme.titleMedium.override(
+                    font: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
+                    color: theme.primaryText,
+                    letterSpacing: 0.0,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: theme.bodyMedium.override(
+                    font: GoogleFonts.notoSans(),
+                    color: theme.secondaryText,
+                    letterSpacing: 0.0,
+                  ),
+                ),
+                if (transactionSummary != null &&
+                    transactionSummary.isNotEmpty) ...[
+                  const SizedBox(height: 16.0),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: theme.primaryBackground,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: transactionSummary.entries.map((entry) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                entry.key,
+                                style: theme.labelSmall.override(
+                                  font: GoogleFonts.notoSans(),
+                                  color: theme.secondaryText,
                                   letterSpacing: 0.0,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                              Flexible(
+                                child: Text(
+                                  entry.value,
+                                  textAlign: TextAlign.end,
+                                  style: theme.bodySmall.override(
+                                    font: GoogleFonts.notoSans(
+                                        fontWeight: FontWeight.w600),
+                                    color: theme.primaryText,
+                                    letterSpacing: 0.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-              ],
-              const SizedBox(height: 24.0),
-              Row(
-                children: [
-                  if (onAddMore != null)
-                    Expanded(
-                      child: Semantics(
-                        label: 'Tambah transaksi lagi',
-                        button: true,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(dialogContext)
-                                .pop(SuccessModalAction.addMore);
-                            onAddMore();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(0, 48),
-                            side: BorderSide(color: theme.primary),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          child: Text(
-                            'Tambah Lagi',
-                            style: theme.bodyMedium.override(
-                              font: GoogleFonts.notoSans(
-                                  fontWeight: FontWeight.w600),
-                              color: theme.primary,
-                              letterSpacing: 0.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (onAddMore != null && onViewHistory != null)
-                    const SizedBox(width: 12.0),
-                  if (onViewHistory != null)
-                    Expanded(
-                      child: Semantics(
-                        label: 'Lihat histori transaksi',
-                        button: true,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(dialogContext)
-                                .pop(SuccessModalAction.viewHistory);
-                            onViewHistory();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(0, 48),
-                            backgroundColor: theme.primary,
-                            foregroundColor: Colors.white,
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          child: Text(
-                            'Lihat Histori',
-                            style: theme.bodyMedium.override(
-                              font: GoogleFonts.notoSans(
-                                  fontWeight: FontWeight.w600),
-                              color: Colors.white,
-                              letterSpacing: 0.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
-              ),
-              if (onAddMore == null && onViewHistory == null)
-                SizedBox(
-                  width: double.infinity,
-                  child: Semantics(
-                    label: 'Tutup dialog',
-                    button: true,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.of(dialogContext)
-                          .pop(SuccessModalAction.dismissed),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(0, 48),
-                        backgroundColor: theme.primary,
-                        foregroundColor: Colors.white,
-                        elevation: 2.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                const SizedBox(height: 24.0),
+                Row(
+                  children: [
+                    if (onAddMore != null)
+                      Expanded(
+                        child: Semantics(
+                          label: 'Tambah transaksi lagi',
+                          button: true,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(dialogContext)
+                                  .pop(SuccessModalAction.addMore);
+                              onAddMore();
+                            },
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: theme.primary),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Tambah Lagi',
+                                  style: theme.bodyMedium.override(
+                                    font: GoogleFonts.notoSans(
+                                        fontWeight: FontWeight.w600),
+                                    color: theme.primary,
+                                    letterSpacing: 0.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      child: Text(
-                        'Tutup',
-                        style: theme.bodyMedium.override(
-                          font:
-                              GoogleFonts.notoSans(fontWeight: FontWeight.w600),
-                          color: Colors.white,
-                          letterSpacing: 0.0,
+                    if (onAddMore != null && onViewHistory != null)
+                      const SizedBox(width: 12.0),
+                    if (onViewHistory != null)
+                      Expanded(
+                        child: Semantics(
+                          label: 'Lihat histori transaksi',
+                          button: true,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(dialogContext)
+                                  .pop(SuccessModalAction.viewHistory);
+                              onViewHistory();
+                            },
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: theme.primary,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Lihat Histori',
+                                  style: theme.bodyMedium.override(
+                                    font: GoogleFonts.notoSans(
+                                        fontWeight: FontWeight.w600),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                if (onAddMore == null && onViewHistory == null)
+                  SizedBox(
+                    width: double.infinity,
+                    child: Semantics(
+                      label: 'Tutup dialog',
+                      button: true,
+                      child: InkWell(
+                        onTap: () => Navigator.of(dialogContext)
+                            .pop(SuccessModalAction.dismissed),
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: theme.primary,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Tutup',
+                              style: theme.bodyMedium.override(
+                                font: GoogleFonts.notoSans(
+                                    fontWeight: FontWeight.w600),
+                                color: Colors.white,
+                                letterSpacing: 0.0,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       },

@@ -276,28 +276,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PenyerapanHakAmilWidget.routeName,
           path: PenyerapanHakAmilWidget.routePath,
-          builder: (context, params) => PenyerapanHakAmilWidget(
-            sisaSaldoAmil: params.getParam(
-              'sisaSaldoAmil',
-              ParamType.int,
-            ),
-            sisaAmilZfBeras: params.getParam(
-              'sisaAmilZfBeras',
-              ParamType.double,
-            ),
-            sisaAmilZfUang: params.getParam(
-              'sisaAmilZfUang',
-              ParamType.int,
-            ),
-            sisaAmilZm: params.getParam(
-              'sisaAmilZm',
-              ParamType.int,
-            ),
-            sisaAmilIfs: params.getParam(
-              'sisaAmilIfs',
-              ParamType.int,
-            ),
-          ),
+          builder: (context, params) => PenyerapanHakAmilWidget(),
         ),
         FFRoute(
           name: RegistrationTypeWidget.routeName,

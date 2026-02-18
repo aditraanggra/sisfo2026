@@ -696,7 +696,8 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                           ),
                                         ],
                                       ),
-                                      if (_model.currentBeras! > sisaBerasZf)
+                                      if (_model.currentBeras != null &&
+                                          _model.currentBeras! > sisaBerasZf)
                                         Padding(
                                           padding: EdgeInsets.only(top: 8),
                                           child: Row(
@@ -812,21 +813,9 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                         '_model.jumlaUangTextController',
                                         Duration(milliseconds: 200),
                                         () async {
-                                          if (((_model.jumlaUangTextController
-                                                          .text !=
-                                                      '') &&
-                                                  (_model.jenisZFValue ==
-                                                      'Uang')) ||
-                                              ((_model.jumlaUangTextController
-                                                          .text !=
-                                                      '') &&
-                                                  (_model.jenisTransaksiValue ==
-                                                      'Zakat Mal')) ||
-                                              ((_model.jumlaUangTextController
-                                                          .text !=
-                                                      '') &&
-                                                  (_model.jenisTransaksiValue ==
-                                                      'Infak Tidak Terikat'))) {
+                                          if (_model.jumlaUangTextController
+                                                  .text !=
+                                              '') {
                                             _model.currentUang = int.tryParse(
                                                 _model.jumlaUangTextController
                                                     .text);
@@ -928,7 +917,66 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 return;
                               }
 
-                              if (_model.currentUang! > sisaDanaZm) {
+                              if (_model.jenisTransaksiValue == null ||
+                                  _model.jenisTransaksiValue!.isEmpty) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Peringatan'),
+                                    content: Text(
+                                        'Pilih sumber dana terlebih dahulu'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (_model.jenisTransaksiValue != 'infak' &&
+                                  (_model.jenisAsnafValue == null ||
+                                      _model.jenisAsnafValue!.isEmpty)) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Peringatan'),
+                                    content:
+                                        Text('Pilih asnaf terlebih dahulu'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (_model.jenisProgramValue == null ||
+                                  _model.jenisProgramValue!.isEmpty) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Peringatan'),
+                                    content:
+                                        Text('Pilih program terlebih dahulu'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (_model.currentUang != null &&
+                                  _model.currentUang! > sisaDanaZm) {
                                 if (_model.jenisTransaksiValue == 'zakat mal') {
                                   await showDialog(
                                     context: context,
@@ -951,7 +999,8 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 }
                               }
 
-                              if (_model.currentUang! > sisaDanaIfs) {
+                              if (_model.currentUang != null &&
+                                  _model.currentUang! > sisaDanaIfs) {
                                 if (_model.jenisTransaksiValue == 'infak') {
                                   await showDialog(
                                       context: context,
@@ -969,7 +1018,8 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 }
                               }
 
-                              if (_model.currentBeras! > sisaBerasZf) {
+                              if (_model.currentBeras != null &&
+                                  _model.currentBeras! > sisaBerasZf) {
                                 if (_model.jenisZFValue == 'Beras') {
                                   await showDialog(
                                       context: context,
@@ -987,7 +1037,8 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 }
                               }
 
-                              if (_model.currentUang! > sisaDanaZfUang) {
+                              if (_model.currentUang != null &&
+                                  _model.currentUang! > sisaDanaZfUang) {
                                 if (_model.jenisZFValue == 'Uang') {
                                   await showDialog(
                                       context: context,
@@ -1005,30 +1056,48 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 }
                               }
 
-                              var _shouldSetState = false;
+                              final pickedDate =
+                                  _model.datePickerModel.datePicked;
+                              final formattedDate = pickedDate != null
+                                  ? '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}'
+                                  : '';
+
+                              debugPrint('Creating pendis with data:');
+                              debugPrint(
+                                  '  unitId: ${FFAppState().profileUPZ.id}');
+                              debugPrint('  trxDate: $formattedDate');
+                              debugPrint(
+                                  '  mustahikName: ${_model.namaMustahikTextController.text}');
+                              debugPrint(
+                                  '  fundType: ${_model.jenisTransaksiValue}');
+                              debugPrint('  asnaf: ${_model.jenisAsnafValue}');
+                              debugPrint(
+                                  '  program: ${_model.jenisProgramValue}');
+                              debugPrint(
+                                  '  totalAmount: ${_model.currentUang}');
+                              debugPrint('  totalRice: ${_model.currentBeras}');
+                              debugPrint(
+                                  '  beneficiary: ${_model.penerimaManfaatTextController.text}');
+
                               _model.responsePendisAdd =
                                   await TransactionEndPointGroup
                                       .addPendistribusianCall
                                       .call(
                                 token: currentAuthenticationToken,
                                 unitId: FFAppState().profileUPZ.id,
-                                trxDate: _model.datePickerModel.datePicked
-                                    ?.toString(),
+                                trxDate: formattedDate,
                                 mustahikName:
                                     _model.namaMustahikTextController.text,
-                                nik: '',
+                                nik: '0000000000000000',
                                 fundType: _model.jenisTransaksiValue,
                                 asnaf: _model.jenisAsnafValue,
                                 program: _model.jenisProgramValue,
                                 totalAmount: valueOrDefault<int>(
-                                  int.tryParse(
-                                      _model.jumlaUangTextController.text),
+                                  _model.currentUang,
                                   0,
                                 ),
-                                // keterangan: _model.keteranganTextController.text, // API does not support this yet
                                 totalRice: valueOrDefault<double>(
-                                  double.tryParse(
-                                      _model.berasTextController.text),
+                                  _model.currentBeras,
                                   0.0,
                                 ),
                                 beneficiary: valueOrDefault<int>(
@@ -1038,9 +1107,18 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 ),
                               );
 
-                              _shouldSetState = true;
-                              if ((_model.responsePendisAdd?.succeeded ??
-                                  true)) {
+                              final response = _model.responsePendisAdd;
+                              debugPrint(
+                                  'Pendis Response: statusCode=${response?.statusCode}');
+                              debugPrint(
+                                  'Pendis Response Body: ${response?.jsonBody}');
+                              debugPrint(
+                                  'Pendis Exception: ${response?.exception}');
+
+                              safeSetState(() {});
+
+                              if (_model.responsePendisAdd?.succeeded ??
+                                  false) {
                                 await showDialog(
                                   context: context,
                                   builder: (alertDialogContext) {
@@ -1069,11 +1147,47 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                   },
                                 );
                               } else {
-                                if (_shouldSetState) safeSetState(() {});
-                                return;
-                              }
+                                final response = _model.responsePendisAdd;
+                                String errorMessage = 'Terjadi kesalahan';
 
-                              if (_shouldSetState) safeSetState(() {});
+                                if (response?.jsonBody != null) {
+                                  try {
+                                    final body = response!.jsonBody;
+                                    if (body is Map) {
+                                      errorMessage =
+                                          body['message']?.toString() ??
+                                              body['error']?.toString() ??
+                                              body['errors']?.toString() ??
+                                              errorMessage;
+                                    }
+                                  } catch (_) {}
+                                }
+
+                                if (errorMessage == 'Terjadi kesalahan' &&
+                                    response?.exception != null) {
+                                  errorMessage = response!.exceptionMessage;
+                                }
+
+                                if (response?.statusCode != null) {
+                                  errorMessage =
+                                      '$errorMessage (Status: ${response?.statusCode})';
+                                }
+
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Error'),
+                                    content:
+                                        Text('Transaksi gagal: $errorMessage'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Ok'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             text: 'Proses Transaksi',
                             options: FFButtonOptions(

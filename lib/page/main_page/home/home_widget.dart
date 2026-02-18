@@ -10,7 +10,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_model.dart';
@@ -36,81 +35,120 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _isLoading = true;
+  int _loadedYear = 0;
+  int _totalUang = 0;
+  double _totalBeras = 0.0;
+  int _totalMuzakki = 0;
+  int _totalMunfiq = 0;
+  int _totalMustahik = 0;
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => HomeModel());
+  }
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (FFAppState().profileUPZ.id == 0) {
-        _model.apiResultpvw = await AuthEndPointGroup.getUPZCall.call(
-          token: currentAuthenticationToken,
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentYear = FFAppState().year;
+    if (_loadedYear != currentYear) {
+      _loadData();
+    }
+  }
+
+  Future<void> _loadData() async {
+    final currentYear = FFAppState().year;
+    safeSetState(() => _isLoading = true);
+
+    if (FFAppState().profileUPZ.id == 0) {
+      await _loadUPZData();
+    }
+
+    await _loadReportData();
+
+    _loadedYear = currentYear;
+    safeSetState(() => _isLoading = false);
+  }
+
+  Future<void> _loadUPZData() async {
+    final response = await AuthEndPointGroup.getUPZCall.call(
+      token: currentAuthenticationToken,
+    );
+
+    if (response.succeeded) {
+      final upzData = response.jsonBody;
+      FFAppState().update(() {
+        FFAppState().profileUPZ = UpzStruct(
+          id: AuthEndPointGroup.getUPZCall.id(upzData),
+          userId: AuthEndPointGroup.getUPZCall.userId(upzData),
+          categoryId: AuthEndPointGroup.getUPZCall.categoryId(upzData),
+          villageId: AuthEndPointGroup.getUPZCall.villageId(upzData),
+          districtId: AuthEndPointGroup.getUPZCall.districtId(upzData),
+          noSk: AuthEndPointGroup.getUPZCall.noSk(upzData),
+          unitName: AuthEndPointGroup.getUPZCall.unitName(upzData),
+          noRegister: AuthEndPointGroup.getUPZCall.noRegister(upzData),
+          address: AuthEndPointGroup.getUPZCall.address(upzData),
+          unitLeader: AuthEndPointGroup.getUPZCall.unitLead(upzData),
+          unitAssistant: AuthEndPointGroup.getUPZCall.unitAssist(upzData),
+          unitFinance: AuthEndPointGroup.getUPZCall.unitFinance(upzData),
+          operatorPhone: AuthEndPointGroup.getUPZCall.opPhone(upzData),
+          ricePrice: AuthEndPointGroup.getUPZCall.ricePrice(upzData),
+          isVerified: AuthEndPointGroup.getUPZCall.isVerified(upzData),
+          profileCompletion:
+              AuthEndPointGroup.getUPZCall.profileCompletion(upzData),
+          villageName: AuthEndPointGroup.getUPZCall.villageName(upzData),
+          districtName: AuthEndPointGroup.getUPZCall.districtName(upzData),
         );
+      });
+    }
+  }
 
-        if ((_model.apiResultpvw?.succeeded ?? true)) {
-          FFAppState().profileUPZ = UpzStruct(
-            id: AuthEndPointGroup.getUPZCall.id(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            userId: AuthEndPointGroup.getUPZCall.userId(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            categoryId: AuthEndPointGroup.getUPZCall.categoryId(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            villageId: AuthEndPointGroup.getUPZCall.villageId(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            districtId: AuthEndPointGroup.getUPZCall.districtId(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            noSk: AuthEndPointGroup.getUPZCall.noSk(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            unitName: AuthEndPointGroup.getUPZCall.unitName(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            noRegister: AuthEndPointGroup.getUPZCall.noRegister(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            address: AuthEndPointGroup.getUPZCall.address(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            unitLeader: AuthEndPointGroup.getUPZCall.unitLead(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            unitAssistant: AuthEndPointGroup.getUPZCall.unitAssist(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            unitFinance: AuthEndPointGroup.getUPZCall.unitFinance(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            operatorPhone: AuthEndPointGroup.getUPZCall.opPhone(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            ricePrice: AuthEndPointGroup.getUPZCall.ricePrice(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            isVerified: AuthEndPointGroup.getUPZCall.isVerified(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            profileCompletion: AuthEndPointGroup.getUPZCall.profileCompletion(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            villageName: AuthEndPointGroup.getUPZCall.villageName(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-            districtName: AuthEndPointGroup.getUPZCall.districtName(
-              (_model.apiResultpvw?.jsonBody ?? ''),
-            ),
-          );
-          safeSetState(() {});
-        }
-      }
-    });
+  Future<void> _loadReportData() async {
+    final unitId = FFAppState().profileUPZ.id;
+    final year = FFAppState().year;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    if (unitId == 0) return;
+
+    final response = await RekapEndPointGroup.rekapZisReportCall.call(
+      unitId: unitId,
+      periode: 'tahunan',
+      year: year,
+      fromDate: '$year-01-01',
+      toDate: '$year-12-31',
+      token: currentAuthenticationToken,
+    );
+
+    if (response.succeeded) {
+      final reportData = response.jsonBody;
+
+      _totalUang = (valueOrDefault<int>(
+              RekapEndPointGroup.rekapZisReportCall.totalZfAmount(reportData),
+              0) +
+          valueOrDefault<int>(
+              RekapEndPointGroup.rekapZisReportCall.totalZmAmount(reportData),
+              0) +
+          valueOrDefault<int>(
+              RekapEndPointGroup.rekapZisReportCall.totalIfsAmount(reportData),
+              0));
+
+      _totalBeras = valueOrDefault<double>(
+          RekapEndPointGroup.rekapZisReportCall.totalZfRice(reportData), 0.0);
+
+      _totalMuzakki = (valueOrDefault<int>(
+              RekapEndPointGroup.rekapZisReportCall.totalZfMuzakki(reportData),
+              0) +
+          valueOrDefault<int>(
+              RekapEndPointGroup.rekapZisReportCall.totalZmMuzakki(reportData),
+              0));
+
+      _totalMunfiq = valueOrDefault<int>(
+          RekapEndPointGroup.rekapZisReportCall.totalIfsMunfiq(reportData), 0);
+
+      _totalMustahik = valueOrDefault<int>(
+          RekapEndPointGroup.rekapZisReportCall.totalPm(reportData), 0);
+    }
   }
 
   @override
@@ -123,439 +161,168 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return FutureBuilder<ApiCallResponse>(
-      future: RekapEndPointGroup.rekapAlokasiCall.call(
-        periode: 'tahunan',
-        unitId: FFAppState().profileUPZ.id.toString(),
-        token: currentAuthenticationToken,
-        periodDate: DateTime.now().year.toString(),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        body: _isLoading ? _buildShimmerLoading() : _buildContent(),
       ),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Scaffold(
-            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            body: _buildShimmerLoading(),
-          );
-        }
+    );
+  }
 
-        return PopScope(
-          canPop: false,
-          child: Scaffold(
-            key: scaffoldKey,
-            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            body: FutureBuilder<ApiCallResponse>(
-              future: _model.getUpzData(
-                requestFn: () => AuthEndPointGroup.getUPZCall.call(
-                  token: currentAuthenticationToken,
-                ),
-              ),
-              builder: (context, snapshot) {
-                // Customize what your widget looks like when it's loading.
-                if (!snapshot.hasData) {
-                  return _buildShimmerLoading();
-                }
-                // UPZ data loaded successfully
+  Widget _buildContent() {
+    final isVerified = FFAppState().profileUPZ.isVerified == true;
 
-                return Container(
-                  decoration: BoxDecoration(),
-                  child: FutureBuilder<ApiCallResponse>(
-                    future: RekapEndPointGroup.rekapPendisCall.call(
-                      periode: 'tahunan',
-                      token: currentAuthenticationToken,
-                      unitId: FFAppState().profileUPZ.id,
-                      periodDate: DateTime.now().year.toString(),
-                    ),
-                    builder: (context, snapshot) {
-                      // Customize what your widget looks like when it's loading.
-                      if (!snapshot.hasData) {
-                        return _buildShimmerLoading();
-                      }
-                      final pendisWrapperRekapPendisResponse = snapshot.data!;
-
-                      return Container(
-                        decoration: BoxDecoration(),
-                        child: FutureBuilder<ApiCallResponse>(
-                          future: RekapEndPointGroup.rekapHakAmilCall.call(
-                            periode: 'tahunan',
-                            token: currentAuthenticationToken,
-                            unitId: FFAppState().profileUPZ.id,
-                            periodDate: DateTime.now().year.toString(),
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return _buildShimmerLoading();
-                            }
-
-                            return Container(
-                              decoration: BoxDecoration(),
-                              child: SingleChildScrollView(
-                                child: Builder(
-                                  builder: (context) {
-                                    final isVerified =
-                                        FFAppState().profileUPZ.isVerified ==
-                                            true;
-
-                                    if (!isVerified) {
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          wrapWithModel(
-                                            model: _model.modernHeaderModel,
-                                            updateCallback: () =>
-                                                safeSetState(() {}),
-                                            child: ModernHeaderWidget(
-                                              userName: FFAppState()
-                                                  .profileUPZ
-                                                  .unitName,
-                                              noRegister: FFAppState()
-                                                  .profileUPZ
-                                                  .noRegister,
-                                              onNotificationTap: () {
-                                                // TODO: Handle notification tap
-                                              },
-                                              onAvatarTap: () {
-                                                context.pushNamed(
-                                                    ProfileResponsiveWidget
-                                                        .routeName);
-                                              },
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    24.0, 16.0, 24.0, 8.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                border: Border.all(
-                                                  color: Color(0xF3DFDFDF),
-                                                  width: 1.0,
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(12.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.person_off_outlined,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .error,
-                                                      size: 40.0,
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  8.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        'User Belum Terverifikasi! \nTunggu proses verifikasi selesai atau \nhubungi Admin',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .notoSans(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryText,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                  lineHeight:
-                                                                      1.5,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 16.0, 0.0, 24.0),
-                                              child: Text(
-                                                'SISFO ZIS Version 2.0',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font: GoogleFonts.lato(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      color: Color(0xFFD0D0D0),
-                                                      fontSize: 12.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    }
-
-                                    return FutureBuilder<ApiCallResponse>(
-                                      future:
-                                          RekapEndPointGroup.rekapZISCall.call(
-                                        period: 'tahunan',
-                                        unitId: FFAppState()
-                                            .profileUPZ
-                                            .id
-                                            .toString(),
-                                        token: currentAuthenticationToken,
-                                        periodDate:
-                                            DateTime.now().year.toString(),
-                                      ),
-                                      builder: (context, zisSnapshot) {
-                                        if (!zisSnapshot.hasData) {
-                                          return _buildShimmerContent();
-                                        }
-
-                                        final zisData =
-                                            zisSnapshot.data!.jsonBody;
-
-                                        // Calculate Header Stats
-                                        final totalUang = (valueOrDefault<int>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalZfAmount(zisData),
-                                                0) +
-                                            valueOrDefault<int>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalZmAmount(zisData),
-                                                0) +
-                                            valueOrDefault<int>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalIfsAmount(zisData),
-                                                0));
-
-                                        final totalBeras =
-                                            valueOrDefault<double>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalZfRice(zisData),
-                                                0.0);
-
-                                        // Calculate Overview Stats
-                                        final totalMuzakki = (valueOrDefault<
-                                                    int>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalZfMuzakki(zisData),
-                                                0) +
-                                            valueOrDefault<int>(
-                                                RekapEndPointGroup.rekapZISCall
-                                                    .totalZmMuzakki(zisData),
-                                                0));
-
-                                        final totalMunfiq = valueOrDefault<int>(
-                                            RekapEndPointGroup.rekapZISCall
-                                                .totalIfsMunfiq(zisData),
-                                            0);
-
-                                        final totalMustahik =
-                                            valueOrDefault<int>(
-                                                RekapEndPointGroup
-                                                    .rekapPendisCall
-                                                    .totalPenerimaManfaat(
-                                                  pendisWrapperRekapPendisResponse
-                                                      .jsonBody,
-                                                ),
-                                                0);
-
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            // Modern Header
-                                            wrapWithModel(
-                                              model: _model.modernHeaderModel,
-                                              updateCallback: () =>
-                                                  safeSetState(() {}),
-                                              child: ModernHeaderWidget(
-                                                userName: FFAppState()
-                                                    .profileUPZ
-                                                    .unitName,
-                                                noRegister: FFAppState()
-                                                    .profileUPZ
-                                                    .noRegister,
-                                                totalPenerimaanUang:
-                                                    formatNumber(
-                                                  totalUang,
-                                                  formatType: FormatType.custom,
-                                                  currency: 'Rp ',
-                                                  format: '###,###',
-                                                  locale: 'ID',
-                                                ),
-                                                totalPenerimaanBeras:
-                                                    formatNumber(
-                                                  totalBeras,
-                                                  formatType: FormatType.custom,
-                                                  format: '##.## Kg',
-                                                  locale: 'ID',
-                                                ),
-                                                onNotificationTap: () {
-                                                  // TODO: Handle notification tap
-                                                },
-                                                onAvatarTap: () {
-                                                  context.pushNamed(
-                                                      ProfileResponsiveWidget
-                                                          .routeName);
-                                                },
-                                              ),
-                                            ),
-                                            // Modern Dana Overview
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 16.0, 16.0, 0.0),
-                                              child: wrapWithModel(
-                                                model: _model
-                                                    .modernDanaOverviewModel,
-                                                updateCallback: () =>
-                                                    safeSetState(() {}),
-                                                child: ModernDanaOverviewWidget(
-                                                  jumlahMuzakki: totalMuzakki,
-                                                  jumlahMunfiq: totalMunfiq,
-                                                  jumlahMustahik: totalMustahik,
-                                                ),
-                                              ),
-                                            ),
-                                            // Modern Quick Actions
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 16.0, 0.0, 0.0),
-                                              child: wrapWithModel(
-                                                model: _model
-                                                    .modernQuickActionsModel,
-                                                updateCallback: () =>
-                                                    safeSetState(() {}),
-                                                child:
-                                                    ModernQuickActionsWidget(),
-                                              ),
-                                            ),
-                                            // Transaksi Terbaru
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 24.0, 0.0, 0.0),
-                                              child: RecentTransactionsWidget(),
-                                            ),
-                                            // Version text
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 16.0, 0.0, 24.0),
-                                                child: Text(
-                                                  'SISFO ZIS Version 2.0',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.lato(
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            Color(0xFFD0D0D0),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                );
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          wrapWithModel(
+            model: _model.modernHeaderModel,
+            updateCallback: () => safeSetState(() {}),
+            child: ModernHeaderWidget(
+              userName: FFAppState().profileUPZ.unitName,
+              noRegister: FFAppState().profileUPZ.noRegister,
+              totalPenerimaanUang: isVerified
+                  ? formatNumber(
+                      _totalUang,
+                      formatType: FormatType.custom,
+                      currency: 'Rp ',
+                      format: '###,###',
+                      locale: 'ID',
+                    )
+                  : null,
+              totalPenerimaanBeras: isVerified
+                  ? formatNumber(
+                      _totalBeras,
+                      formatType: FormatType.custom,
+                      format: '##.## Kg',
+                      locale: 'ID',
+                    )
+                  : null,
+              onNotificationTap: () {},
+              onAvatarTap: () {
+                context.pushNamed(ProfileResponsiveWidget.routeName);
               },
             ),
           ),
-        );
-      },
+          if (!isVerified) _buildUnverifiedMessage(context),
+          if (isVerified) ...[
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+              child: wrapWithModel(
+                model: _model.modernDanaOverviewModel,
+                updateCallback: () => safeSetState(() {}),
+                child: ModernDanaOverviewWidget(
+                  jumlahMuzakki: _totalMuzakki,
+                  jumlahMunfiq: _totalMunfiq,
+                  jumlahMustahik: _totalMustahik,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+              child: wrapWithModel(
+                model: _model.modernQuickActionsModel,
+                updateCallback: () => safeSetState(() {}),
+                child: ModernQuickActionsWidget(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+              child: RecentTransactionsWidget(),
+            ),
+          ],
+          Align(
+            alignment: AlignmentDirectional(0.0, 0.0),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 24.0),
+              child: Text(
+                'SISFO ZIS Version 2.0',
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      font: GoogleFonts.lato(
+                        fontWeight: FontWeight.w300,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                      ),
+                      color: Color(0xFFD0D0D0),
+                      fontSize: 12.0,
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w300,
+                      fontStyle:
+                          FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                    ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUnverifiedMessage(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 8.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).secondaryBackground,
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(
+            color: Color(0xF3DFDFDF),
+            width: 1.0,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Icon(
+                Icons.person_off_outlined,
+                color: FlutterFlowTheme.of(context).error,
+                size: 40.0,
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                child: Text(
+                  'User Belum Terverifikasi! \nTunggu proses verifikasi selesai atau \nhubungi Admin',
+                  textAlign: TextAlign.center,
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        font: GoogleFonts.notoSans(
+                          fontWeight: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .fontWeight,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                        ),
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                        letterSpacing: 0.0,
+                        fontWeight:
+                            FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                        lineHeight: 1.5,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildShimmerLoading() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: _buildShimmerContent(),
+    return Scaffold(
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: _buildShimmerContent(),
+        ),
       ),
     );
   }
@@ -563,34 +330,31 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget _buildShimmerContent() {
     return Column(
       children: [
-        // Header skeleton
-        Container(
-          width: double.infinity,
-          height: 195.0,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF259148), Color(0xFF1D6935)],
-              stops: [0.0, 1.0],
-              begin: AlignmentDirectional(1.0, -1.0),
-              end: AlignmentDirectional(-1.0, 1.0),
-            ),
-          ),
-        ),
+        SkeletonLoaderWidget(type: SkeletonType.header),
         const SizedBox(height: 16.0),
-        // Dashboard Stats properties
         SkeletonLoaderWidget(
           type: SkeletonType.dashboardStats,
         ),
         const SizedBox(height: 16.0),
-        // Quick Actions
         SkeletonLoaderWidget(
           type: SkeletonType.dashboardGrid,
         ),
         const SizedBox(height: 24.0),
-        // Recent Transactions
-        SkeletonLoaderWidget(
-          type: SkeletonType.listItem,
-          itemCount: 2,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SkeletonLoaderWidget(
+                type: SkeletonType.transactionFilter,
+              ),
+              const SizedBox(height: 16.0),
+              SkeletonLoaderWidget(
+                type: SkeletonType.listItem,
+                itemCount: 2,
+              ),
+            ],
+          ),
         ),
       ],
     );
