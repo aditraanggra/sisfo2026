@@ -3,13 +3,16 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'recent_transactions_model.dart';
 export 'recent_transactions_model.dart';
 
 /// Recent Transactions Component
 /// Displays recent transactions with filter tabs - connected to real backend data
 class RecentTransactionsWidget extends StatefulWidget {
-  const RecentTransactionsWidget({super.key});
+  const RecentTransactionsWidget({
+    super.key,
+  });
 
   @override
   State<RecentTransactionsWidget> createState() =>
@@ -30,9 +33,11 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
     super.initState();
     _model = createModel(context, () => RecentTransactionsModel());
 
-    // Fetch transactions on init
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _model.fetchAllTransactions(currentAuthenticationToken ?? '');
+      await _model.fetchAllTransactions(
+        currentAuthenticationToken ?? '',
+        FFAppState().year,
+      );
       safeSetState(() {});
     });
   }
@@ -45,6 +50,7 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -167,8 +173,10 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
                   safeSetState(() {
                     _model.isLoading = true;
                   });
-                  await _model
-                      .fetchAllTransactions(currentAuthenticationToken ?? '');
+                  await _model.fetchAllTransactions(
+                    currentAuthenticationToken ?? '',
+                    FFAppState().year,
+                  );
                   safeSetState(() {});
                 },
                 child: Text(

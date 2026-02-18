@@ -41,21 +41,28 @@ class RecentTransactionsModel
   void dispose() {}
 
   /// Fetch all transaction data from APIs
-  Future<void> fetchAllTransactions(String token) async {
+  Future<void> fetchAllTransactions(String token, int year) async {
     isLoading = true;
     errorMessage = null;
     allTransactions = [];
 
+    final fromDate = '$year-01-01';
+    final toDate = '$year-12-31';
+
     try {
       // Fetch all transaction types in parallel
       final results = await Future.wait([
-        AuthEndPointGroup.getZakatFitrahCall.call(token: token),
-        TransactionEndPointGroup.getZakatMaalCall.call(token: token),
-        TransactionEndPointGroup.getSedekahCall.call(token: token),
-        TransactionEndPointGroup.getFidyahCall.call(token: token),
-        TransactionEndPointGroup.getKotakAmalCall.call(token: token),
-        TransactionEndPointGroup.getPendistribusianCall.call(token: token),
-        TransactionEndPointGroup.getSetorZISCall.call(token: token),
+        AuthEndPointGroup.getZakatFitrahCall.call(token: token, year: year),
+        TransactionEndPointGroup.getZakatMaalCall
+            .call(token: token, year: year),
+        TransactionEndPointGroup.getSedekahCall.call(token: token, year: year),
+        TransactionEndPointGroup.getFidyahCall.call(token: token, year: year),
+        TransactionEndPointGroup.getKotakAmalCall
+            .call(token: token, year: year),
+        TransactionEndPointGroup.getPendistribusianCall
+            .call(token: token, year: year),
+        TransactionEndPointGroup.getSetorZISCall
+            .call(token: token, fromDate: fromDate, toDate: toDate),
       ]);
 
       zfResponse = results[0];

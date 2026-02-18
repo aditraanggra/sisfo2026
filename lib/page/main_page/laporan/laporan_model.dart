@@ -180,6 +180,7 @@ class LaporanModel extends FlutterFlowModel<LaporanWidget> {
 
   @override
   void initState(BuildContext context) {
+    isLoading = true;
     selectedYear = DateTime.now().year;
     // Default to yearly as requested
     setYearly(selectedYear);

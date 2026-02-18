@@ -55,55 +55,55 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
   static final List<ModernQuickActionItem> _quickActions = [
     ModernQuickActionItem(
       label: 'Zakat Fitrah',
-      iconPath: 'assets/images/001-zakat.png',
+      iconPath: 'assets/images/zakat_fitrah.png',
       fallbackIcon: Icons.volunteer_activism,
       routeName: ZakatFitrahWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Infak/Sedekah',
-      iconPath: 'assets/images/006-infaq.png',
+      iconPath: 'assets/images/infak.png',
       fallbackIcon: Icons.favorite,
       routeName: InfakWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Zakat Mal',
-      iconPath: 'assets/images/003-money.png',
+      iconPath: 'assets/images/zakat_mal.png',
       fallbackIcon: Icons.account_balance_wallet,
       routeName: ZakatMalWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Setor ZIS',
-      iconPath: 'assets/images/005-donation.png',
+      iconPath: 'assets/images/setor.png',
       fallbackIcon: Icons.upload,
       routeName: SetorZisWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Penyerapan Amil',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/amilin.png',
       fallbackIcon: Icons.account_balance,
       routeName: PenyerapanHakAmilWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Pendistribusian',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/pendistribusian.png',
       fallbackIcon: Icons.people,
       routeName: PendistribusianWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Fidyah',
-      iconPath: 'assets/images/008-wheat.png',
+      iconPath: 'assets/images/fidyah.png',
       fallbackIcon: Icons.rice_bowl,
       routeName: FidyahWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Kotak Amal',
-      iconPath: 'assets/images/007-charity.png',
+      iconPath: 'assets/images/kotak_amal.png',
       fallbackIcon: Icons.inventory_2,
       routeName: KotakAmalWidget.routeName,
     ),
     ModernQuickActionItem(
       label: 'Kurban',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/kurban.png',
       fallbackIcon: Icons.pets,
       routeName: QurbanWidget.routeName,
     ),
@@ -163,16 +163,14 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
                 ),
                 const SizedBox(height: ModernSpacing.md),
               ],
-              // Requirements: 5.1 - 2x3 grid layout (2 rows, 3 columns)
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  // Requirements: 5.5 - Consistent spacing 16px
-                  crossAxisSpacing: ModernSpacing.md,
-                  mainAxisSpacing: ModernSpacing.md,
-                  childAspectRatio: 0.85,
+                  crossAxisSpacing: ModernSpacing.xs,
+                  mainAxisSpacing: ModernSpacing.xs,
+                  childAspectRatio: 1.0,
                 ),
                 itemCount: _quickActions.length,
                 itemBuilder: (context, index) {
@@ -242,41 +240,30 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
     );
   }
 
-  /// Build circular icon container with subtle background
-  /// Requirements: 5.3, 5.6
   Widget _buildCircularIconContainer(
     BuildContext context,
     ModernQuickActionItem action,
   ) {
-    return Container(
+    return SizedBox(
       width: 56.0,
       height: 56.0,
-      decoration: BoxDecoration(
-        // Subtle background color
-        color: action.iconBackgroundColor ??
-            ModernColors.backgroundMint.withOpacity(0.5),
-        shape: BoxShape.circle,
-      ),
       child: Center(
         child: _buildActionIcon(context, action),
       ),
     );
   }
 
-  /// Build action icon with fallback
-  /// Requirements: 5.6 - Consistent icon style
   Widget _buildActionIcon(BuildContext context, ModernQuickActionItem action) {
     return ExcludeSemantics(
       child: Image.asset(
         action.iconPath,
-        width: 32.0,
-        height: 32.0,
+        width: 48.0,
+        height: 48.0,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
-          // Fallback to icon if image fails to load
           return Icon(
             action.fallbackIcon ?? Icons.touch_app,
-            size: 28.0,
+            size: 44.0,
             color: ModernColors.primaryAccent,
           );
         },

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
 import 'api_manager.dart';
+import '/app_state.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
 
@@ -521,6 +522,7 @@ class DeleteZakatFitrahCall {
 class GetZakatFitrahCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = AuthEndPointGroup.getBaseUrl();
 
@@ -533,7 +535,9 @@ class GetZakatFitrahCall {
         'Accept': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -1491,6 +1495,7 @@ class DeleteSetorZISCall {
 class GetZakatMaalCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1503,7 +1508,9 @@ class GetZakatMaalCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -1523,6 +1530,7 @@ class GetZakatMaalCall {
 class GetSedekahCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1535,7 +1543,9 @@ class GetSedekahCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -1555,6 +1565,7 @@ class GetSedekahCall {
 class GetFidyahCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1567,7 +1578,9 @@ class GetFidyahCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -1587,6 +1600,7 @@ class GetFidyahCall {
 class GetKotakAmalCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1599,7 +1613,9 @@ class GetKotakAmalCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -1619,6 +1635,7 @@ class GetKotakAmalCall {
 class GetPendistribusianCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    int? year,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
@@ -1631,7 +1648,9 @@ class GetPendistribusianCall {
         'Content': 'application/json',
         'Authorization': 'Bearer ${token}',
       },
-      params: {},
+      params: {
+        'year': year,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -2034,12 +2053,15 @@ class RekapEndPointGroup {
 
 class RekapZISCall {
   Future<ApiCallResponse> call({
-    String? period = '',
+    String? period = 'tahunan',
     String? unitId = '',
     String? token = '',
     String? periodDate = '',
   }) async {
     final baseUrl = RekapEndPointGroup.getBaseUrl();
+
+    // Set periodDate dynamically based on selected year from App State
+    periodDate = '${FFAppState().year}-01-01';
 
     return ApiManager.instance.makeApiCall(
       callName: 'Rekap ZIS',
@@ -2107,6 +2129,9 @@ class RekapPendisCall {
     String? periodDate = '',
   }) async {
     final baseUrl = RekapEndPointGroup.getBaseUrl();
+
+    // Set periodDate dynamically based on selected year from App State
+    periodDate = '${FFAppState().year}-01-01';
 
     return ApiManager.instance.makeApiCall(
       callName: 'Rekap Pendis',
@@ -2205,6 +2230,9 @@ class RekapHakAmilCall {
   }) async {
     final baseUrl = RekapEndPointGroup.getBaseUrl();
 
+    // Set periodDate dynamically based on selected year from App State
+    periodDate = '${FFAppState().year}-01-01';
+
     return ApiManager.instance.makeApiCall(
       callName: 'Rekap Hak Amil',
       apiUrl: '${baseUrl}/rekap/hak-amil',
@@ -2257,6 +2285,7 @@ class RekapSetorCall {
     String? token = '',
     int? unitId,
     String? periodDate = '',
+    int? year,
   }) async {
     final baseUrl = RekapEndPointGroup.getBaseUrl();
 
@@ -2273,6 +2302,7 @@ class RekapSetorCall {
         'periode': periode,
         'unit_id': unitId,
         'period_date': periodDate,
+        'year': year,
       },
       returnBody: true,
       encodeBodyUtf8: false,

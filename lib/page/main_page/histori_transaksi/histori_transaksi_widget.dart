@@ -192,6 +192,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                             child: FutureBuilder<ApiCallResponse>(
                               future: AuthEndPointGroup.getZakatFitrahCall.call(
                                 token: currentAuthenticationToken,
+                                year: FFAppState().year,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -388,6 +389,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                               future:
                                   TransactionEndPointGroup.getSedekahCall.call(
                                 token: currentAuthenticationToken,
+                                year: FFAppState().year,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -568,6 +570,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                               future: TransactionEndPointGroup.getZakatMaalCall
                                   .call(
                                 token: currentAuthenticationToken,
+                                year: FFAppState().year,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -743,6 +746,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                               future: TransactionEndPointGroup.getKotakAmalCall
                                   .call(
                                 token: currentAuthenticationToken,
+                                year: FFAppState().year,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -921,6 +925,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                                   .getPendistribusianCall
                                   .call(
                                 token: currentAuthenticationToken,
+                                year: FFAppState().year,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.

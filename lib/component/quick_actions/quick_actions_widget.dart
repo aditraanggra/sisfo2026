@@ -37,55 +37,55 @@ class _QuickActionsWidgetState extends State<QuickActionsWidget> {
   static final List<QuickActionItem> _quickActions = [
     QuickActionItem(
       label: 'Zakat Fitrah',
-      iconPath: 'assets/images/001-zakat.png',
+      iconPath: 'assets/images/zakat_fitrah.png',
       fallbackIcon: Icons.volunteer_activism,
       routeName: ZakatFitrahWidget.routeName,
     ),
     QuickActionItem(
       label: 'Infak/Sedekah',
-      iconPath: 'assets/images/006-infaq.png',
+      iconPath: 'assets/images/infak.png',
       fallbackIcon: Icons.favorite,
       routeName: InfakWidget.routeName,
     ),
     QuickActionItem(
       label: 'Zakat Mal',
-      iconPath: 'assets/images/003-money.png',
+      iconPath: 'assets/images/zakat_mal.png',
       fallbackIcon: Icons.account_balance_wallet,
       routeName: ZakatMalWidget.routeName,
     ),
     QuickActionItem(
       label: 'Setor ZIS',
-      iconPath: 'assets/images/005-donation.png',
+      iconPath: 'assets/images/setor.png',
       fallbackIcon: Icons.upload,
       routeName: SetorZisWidget.routeName,
     ),
     QuickActionItem(
       label: 'Penyerapan Amil',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/amilin.png',
       fallbackIcon: Icons.account_balance,
       routeName: PenyerapanHakAmilWidget.routeName,
     ),
     QuickActionItem(
       label: 'Pendistribusian',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/pendistribusian.png',
       fallbackIcon: Icons.people,
       routeName: PendistribusianWidget.routeName,
     ),
     QuickActionItem(
       label: 'Fidyah',
-      iconPath: 'assets/images/008-wheat.png',
+      iconPath: 'assets/images/fidyah.png',
       fallbackIcon: Icons.rice_bowl,
       routeName: FidyahWidget.routeName,
     ),
     QuickActionItem(
       label: 'Kotak Amal',
-      iconPath: 'assets/images/007-charity.png',
+      iconPath: 'assets/images/kotak_amal.png',
       fallbackIcon: Icons.inventory_2,
       routeName: KotakAmalWidget.routeName,
     ),
     QuickActionItem(
       label: 'Kurban',
-      iconPath: 'assets/images/004-zakat-2.png',
+      iconPath: 'assets/images/kurban.png',
       fallbackIcon: Icons.pets,
       routeName: QurbanWidget.routeName,
     ),
@@ -239,14 +239,13 @@ class _QuickActionsWidgetState extends State<QuickActionsWidget> {
     return ExcludeSemantics(
       child: Image.asset(
         action.iconPath,
-        width: 36.0,
-        height: 36.0,
+        width: 44.0,
+        height: 44.0,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
-          // Fallback to icon if image fails to load
           return Icon(
             action.fallbackIcon ?? Icons.touch_app,
-            size: 32.0,
+            size: 40.0,
             color: const Color(0xFF259148),
           );
         },

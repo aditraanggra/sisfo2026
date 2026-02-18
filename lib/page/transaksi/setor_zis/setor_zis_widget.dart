@@ -162,6 +162,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
         periode: 'tahunan',
         token: currentAuthenticationToken,
         unitId: FFAppState().profileUPZ.id.toString(),
+        year: FFAppState().year,
       ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
@@ -191,6 +192,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                     periode: 'tahunan',
                     token: currentAuthenticationToken,
                     unitId: FFAppState().profileUPZ.id,
+                    year: FFAppState().year,
                   ),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.

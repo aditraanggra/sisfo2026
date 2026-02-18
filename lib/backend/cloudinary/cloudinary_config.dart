@@ -11,11 +11,9 @@ class CloudinaryConfig {
       String.fromEnvironment('CLOUDINARY_CLOUD_NAME', defaultValue: '');
 
   // Upload preset for unsigned uploads (no secret required)
-  static const String uploadPreset =
-      String.fromEnvironment('CLOUDINARY_UPLOAD_PRESET', defaultValue: '');
-
-  // Upload preset untuk unsigned upload (lebih aman untuk mobile)
-  static const String uploadPreset = 'sisfo_zis';
+  static const String uploadPreset = String.fromEnvironment(
+      'CLOUDINARY_UPLOAD_PRESET',
+      defaultValue: 'sisfo_zis');
 
   // Folder untuk organisasi assets
   static const String folderBuktiTransfer = 'sisfo_upz/bukti_transfer';
