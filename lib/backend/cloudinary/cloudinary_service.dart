@@ -144,6 +144,24 @@ class CloudinaryService {
     String? fileName,
   }) async {
     try {
+      // Debug: log configuration
+      print('Cloudinary Upload - Cloud Name: ${CloudinaryConfig.cloudName}');
+      print(
+          'Cloudinary Upload - Upload Preset: ${CloudinaryConfig.uploadPreset}');
+      print('Cloudinary Upload - Folder: ${folder ?? 'not specified'}');
+
+      if (CloudinaryConfig.cloudName.isEmpty) {
+        return CloudinaryUploadResponse.error(
+          'Cloud name is not configured. Please set CLOUDINARY_CLOUD_NAME.',
+        );
+      }
+
+      if (CloudinaryConfig.uploadPreset.isEmpty) {
+        return CloudinaryUploadResponse.error(
+          'Upload preset is not configured. Please set CLOUDINARY_UPLOAD_PRESET.',
+        );
+      }
+
       final uri = Uri.parse(CloudinaryConfig.uploadUrl);
       final request = http.MultipartRequest('POST', uri);
 
@@ -167,21 +185,27 @@ class CloudinaryService {
         request.fields['public_id'] = publicId;
       }
 
+      print('Cloudinary Upload - URL: ${CloudinaryConfig.uploadUrl}');
+
       // Send request
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
+
+      print('Cloudinary Upload - Status Code: ${response.statusCode}');
+      print('Cloudinary Upload - Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         return CloudinaryUploadResponse.fromJson(jsonResponse);
       } else {
         final errorBody = json.decode(response.body);
-        return CloudinaryUploadResponse.error(
-          errorBody['error']?['message'] ??
-              'Upload failed with status ${response.statusCode}',
-        );
+        final errorMessage = errorBody['error']?['message'] ??
+            'Upload failed with status ${response.statusCode}';
+        print('Cloudinary Upload Error: $errorMessage');
+        return CloudinaryUploadResponse.error(errorMessage);
       }
     } catch (e) {
+      print('Cloudinary Upload Exception: $e');
       return CloudinaryUploadResponse.error('Upload error: $e');
     }
   }

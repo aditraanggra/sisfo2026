@@ -455,19 +455,13 @@ class _FidyahWidgetState extends State<FidyahWidget>
       return;
     }
 
-    String desc = 'Fidyah ${_model.jmlHariTextController?.text} hari';
-    if (_model.keteranganTextController?.text.isNotEmpty ?? false) {
-      desc += ' - ${_model.keteranganTextController?.text}';
-    }
-
-    await TransactionEndPointGroup.addSedekahCall.call(
+    await TransactionEndPointGroup.addFidyahCall.call(
       trxDate: _model.datePickerModel.datePicked?.toString(),
       token: currentAuthenticationToken,
       unitId: FFAppState().profileUPZ.id,
-      munfiqName: _model.namaMuzakkiTextController?.text,
+      name: _model.namaMuzakkiTextController?.text,
+      totalDay: int.tryParse(_model.jmlHariTextController?.text ?? '0'),
       amount: _model.totalFidyah,
-      totalMunfiq: 1,
-      desc: desc,
     );
 
     if (!mounted) return;

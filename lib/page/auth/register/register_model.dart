@@ -1,70 +1,87 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/index.dart';
 import 'register_widget.dart' show RegisterWidget;
 import 'package:flutter/material.dart';
 
 class RegisterModel extends FlutterFlowModel<RegisterWidget> {
-  ///  State fields for stateful widgets in this page.
-
   final formKey = GlobalKey<FormState>();
-  // State field(s) for nameReg widget.
-  final nameRegKey = GlobalKey();
+
   FocusNode? nameRegFocusNode;
   TextEditingController? nameRegTextController;
-  String? nameRegSelectedOption;
-  String? Function(BuildContext, String?)? nameRegTextControllerValidator;
-  // State field(s) for emailReg widget.
-  final emailRegKey = GlobalKey();
+
   FocusNode? emailRegFocusNode;
   TextEditingController? emailRegTextController;
-  String? emailRegSelectedOption;
-  String? Function(BuildContext, String?)? emailRegTextControllerValidator;
-  // State field(s) for passReg widget.
+
   FocusNode? passRegFocusNode;
   TextEditingController? passRegTextController;
   late bool passRegVisibility;
-  String? Function(BuildContext, String?)? passRegTextControllerValidator;
-  String? _passRegTextControllerValidator(BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Password wajib diisi';
-    }
 
-    return null;
-  }
-
-  // State field(s) for passRegConfirm widget.
   FocusNode? passRegConfirmFocusNode;
   TextEditingController? passRegConfirmTextController;
   late bool passRegConfirmVisibility;
-  String? Function(BuildContext, String?)?
-      passRegConfirmTextControllerValidator;
-  String? _passRegConfirmTextControllerValidator(
-      BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Password wajib diisi';
-    }
 
+  bool isLoading = false;
+  ApiCallResponse? registerResponse;
+  ApiCallResponse? loginResponse;
+
+  String? validateName(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Nama wajib diisi';
+    }
+    if (val.length < 3) {
+      return 'Nama minimal 3 karakter';
+    }
     return null;
   }
 
-  // Stores action output result for [Backend Call - API (Register User)] action in Button widget.
-  ApiCallResponse? registerResponse;
+  String? validateEmail(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Email wajib diisi';
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(val)) {
+      return 'Format email tidak valid';
+    }
+    return null;
+  }
+
+  String? validatePassword(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Password wajib diisi';
+    }
+    if (val.length < 6) {
+      return 'Password minimal 6 karakter';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Konfirmasi password wajib diisi';
+    }
+    if (val != passRegTextController?.text) {
+      return 'Password tidak cocok';
+    }
+    return null;
+  }
 
   @override
   void initState(BuildContext context) {
     passRegVisibility = false;
-    passRegTextControllerValidator = _passRegTextControllerValidator;
     passRegConfirmVisibility = false;
-    passRegConfirmTextControllerValidator =
-        _passRegConfirmTextControllerValidator;
+    nameRegTextController = TextEditingController();
+    emailRegTextController = TextEditingController();
+    passRegTextController = TextEditingController();
+    passRegConfirmTextController = TextEditingController();
   }
 
   @override
   void dispose() {
     nameRegFocusNode?.dispose();
+    nameRegTextController?.dispose();
 
     emailRegFocusNode?.dispose();
+    emailRegTextController?.dispose();
 
     passRegFocusNode?.dispose();
     passRegTextController?.dispose();

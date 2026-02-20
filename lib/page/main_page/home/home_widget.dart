@@ -62,7 +62,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     final currentYear = FFAppState().year;
     safeSetState(() => _isLoading = true);
 
-    if (FFAppState().profileUPZ.id == 0) {
+    if (FFAppState().profileUPZ.id == 0 ||
+        FFAppState().profileUPZ.isVerified != true) {
       await _loadUPZData();
     }
 

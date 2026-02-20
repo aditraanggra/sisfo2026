@@ -57,6 +57,19 @@ class _LaporanWidgetState extends State<LaporanWidget>
     safeSetState(() {});
   }
 
+  String? _getTipeLaporan() {
+    switch (_model.selectedPeriod) {
+      case ReportPeriod.tahunan:
+        return 'Tahunan';
+      case ReportPeriod.bulanan:
+        return 'Bulanan';
+      case ReportPeriod.harian:
+        return 'Harian';
+      case ReportPeriod.rentang:
+        return 'Range';
+    }
+  }
+
   Future<void> _generatePdf() async {
     final reportData = _model.reportData;
     if (reportData == null) return;
@@ -244,16 +257,38 @@ class _LaporanWidgetState extends State<LaporanWidget>
       FFAppState().profileUPZ.unitLeader,
       FFAppState().profileUPZ.unitAssistant,
       FFAppState().profileUPZ.unitFinance,
-      // List Data Setor - might need adjustment if structure changed
-      // The original used:TransactionEndPointGroup.getSetorZISCall.listDataSetor(setoranData.jsonBody)
-      // The new API return allData in a flat structure, check if it has 'data' list for setoran?
-      // rekapZisReportCall has 'allData'.
-      // However, the original code had a separate getSetorZISCall.
-      // The new API might NOT return the list of transactions.
-      // Requirement: "consume the existing consolidated API endpoint".
-      // If the report endpoint doesn't return the list, we might lose that table in the PDF.
-      // Passing empty list for now to avoid breaking if API doesn't have it.
-      [],
+      _model.listSetoran,
+      // Tipe Laporan
+      _getTipeLaporan(),
+      // Bulan
+      _model.selectedMonth != null
+          ? [
+              'Januari',
+              'Februari',
+              'Maret',
+              'April',
+              'Mei',
+              'Juni',
+              'Juli',
+              'Agustus',
+              'September',
+              'Oktober',
+              'November',
+              'Desember'
+            ][_model.selectedMonth! - 1]
+          : null,
+      // Tanggal
+      _model.selectedDate != null
+          ? DateFormat('dd/MM/yyyy').format(_model.selectedDate!)
+          : null,
+      // Tanggal Mulai
+      _model.fromDate != null
+          ? DateFormat('dd/MM/yyyy').format(_model.fromDate!)
+          : null,
+      // Tanggal Selesai
+      _model.toDate != null
+          ? DateFormat('dd/MM/yyyy').format(_model.toDate!)
+          : null,
     );
   }
 

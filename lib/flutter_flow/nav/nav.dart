@@ -99,6 +99,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: LengkapiProfileWidget.routeName,
           path: LengkapiProfileWidget.routePath,
+          requireAuth: true,
           builder: (context, params) => LengkapiProfileWidget(),
         ),
         FFRoute(
@@ -281,11 +282,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: RegistrationTypeWidget.routeName,
           path: RegistrationTypeWidget.routePath,
+          requireAuth: true,
           builder: (context, params) => RegistrationTypeWidget(),
         ),
         FFRoute(
           name: LengkapiProfileSDWidget.routeName,
           path: LengkapiProfileSDWidget.routePath,
+          requireAuth: true,
           builder: (context, params) => LengkapiProfileSDWidget(),
         ),
         FFRoute(

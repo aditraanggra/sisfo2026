@@ -7,13 +7,11 @@
 
 class CloudinaryConfig {
   // Public identifiers only - safe for client-side
-  static const String cloudName =
-      String.fromEnvironment('CLOUDINARY_CLOUD_NAME', defaultValue: '');
+  // Hardcoded for production - cloud name and upload preset are public-safe
+  static const String cloudName = 'dlss3vrkz';
 
   // Upload preset for unsigned uploads (no secret required)
-  static const String uploadPreset = String.fromEnvironment(
-      'CLOUDINARY_UPLOAD_PRESET',
-      defaultValue: 'sisfo_zis');
+  static const String uploadPreset = 'sisfo_zis';
 
   // Folder untuk organisasi assets
   static const String folderBuktiTransfer = 'sisfo_upz/bukti_transfer';

@@ -66,7 +66,28 @@ Future<void> saveToPdf(
   String? sekretaris,
   String? bendahara,
   List<dynamic>? listSetoran,
+  //Tipe Laporan
+  String? tipeLaporan,
+  String? bulan,
+  String? tanggal,
+  String? tanggalMulai,
+  String? tanggalSelesai,
 ) async {
+  String getPeriodeText() {
+    switch (tipeLaporan) {
+      case 'Tahunan':
+        return 'Tahun ${DateTime.now().year}';
+      case 'Bulanan':
+        return 'Bulan $bulan';
+      case 'Harian':
+        return 'Tanggal $tanggal';
+      case 'Range':
+        return 'Periode $tanggalMulai - $tanggalSelesai';
+      default:
+        return 'Tahun ${DateTime.now().year}';
+    }
+  }
+
   final pdf = pw.Document();
 
   final logo = await networkImage(
@@ -117,8 +138,7 @@ Future<void> saveToPdf(
                   pw.Text('LAPORAN PENGELOLAAN ZIS',
                       style: pw.TextStyle(
                           fontSize: 12, fontWeight: pw.FontWeight.bold)),
-                  pw.Text('TAHUN ${DateTime.now().year}',
-                      style: pw.TextStyle(fontSize: 12)),
+                  pw.Text(getPeriodeText(), style: pw.TextStyle(fontSize: 12)),
                 ],
               ),
             ),
@@ -205,7 +225,8 @@ Future<void> saveToPdf(
             _buildTableRow('Jumlah Muzakki', jmlMuzakkiZm),
             _buildTableRow('Jumlah Mustahik', jmlMustahikZm),
             _buildTableRow('Jumlah Amil', jmlAmilZm),
-            _buildTableRow('Setoran ke BAZNAS (30%)', jmlSetorZm, isBold: true),
+            _buildTableRow('Setoran ke BAZNAS (100%)', jmlSetorZm,
+                isBold: true),
 
             // 3. INFAK SEDEKAH
             _buildTableHeaderRow('3. PENERIMAAN DAN PENYALURAN INFAK SEDEKAH'),
@@ -214,7 +235,7 @@ Future<void> saveToPdf(
             _buildTableRow('Jumlah Munfiq', jmlMunfiqIfs),
             _buildTableRow('Jumlah Mustahik', jmlMustahikIfs),
             _buildTableRow('Jumlah Amil', jmlAmilIfs),
-            _buildTableRow('Setoran ke BAZNAS (30%)', jmlSetorIfs,
+            _buildTableRow('Setoran ke BAZNAS (80%)', jmlSetorIfs,
                 isBold: true),
           ],
         ),
@@ -302,6 +323,7 @@ Future<void> saveToPdf(
             _buildSignatureBlock('Mengetahui,', kepda ?? 'Kepala Desa',
                 nama: ''),
             _buildSignatureBlock('Ketua UPZ', ketua),
+            _buildSignatureBlock('Sekretaris', sekretaris),
             pw.SizedBox(width: 10),
             _buildSignatureBlock('Bendahara', bendahara),
           ],

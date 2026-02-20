@@ -123,3 +123,94 @@ Future<List<String>> uploadProfilePhotoToCloudinary({
     transactionId: unitId != null ? 'profile_$unitId' : null,
   );
 }
+
+/// Upload dokumen (PDF, etc) ke Cloudinary
+///
+/// Fungsi khusus untuk upload dokumen dengan folder yang tepat.
+/// Menggunakan raw upload endpoint untuk dokumen non-gambar.
+///
+/// [bytes] - Bytes dari dokumen yang akan diupload
+/// [fileName] - Nama file original (harus menyertakan ekstensi)
+/// [documentId] - Optional ID untuk penamaan file
+/// [folder] - Folder tujuan (default: folderDocuments)
+///
+/// Returns: URL dari dokumen yang berhasil diupload, atau null jika gagal
+Future<String?> uploadDocumentToCloudinary({
+  required Uint8List bytes,
+  required String fileName,
+  String? documentId,
+  String? folder,
+}) async {
+  if (bytes.isEmpty) return null;
+
+  final cloudinary = CloudinaryService();
+
+  final String publicId = documentId != null
+      ? 'doc_${documentId}_${DateTime.now().millisecondsSinceEpoch}'
+      : 'doc_${DateTime.now().millisecondsSinceEpoch}';
+
+  try {
+    final response = await cloudinary.uploadImageBytes(
+      bytes,
+      folder: folder ?? CloudinaryConfig.folderDocuments,
+      publicId: publicId,
+      fileName: fileName,
+    );
+
+    if (response.success && response.secureUrl != null) {
+      return response.secureUrl;
+    } else {
+      print('Cloudinary document upload failed: ${response.error}');
+      return null;
+    }
+  } catch (e) {
+    print('Cloudinary document upload error: $e');
+    return null;
+  }
+}
+
+/// Upload dokumen dari SelectedFile ke Cloudinary
+///
+/// Wrapper untuk upload dokumen menggunakan SelectedFile.
+///
+/// [selectedFiles] - List file dari selectFiles()
+/// [documentId] - Optional ID untuk penamaan file
+///
+/// Returns: List<String> berisi URL dari dokumen yang berhasil diupload
+Future<List<String>> uploadDocumentsToCloudinary({
+  required List<SelectedFile> selectedFiles,
+  String? documentId,
+}) async {
+  final List<String> uploadedUrls = [];
+
+  for (int i = 0; i < selectedFiles.length; i++) {
+    final file = selectedFiles[i];
+    final bytes = file.bytes;
+
+    if (bytes.isEmpty) continue;
+
+    final String docId = documentId != null
+        ? '${documentId}_$i'
+        : '${DateTime.now().millisecondsSinceEpoch}_$i';
+
+    try {
+      final response = await CloudinaryService().uploadImageBytes(
+        bytes,
+        folder: CloudinaryConfig.folderDocuments,
+        publicId: docId,
+        fileName: file.originalFilename,
+      );
+
+      if (response.success && response.secureUrl != null) {
+        uploadedUrls.add(response.secureUrl!);
+      } else {
+        print(
+            'Cloudinary document upload failed for file $i: ${response.error}');
+      }
+    } catch (e) {
+      print('Cloudinary document upload error for file $i: $e');
+    }
+  }
+
+  return uploadedUrls;
+}

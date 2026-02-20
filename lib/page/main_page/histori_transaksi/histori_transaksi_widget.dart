@@ -38,7 +38,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
 
     _model.tabBarController = TabController(
       vsync: this,
-      length: 5,
+      length: 6,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
 
@@ -163,6 +163,14 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                             ),
                           ),
                           Tab(
+                            text: 'Fidyah',
+                            icon: Icon(
+                              Icons.restaurant_menu_rounded,
+                              color: ModernColors.primaryAccent,
+                              size: 24.0,
+                            ),
+                          ),
+                          Tab(
                             text: 'Pendistribusian',
                             icon: Icon(
                               Icons.local_florist_rounded,
@@ -174,6 +182,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                         controller: _model.tabBarController,
                         onTap: (i) async {
                           [
+                            () async {},
                             () async {},
                             () async {},
                             () async {},
@@ -908,6 +917,184 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                                                   komalData?.trxDate ?? '',
                                               type: TransactionType.income,
                                               iconData: Icons.mosque_rounded,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: FutureBuilder<ApiCallResponse>(
+                              future:
+                                  TransactionEndPointGroup.getFidyahCall.call(
+                                token: currentAuthenticationToken,
+                                year: FFAppState().year,
+                              ),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return SkeletonLoaderWidget(
+                                    type: SkeletonType.listItem,
+                                    itemCount: 5,
+                                  );
+                                }
+                                final listViewFidyahGetFidyahResponse =
+                                    snapshot.data!;
+
+                                return Builder(
+                                  builder: (context) {
+                                    final listTrxFidyah =
+                                        TransactionEndPointGroup.getFidyahCall
+                                                .dataListFidyah(
+                                                  listViewFidyahGetFidyahResponse
+                                                      .jsonBody,
+                                                )
+                                                ?.toList() ??
+                                            [];
+                                    if (listTrxFidyah.isEmpty) {
+                                      return EnhancedEmptyStateWidget(
+                                        title: 'Belum Ada Transaksi Fidyah',
+                                        description:
+                                            'Anda belum memiliki transaksi fidyah. Mulai catat transaksi fidyah dari muzakki.',
+                                        icon: Icons.restaurant_menu_rounded,
+                                        iconColor: ModernColors.primaryAccent,
+                                        actionButtonText: 'Tambah Fidyah',
+                                        onActionPressed: () {
+                                          context.pushNamed(
+                                              FidyahWidget.routeName);
+                                        },
+                                        tips: [
+                                          'Fidyah adalah denda untuk meninggalkan puasa wajib',
+                                          'Besaran fidyah adalah satu mud (sekitar 6 ons) makanan per hari',
+                                          'Fidyah diberikan kepada fakir/miskin setiap hari yang ditinggal',
+                                        ],
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      padding: EdgeInsets.all(ModernSpacing.sm),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listTrxFidyah.length,
+                                      itemBuilder:
+                                          (context, listTrxFidyahIndex) {
+                                        final listTrxFidyahItem =
+                                            listTrxFidyah[listTrxFidyahIndex];
+                                        final fidyahId = getJsonField(
+                                                listTrxFidyahItem, r'$.id') ??
+                                            0;
+                                        final fidyahName = getJsonField(
+                                                listTrxFidyahItem, r'$.name') ??
+                                            '';
+                                        final fidyahAmount = (getJsonField(
+                                                    listTrxFidyahItem,
+                                                    r'$.amount') ??
+                                                0)
+                                            .toInt();
+                                        final fidyahDate = getJsonField(
+                                                listTrxFidyahItem,
+                                                r'$.trx_date') ??
+                                            '';
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: ModernSpacing.sm),
+                                          child: Slidable(
+                                            endActionPane: ActionPane(
+                                              motion: const ScrollMotion(),
+                                              extentRatio: 0.5,
+                                              children: [
+                                                SlidableAction(
+                                                  label: 'Hapus',
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                  icon: Icons
+                                                      .delete_sweep_outlined,
+                                                  onPressed:
+                                                      (slideContext) async {
+                                                    Slidable.of(slideContext)
+                                                        ?.close();
+
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 100));
+
+                                                    var confirmDialogResponse =
+                                                        await DialogService
+                                                            .showDeleteConfirmation(
+                                                      context: context,
+                                                      itemName:
+                                                          'Transaksi Fidyah',
+                                                      itemId:
+                                                          fidyahId.toString(),
+                                                    );
+
+                                                    if (confirmDialogResponse) {
+                                                      _model.apiResultadsFidyah =
+                                                          await TransactionEndPointGroup
+                                                              .deleteFidyahCall
+                                                              .call(
+                                                        token:
+                                                            currentAuthenticationToken,
+                                                        id: fidyahId,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            'Data transaksi $fidyahId berhasil dihapus',
+                                                            style: TextStyle(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primary,
+                                                        ),
+                                                      );
+
+                                                      safeSetState(() {});
+                                                    }
+                                                  },
+                                                ),
+                                                SlidableAction(
+                                                  label: 'Edit',
+                                                  backgroundColor:
+                                                      Color(0xFF3311D2),
+                                                  icon: Icons.edit,
+                                                  onPressed: (_) {
+                                                    print(
+                                                        'SlidableActionWidget pressed ...');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            child: _buildModernTransactionItem(
+                                              context: context,
+                                              title: 'Fidyah',
+                                              subtitle:
+                                                  '$fidyahName - #$fidyahId',
+                                              amount: fidyahAmount,
+                                              dateString: fidyahDate,
+                                              type: TransactionType.income,
+                                              iconData:
+                                                  Icons.restaurant_menu_rounded,
                                             ),
                                           ),
                                         );

@@ -72,7 +72,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                         context.pushNamed(ProfilUPZWidget.routeName);
                       },
                     ),
-                    SizedBox(height: 12.0),
+                    /* SizedBox(height: 12.0),
                     _buildMenuItem(
                       icon: Icons.people_outline_rounded,
                       iconColor: Color(0xFF259148),
@@ -82,8 +82,8 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                         context.pushNamed(ListDkmWidget.routeName);
                       },
                     ),
-
-                    SizedBox(height: 24.0),
+ */
+                    SizedBox(height: 12.0),
 
                     // Pengaturan Section
                     _buildSectionTitle('Pengaturan'),

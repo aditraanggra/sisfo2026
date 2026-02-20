@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/backend/schema/structs/index.dart';
+import '/app_state.dart';
 import 'custom_auth_user_provider.dart';
 
 export 'custom_auth_manager.dart';
@@ -30,6 +31,8 @@ class CustomAuthManager {
     tokenExpiration = null;
     uid = null;
     userData = null;
+    // Clear profileUPZ from FFAppState
+    FFAppState().profileUPZ = UpzStruct();
     // Update the current user.
     sisfoAuthUserSubject.add(
       SisfoAuthUser(loggedIn: false),

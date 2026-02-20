@@ -296,7 +296,7 @@ class _LoginWidgetState extends State<LoginWidget>
                               ],
                             ),
                             // Forgot Password Link
-                            GestureDetector(
+                            /* GestureDetector(
                               onTap: () {
                                 // Handle forgot password
                               },
@@ -308,7 +308,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
+                            ), */
                           ],
                         ),
 

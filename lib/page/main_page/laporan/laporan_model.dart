@@ -11,6 +11,8 @@ class LaporanModel extends FlutterFlowModel<LaporanWidget> {
 
   // Stores the single consolidated API response
   ApiCallResponse? reportData;
+  // Stores list of setoran transactions for PDF
+  List<dynamic>? listSetoran;
   bool isLoading = false;
   String? errorMessage;
 
@@ -104,37 +106,34 @@ class LaporanModel extends FlutterFlowModel<LaporanWidget> {
         year: selectedYear,
         fromDate: fromDateParam,
         toDate: toDateParam,
-        // month logic needs to be handled if API expects it, strictly speaking rekapZisReportCall
-        // in api_calls.dart params: unit_id, periode, year, from_date, to_date.
-        // It does NOT seem to have a 'month' parameter.
-        // If 'bulanan' is selected, usually APIs need year + month OR from_date/to_date covering the month.
-        // Based on previous analysis, we might need to send from_date/to_date for monthly/daily as well
-        // IF the backend relies on them for those periods.
-        // Let's refine the params based on common usage:
-        // For 'bulanan', we likely need to send specific dates or let backend handle 'year' + (missing month param?).
-        // Wait, looking at api_calls.dart `RekapZisReportCall` params: unit_id, periode, year, from_date, to_date.
-        // There is NO month param. So for monthly, we likely need to send from_date=startOfMonth, to_date=endOfMonth?
-        // OR the backend ignores 'month' and just uses 'year'? Unlikely for explicit 'bulanan'.
-        // Let's assume we pass the date range for monthly/daily/rentang to be safe,
-        // OR checks if we need to add 'month' param to the API definition.
-        // The user said: "consume the existing consolidated API endpoint".
-        // Let's use specific dates for everything except 'tahunan' to be safe, or just year for tahunan.
-        // actually for 'harian', we need 'period_date' maybe?
-        // The previous `RekapZISCall` had `period_date`.
-        // `RekapZisReportCall` has `from_date` and `to_date`.
-        // Let's map accordingly:
         token: currentAuthenticationToken,
       );
 
-      if ((response as ApiCallResponse).succeeded) {
+      // Fetch list setoran for PDF report
+      final setorResponse = await TransactionEndPointGroup.getSetorZISCall.call(
+        token: currentAuthenticationToken,
+        unitId: FFAppState().profileUPZ.id.toString(),
+        fromDate: fromDateParam ?? '',
+        toDate: toDateParam ?? '',
+      );
+
+      if (response.succeeded) {
         reportData = response;
       } else {
         errorMessage = response.jsonBody?['message'] ?? 'Gagal memuat data.';
         reportData = null;
       }
+
+      if (setorResponse.succeeded) {
+        listSetoran = TransactionEndPointGroup.getSetorZISCall
+            .listDataSetor(setorResponse.jsonBody);
+      } else {
+        listSetoran = null;
+      }
     } catch (e) {
       errorMessage = 'Terjadi kesalahan: $e';
       reportData = null;
+      listSetoran = null;
     } finally {
       isLoading = false;
     }

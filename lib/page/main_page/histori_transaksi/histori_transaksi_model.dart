@@ -22,6 +22,8 @@ class HistoriTransaksiModel extends FlutterFlowModel<HistoriTransaksiWidget> {
   ApiCallResponse? apiResultadsCopy;
   // Stores action output result for [Backend Call - API (Delete Kotak Amal)] action in SlidableActionWidget widget.
   ApiCallResponse? apiResultadsCopy3;
+  // Stores action output result for [Backend Call - API (Delete Fidyah)] action in SlidableActionWidget widget.
+  ApiCallResponse? apiResultadsFidyah;
   // Stores action output result for [Backend Call - API (Delete Pendistribusian)] action in SlidableActionWidget widget.
   ApiCallResponse? apiResultadsCopy3Copy;
 

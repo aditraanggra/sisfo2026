@@ -501,7 +501,24 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                                   ModernColors.primaryAccent,
                                             ),
                                           );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Upload gagal. Pastikan koneksi internet stabil dan coba lagi.'),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
                                         }
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text('Upload gagal: $e'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
                                       } finally {
                                         safeSetState(() => _model
                                                 .isDataUploading_uploadDataF1e =
@@ -521,46 +538,65 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         width: 2,
                                       ),
                                     ),
-                                    child: _model.uploadedFileUrl_uploadDataF1e
-                                            .isNotEmpty
-                                        ? Column(
+                                    child: _model.isDataUploading_uploadDataF1e
+                                        ? const Column(
                                             children: [
-                                              const Icon(Icons.check_circle,
-                                                  color: ModernColors
-                                                      .primaryAccent,
-                                                  size: 40),
-                                              const SizedBox(height: 8),
-                                              const Text(
-                                                  'Bukti Setor Terupload',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const SizedBox(height: 4),
-                                              Text('Klik untuk mengubah',
-                                                  style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      fontSize: 12)),
+                                              CircularProgressIndicator(
+                                                color:
+                                                    ModernColors.primaryAccent,
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Mengupload...',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ],
                                           )
-                                        : Column(
-                                            children: const [
-                                              Icon(Icons.cloud_upload_outlined,
-                                                  color: ModernColors
-                                                      .primaryAccent,
-                                                  size: 40),
-                                              SizedBox(height: 8),
-                                              Text('Upload Bukti Setoran',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                  'Format: JPG, PNG • Maks: 5MB',
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12)),
-                                            ],
-                                          ),
+                                        : _model.uploadedFileUrl_uploadDataF1e
+                                                .isNotEmpty
+                                            ? Column(
+                                                children: [
+                                                  const Icon(Icons.check_circle,
+                                                      color: ModernColors
+                                                          .primaryAccent,
+                                                      size: 40),
+                                                  const SizedBox(height: 8),
+                                                  const Text(
+                                                      'Bukti Setor Terupload',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  const SizedBox(height: 4),
+                                                  Text('Klik untuk mengubah',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.grey[600],
+                                                          fontSize: 12)),
+                                                ],
+                                              )
+                                            : Column(
+                                                children: const [
+                                                  Icon(
+                                                      Icons
+                                                          .cloud_upload_outlined,
+                                                      color: ModernColors
+                                                          .primaryAccent,
+                                                      size: 40),
+                                                  SizedBox(height: 8),
+                                                  Text('Upload Bukti Setoran',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                      'Format: JPG, PNG • Maks: 5MB',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 12)),
+                                                ],
+                                              ),
                                   ),
                                 ),
                                 const SizedBox(height: 32.0),

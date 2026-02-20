@@ -149,7 +149,7 @@ class RecentTransactionsModel
         for (var item in data) {
           allTransactions.add(TransactionData(
             id: getJsonField(item, r'$.id') ?? 0,
-            title: getJsonField(item, r'$.desc') ?? 'Kotak Amal',
+            title: getJsonField(item, r'$.unit_zis.unit_name') ?? 'Kotak Amal',
             category: 'Kotak Amal',
             trxDate: getJsonField(item, r'$.trx_date') ?? '',
             amount: (getJsonField(item, r'$.amount') ?? 0).toInt(),

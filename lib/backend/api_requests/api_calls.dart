@@ -329,75 +329,75 @@ class GetUPZCall {
       ) as List?;
   int? id(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].id''',
+        r'''$.data[0].id''',
       ));
   int? userId(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].user_id''',
+        r'''$.data[0].user_id''',
       ));
   int? categoryId(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].category_id''',
+        r'''$.data[0].category_id''',
       ));
   int? villageId(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].village_id''',
+        r'''$.data[0].village_id''',
       ));
   int? districtId(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].district_id''',
+        r'''$.data[0].district_id''',
       ));
   String? noRegister(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].no_register''',
+        r'''$.data[0].no_register''',
       ));
   String? unitName(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].unit_name''',
+        r'''$.data[0].unit_name''',
       ));
   String? noSk(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].no_sk''',
+        r'''$.data[0].no_sk''',
       ));
   String? address(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].address''',
+        r'''$.data[0].address''',
       ));
   String? unitLead(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].unit_leader''',
+        r'''$.data[0].unit_leader''',
       ));
   String? unitAssist(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].unit_assistant''',
+        r'''$.data[0].unit_assistant''',
       ));
   String? unitFinance(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].unit_finance''',
+        r'''$.data[0].unit_finance''',
       ));
   String? opPhone(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].operator_phone''',
+        r'''$.data[0].operator_phone''',
       ));
   int? ricePrice(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].rice_price''',
+        r'''$.data[0].rice_price''',
       ));
   bool? isVerified(dynamic response) => castToType<bool>(getJsonField(
         response,
-        r'''$.data[:].is_verified''',
+        r'''$.data[0].is_verified''',
       ));
   int? profileCompletion(dynamic response) => castToType<int>(getJsonField(
         response,
-        r'''$.data[:].profile_completion''',
+        r'''$.data[0].profile_completion''',
       ));
   String? villageName(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].village_name''',
+        r'''$.data[0].village_name''',
       ));
   String? districtName(dynamic response) => castToType<String>(getJsonField(
         response,
-        r'''$.data[:].district_name''',
+        r'''$.data[0].district_name''',
       ));
 }
 
