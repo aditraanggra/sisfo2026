@@ -116,7 +116,7 @@ class _InfakWidgetState extends State<InfakWidget>
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -139,19 +139,19 @@ class _InfakWidgetState extends State<InfakWidget>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: ModernColors.primaryDark,
+      backgroundColor: FlutterFlowTheme.of(context).primaryDark,
       automaticallyImplyLeading: false,
       leading: FlutterFlowIconButton(
         borderRadius: 30,
         buttonSize: 48,
         icon: Icon(Icons.arrow_back_rounded,
-            color: ModernColors.textOnDark, size: 20),
+            color: FlutterFlowTheme.of(context).info, size: 20),
         onPressed: () => context.safePop(),
       ),
       title: Text(
         'Penerimaan Infak Sedekah',
         style: GoogleFonts.inter(
-            color: ModernColors.textOnDark,
+            color: FlutterFlowTheme.of(context).info,
             fontSize: 16,
             fontWeight: FontWeight.w600),
       ),
@@ -162,7 +162,7 @@ class _InfakWidgetState extends State<InfakWidget>
   Widget _buildInfakTypeSelector() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -173,7 +173,7 @@ class _InfakWidgetState extends State<InfakWidget>
           Text(
             'JENIS INFAK SEDEKAH',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -226,11 +226,11 @@ class _InfakWidgetState extends State<InfakWidget>
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? ModernColors.primaryDark.withOpacity(0.1)
-              : ModernColors.backgroundPrimary,
+              ? FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1)
+              : FlutterFlowTheme.of(context).primaryBackground,
           borderRadius: BorderRadius.circular(ModernRadius.lg),
           border: Border.all(
-            color: isSelected ? ModernColors.primaryDark : Colors.grey.shade300,
+            color: isSelected ? FlutterFlowTheme.of(context).primaryDark : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -240,7 +240,7 @@ class _InfakWidgetState extends State<InfakWidget>
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? ModernColors.primaryDark
+                    ? FlutterFlowTheme.of(context).primaryDark
                     : Colors.grey.shade200,
                 shape: BoxShape.circle,
               ),
@@ -253,8 +253,8 @@ class _InfakWidgetState extends State<InfakWidget>
               title,
               style: GoogleFonts.inter(
                 color: isSelected
-                    ? ModernColors.primaryDark
-                    : ModernColors.textPrimary,
+                    ? FlutterFlowTheme.of(context).primaryDark
+                    : FlutterFlowTheme.of(context).primaryText,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -263,7 +263,7 @@ class _InfakWidgetState extends State<InfakWidget>
             Text(
               subtitle,
               style: GoogleFonts.inter(
-                  color: ModernColors.textSecondary, fontSize: 11),
+                  color: FlutterFlowTheme.of(context).secondaryText, fontSize: 11),
               textAlign: TextAlign.center,
             ),
           ],
@@ -275,7 +275,7 @@ class _InfakWidgetState extends State<InfakWidget>
   Widget _buildProgramSelector() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -286,7 +286,7 @@ class _InfakWidgetState extends State<InfakWidget>
           Text(
             'PILIH PROGRAM',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -303,10 +303,10 @@ class _InfakWidgetState extends State<InfakWidget>
               child: Column(
                 children: [
                   Icon(Icons.error_outline,
-                      color: ModernColors.expenseRed, size: 40),
+                      color: FlutterFlowTheme.of(context).error, size: 40),
                   const SizedBox(height: 8),
                   Text(_model.programsError!,
-                      style: GoogleFonts.inter(color: ModernColors.expenseRed)),
+                      style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).error)),
                   TextButton(
                       onPressed: _loadPrograms, child: const Text('Coba Lagi')),
                 ],
@@ -337,11 +337,11 @@ class _InfakWidgetState extends State<InfakWidget>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? ModernColors.primaryDark
-              : ModernColors.backgroundPrimary,
+              ? FlutterFlowTheme.of(context).primaryDark
+              : FlutterFlowTheme.of(context).primaryBackground,
           borderRadius: BorderRadius.circular(ModernRadius.lg),
           border: Border.all(
-            color: isSelected ? ModernColors.primaryDark : Colors.grey.shade300,
+            color: isSelected ? FlutterFlowTheme.of(context).primaryDark : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -350,14 +350,14 @@ class _InfakWidgetState extends State<InfakWidget>
           children: [
             Icon(
               _getProgramIcon(program['icon']),
-              color: isSelected ? Colors.white : ModernColors.primaryDark,
+              color: isSelected ? Colors.white : FlutterFlowTheme.of(context).primaryDark,
               size: 18,
             ),
             const SizedBox(width: 8),
             Text(
               program['name'],
               style: GoogleFonts.inter(
-                color: isSelected ? Colors.white : ModernColors.textPrimary,
+                color: isSelected ? Colors.white : FlutterFlowTheme.of(context).primaryText,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -371,7 +371,7 @@ class _InfakWidgetState extends State<InfakWidget>
   Widget _buildFormCard() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -387,18 +387,18 @@ class _InfakWidgetState extends State<InfakWidget>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: ModernColors.primaryDark.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(ModernRadius.md),
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.check_circle,
-                        color: ModernColors.primaryDark, size: 20),
+                        color: FlutterFlowTheme.of(context).primaryDark, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       'Program: ${_model.selectedProgramName}',
                       style: GoogleFonts.inter(
-                        color: ModernColors.primaryDark,
+                        color: FlutterFlowTheme.of(context).primaryDark,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -413,7 +413,7 @@ class _InfakWidgetState extends State<InfakWidget>
             Text(
               'PILIH TANGGAL',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -430,7 +430,7 @@ class _InfakWidgetState extends State<InfakWidget>
             Text(
               'DATA MUNFIK',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -442,8 +442,8 @@ class _InfakWidgetState extends State<InfakWidget>
               focusNode: _model.namaMuzakkiFocusNode,
               decoration: _buildInputDecoration(labelText: 'Nama Munfik'),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary, fontSize: 16),
-              cursorColor: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16),
+              cursorColor: FlutterFlowTheme.of(context).primary,
               validator: _model.namaMuzakkiTextControllerValidator
                   ?.asValidator(context),
             ),
@@ -453,7 +453,7 @@ class _InfakWidgetState extends State<InfakWidget>
             Text(
               'NOMINAL INFAK',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -472,13 +472,13 @@ class _InfakWidgetState extends State<InfakWidget>
                 labelText: 'Isi Nominal',
                 prefixText: 'Rp ',
                 labelStyle: GoogleFonts.inter(
-                    color: ModernColors.textSecondary, fontSize: 16),
+                    color: FlutterFlowTheme.of(context).secondaryText, fontSize: 16),
                 prefixStyle: GoogleFonts.inter(
-                    color: ModernColors.textPrimary,
+                    color: FlutterFlowTheme.of(context).primaryText,
                     fontSize: 22,
                     fontWeight: FontWeight.w500),
                 floatingLabelStyle: GoogleFonts.inter(
-                    color: ModernColors.primaryAccent,
+                    color: FlutterFlowTheme.of(context).primary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
                 enabledBorder: UnderlineInputBorder(
@@ -487,16 +487,16 @@ class _InfakWidgetState extends State<InfakWidget>
                 ),
                 focusedBorder: UnderlineInputBorder(
                   borderSide:
-                      BorderSide(color: ModernColors.primaryAccent, width: 2),
+                      BorderSide(color: FlutterFlowTheme.of(context).primary, width: 2),
                 ),
                 errorBorder: UnderlineInputBorder(
                   borderSide:
-                      BorderSide(color: ModernColors.expenseRed, width: 2),
+                      BorderSide(color: FlutterFlowTheme.of(context).error, width: 2),
                 ),
                 suffixIcon: _model.jmlInfakTextController!.text.isNotEmpty
                     ? IconButton(
                         icon: Icon(Icons.clear,
-                            color: ModernColors.primaryAccent, size: 22),
+                            color: FlutterFlowTheme.of(context).primary, size: 22),
                         onPressed: () {
                           _model.jmlInfakTextController?.clear();
                           safeSetState(() {});
@@ -505,10 +505,10 @@ class _InfakWidgetState extends State<InfakWidget>
                     : null,
               ),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary,
+                  color: FlutterFlowTheme.of(context).primaryText,
                   fontSize: 22,
                   fontWeight: FontWeight.w500),
-              cursorColor: ModernColors.primaryAccent,
+              cursorColor: FlutterFlowTheme.of(context).primary,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -521,7 +521,7 @@ class _InfakWidgetState extends State<InfakWidget>
             Text(
               'TOTAL MUNFIQ',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -533,8 +533,8 @@ class _InfakWidgetState extends State<InfakWidget>
               focusNode: _model.totalMunfiqFocusNode,
               decoration: _buildInputDecoration(labelText: 'Jumlah Munfiq'),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary, fontSize: 16),
-              cursorColor: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16),
+              cursorColor: FlutterFlowTheme.of(context).primary,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: _model.totalMunfiqTextControllerValidator
@@ -549,8 +549,8 @@ class _InfakWidgetState extends State<InfakWidget>
               decoration:
                   _buildInputDecoration(labelText: 'Keterangan (opsional)'),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary, fontSize: 16),
-              cursorColor: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16),
+              cursorColor: FlutterFlowTheme.of(context).primary,
               maxLines: 2,
             ),
 
@@ -567,9 +567,9 @@ class _InfakWidgetState extends State<InfakWidget>
     return InputDecoration(
       labelText: labelText,
       labelStyle:
-          GoogleFonts.inter(color: ModernColors.textSecondary, fontSize: 16),
+          GoogleFonts.inter(color: FlutterFlowTheme.of(context).secondaryText, fontSize: 16),
       floatingLabelStyle: GoogleFonts.inter(
-          color: ModernColors.primaryAccent,
+          color: FlutterFlowTheme.of(context).primary,
           fontSize: 14,
           fontWeight: FontWeight.w500),
       enabledBorder: OutlineInputBorder(
@@ -577,15 +577,15 @@ class _InfakWidgetState extends State<InfakWidget>
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: ModernColors.primaryAccent, width: 2),
+        borderSide: BorderSide(color: FlutterFlowTheme.of(context).primary, width: 2),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: ModernColors.expenseRed, width: 1.5),
+        borderSide: BorderSide(color: FlutterFlowTheme.of(context).error, width: 1.5),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       filled: true,
-      fillColor: ModernColors.backgroundPrimary,
+      fillColor: FlutterFlowTheme.of(context).primaryBackground,
       contentPadding: const EdgeInsets.all(16),
     );
   }
@@ -605,9 +605,9 @@ class _InfakWidgetState extends State<InfakWidget>
           options: FFButtonOptions(
             width: double.infinity,
             height: 52,
-            color: ModernColors.primaryDark,
+            color: FlutterFlowTheme.of(context).primaryDark,
             textStyle: GoogleFonts.inter(
-                color: ModernColors.textOnDark,
+                color: FlutterFlowTheme.of(context).info,
                 fontSize: 16,
                 fontWeight: FontWeight.w600),
             elevation: 0,
@@ -625,8 +625,8 @@ class _InfakWidgetState extends State<InfakWidget>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Tanggal belum diisi',
-              style: GoogleFonts.inter(color: ModernColors.textOnDark)),
-          backgroundColor: ModernColors.expenseRed,
+              style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).info)),
+          backgroundColor: FlutterFlowTheme.of(context).error,
         ),
       );
       return;
@@ -636,8 +636,8 @@ class _InfakWidgetState extends State<InfakWidget>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Pilih program terlebih dahulu',
-              style: GoogleFonts.inter(color: ModernColors.textOnDark)),
-          backgroundColor: ModernColors.expenseRed,
+              style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).info)),
+          backgroundColor: FlutterFlowTheme.of(context).error,
         ),
       );
       return;
@@ -680,7 +680,7 @@ class _InfakWidgetState extends State<InfakWidget>
             onPressed: () => Navigator.pop(ctx),
             child: Text('Ok',
                 style: GoogleFonts.inter(
-                    color: ModernColors.primaryAccent,
+                    color: FlutterFlowTheme.of(context).primary,
                     fontWeight: FontWeight.w500)),
           ),
         ],

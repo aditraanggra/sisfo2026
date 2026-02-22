@@ -463,31 +463,32 @@ class DarkModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF259148);
-  late Color secondary = const Color(0xFF39D2C0);
+  late Color primary = const Color(0xFF4ADE80); // Green 400 (Contrast safe)
+  late Color secondary = const Color(0xFF5EEAD4); // Teal 300
   late Color tertiary = const Color(0xFFEE8B60);
-  late Color alternate = const Color(0xFF262D34);
-  late Color primaryText = const Color(0xFFFFFFFF);
-  late Color secondaryText = const Color(0xFF95A1AC);
-  late Color primaryBackground = const Color(0xFF1D2428);
-  late Color secondaryBackground = const Color(0xFF14181B);
-  late Color accent1 = const Color(0x4C4B39EF);
-  late Color accent2 = const Color(0x4D39D2C0);
+  late Color alternate = const Color(0xFF2C2C2C); // Higher Elevation
+  late Color primaryText = const Color(0xFFFFFFFF); // Pass AAA
+  late Color secondaryText = const Color(0xFFB3B3B3); // Pass AA for normal text
+  late Color primaryBackground = const Color(0xFF121212); // Neutral Dark
+  late Color secondaryBackground = const Color(0xFF1E1E1E); // Elevated Surface
+  late Color accent1 = const Color(0x4C4ADE80);
+  late Color accent2 = const Color(0x4D5EEAD4);
   late Color accent3 = const Color(0x4DEE8B60);
-  late Color accent4 = const Color(0xB2262D34);
-  late Color success =
-      const Color(0xFF22C55E); // Updated to modern income green
-  late Color warning = const Color(0xFFD4AF37); // Updated to modern gold accent
-  late Color error = const Color(0xFFEF4444); // Updated to modern expense red
+  late Color accent4 = const Color(0xB22C2C2C);
+  late Color success = const Color(0xFF4ADE80); // Income green dark mode
+  late Color warning = const Color(0xFFFDE047); // Warning gold dark mode
+  late Color error = const Color(0xFFF87171); // Expense red dark mode
   late Color info = const Color(0xFFFFFFFF);
 
   // Modern color extensions
-  late Color primaryDark = ModernColors.primaryDark;
-  late Color primaryAccent = ModernColors.primaryAccent;
-  late Color backgroundMint = ModernColors.backgroundMint;
-  late Color goldAccent = ModernColors.goldAccent;
-  late Color incomeGreen = ModernColors.incomeGreen;
-  late Color expenseRed = ModernColors.expenseRed;
+  late Color primaryDark =
+      const Color(0xFF112A20); // Very dark green background
+  late Color primaryAccent = const Color(0xFF4ADE80);
+  late Color backgroundMint =
+      const Color(0xFF122E22); // Mint equivalent for dark mode
+  late Color goldAccent = const Color(0xFFFDE047);
+  late Color incomeGreen = const Color(0xFF4ADE80);
+  late Color expenseRed = const Color(0xFFF87171);
 }
 
 extension TextStyleHelper on TextStyle {

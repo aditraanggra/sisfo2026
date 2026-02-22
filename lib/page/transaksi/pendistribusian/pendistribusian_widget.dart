@@ -52,10 +52,8 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
     _model.keteranganFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {
-          _model.rekapAlokasi =
-              TransactionEndPointGroup.getRekapAlokasiCall.call(
+          _model.rekapAlokasi = RekapEndPointGroup.alokasiReportCall.call(
             token: currentAuthenticationToken,
-            periode: 'tahunan',
             unitId: FFAppState().profileUPZ.id,
             year: FFAppState().year,
           );
@@ -146,21 +144,18 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                         );
                       }
                       final rekapBody = snapshot.data!.jsonBody;
-                      final sisaDanaZfUang = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .alokasiZakatFitrahUang(rekapBody) ??
+                      final sisaDanaZfUang = RekapEndPointGroup
+                              .alokasiReportCall
+                              .alokasiPendisZfUang(rekapBody) ??
                           0;
-                      final sisaBerasZf = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .alokasiZakatFitrahBeras(rekapBody) ??
+                      final sisaBerasZf = RekapEndPointGroup.alokasiReportCall
+                              .alokasiPendisZfBeras(rekapBody) ??
                           0.0;
-                      final sisaDanaZm = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .alokasiZakatMal(rekapBody) ??
+                      final sisaDanaZm = RekapEndPointGroup.alokasiReportCall
+                              .alokasiPendisZm(rekapBody) ??
                           0;
-                      final sisaDanaIfs = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .alokasiInfakSedekah(rekapBody) ??
+                      final sisaDanaIfs = RekapEndPointGroup.alokasiReportCall
+                              .alokasiPendisIfs(rekapBody) ??
                           0;
 
                       return Column(
@@ -722,41 +717,6 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                             ],
                                           ),
                                         ),
-                                      if ((_model.jenisAsnafValue != 'Amil') &&
-                                          (_model.jenisProgramValue !=
-                                              'Operasional'))
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 12),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Sisa Alokasi Beras',
-                                                style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryText,
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              ),
-                                              Text(
-                                                formatNumber(
-                                                      sisaBerasZf,
-                                                      formatType:
-                                                          FormatType.custom,
-                                                      format: '##.##',
-                                                      locale: 'id_ID',
-                                                    ) +
-                                                    ' Kg',
-                                                style: TextStyle(
-                                                    color: Color(0xFF1A3C34),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 ),
@@ -824,6 +784,52 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                         },
                                       ),
                                     ),
+                                    if (_model.currentUang != null &&
+                                        _model.currentUang! >
+                                            ((_model.jenisTransaksiValue ==
+                                                    'zakat fitrah')
+                                                ? sisaDanaZfUang
+                                                : (_model.jenisTransaksiValue ==
+                                                        'zakat mal')
+                                                    ? sisaDanaZm
+                                                    : sisaDanaIfs))
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.error_outline,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                size: 16),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                              child: Text(
+                                                'Jumlah melebihi sisa alokasi ${(_model.jenisTransaksiValue == 'zakat fitrah') ? 'Zakat Fitrah' : (_model.jenisTransaksiValue == 'zakat mal') ? 'Zakat Mal' : 'Infak Sedekah'} (${formatNumber(
+                                                  (_model.jenisTransaksiValue ==
+                                                          'zakat fitrah')
+                                                      ? sisaDanaZfUang
+                                                      : (_model.jenisTransaksiValue ==
+                                                              'zakat mal')
+                                                          ? sisaDanaZm
+                                                          : sisaDanaIfs,
+                                                  formatType:
+                                                      FormatType.decimal,
+                                                  decimalType:
+                                                      DecimalType.periodDecimal,
+                                                  currency: 'Rp ',
+                                                  locale: 'id_ID',
+                                                )})',
+                                                style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .error,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),

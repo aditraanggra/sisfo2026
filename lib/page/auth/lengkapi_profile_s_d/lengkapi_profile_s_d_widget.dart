@@ -465,6 +465,13 @@ class _LengkapiProfileSDWidgetState extends State<LengkapiProfileSDWidget> {
                                                                             await uploadProfilePhotoToCloudinary(
                                                                           selectedFiles:
                                                                               selectedMedia,
+                                                                          userId: FFAppState()
+                                                                              .profileUPZ
+                                                                              .userId
+                                                                              .toString(),
+                                                                          noRegister: FFAppState()
+                                                                              .profileUPZ
+                                                                              .noRegister,
                                                                         );
                                                                       } finally {
                                                                         ScaffoldMessenger.of(context)
@@ -2737,6 +2744,13 @@ class _LengkapiProfileSDWidgetState extends State<LengkapiProfileSDWidget> {
                                                                       await uploadProfilePhotoToCloudinary(
                                                                     selectedFiles:
                                                                         selectedFiles,
+                                                                    userId: FFAppState()
+                                                                        .profileUPZ
+                                                                        .userId
+                                                                        .toString(),
+                                                                    noRegister: FFAppState()
+                                                                        .profileUPZ
+                                                                        .noRegister,
                                                                   );
                                                                 } finally {
                                                                   ScaffoldMessenger.of(

@@ -49,6 +49,23 @@ class CloudinaryUploadResponse {
   }
 }
 
+/// Helper: format tanggal hari ini sebagai YYYYMMDD
+String _todayFormatted() {
+  final now = DateTime.now();
+  final y = now.year.toString();
+  final m = now.month.toString().padLeft(2, '0');
+  final d = now.day.toString().padLeft(2, '0');
+  return '$y$m$d';
+}
+
+/// Helper: sanitize string untuk public_id (hapus spasi & karakter khusus)
+String _sanitize(String input) {
+  return input
+      .replaceAll(RegExp(r'[^a-zA-Z0-9_\-]'), '_')
+      .replaceAll(RegExp(r'_+'), '_')
+      .toLowerCase();
+}
+
 /// Service untuk upload ke Cloudinary
 class CloudinaryService {
   static final CloudinaryService _instance = CloudinaryService._internal();
@@ -88,25 +105,29 @@ class CloudinaryService {
     );
   }
 
-  /// Upload bukti transfer
+  /// Upload bukti setor
+  /// Format penamaan: tgl_noregister_namaupz
+  /// Folder: sisfo_upz/bukti_setor
   Future<CloudinaryUploadResponse> uploadBuktiTransfer(
     dynamic file, {
-    String? transactionId,
+    String? noRegister,
+    String? namaUpz,
   }) async {
-    final String publicId = transactionId != null
-        ? 'bukti_${transactionId}_${DateTime.now().millisecondsSinceEpoch}'
-        : 'bukti_${DateTime.now().millisecondsSinceEpoch}';
+    final String tgl = _todayFormatted();
+    final String reg = _sanitize(noRegister ?? 'unknown');
+    final String nama = _sanitize(namaUpz ?? 'unknown');
+    final String publicId = '${tgl}_${reg}_$nama';
 
     if (file is File) {
       return await uploadImage(
         file,
-        folder: CloudinaryConfig.folderBuktiTransfer,
+        folder: CloudinaryConfig.folderBuktiSetor,
         publicId: publicId,
       );
     } else if (file is Uint8List) {
       return await uploadImageBytes(
         file,
-        folder: CloudinaryConfig.folderBuktiTransfer,
+        folder: CloudinaryConfig.folderBuktiSetor,
         publicId: publicId,
       );
     }
@@ -114,11 +135,16 @@ class CloudinaryService {
   }
 
   /// Upload foto profil
+  /// Format penamaan: userId_noregister
+  /// Folder: sisfo_upz/profile
   Future<CloudinaryUploadResponse> uploadProfilePhoto(
     dynamic file, {
-    required String unitId,
+    required String userId,
+    String? noRegister,
   }) async {
-    final String publicId = 'profile_$unitId';
+    final String sanitizedUserId = _sanitize(userId);
+    final String reg = _sanitize(noRegister ?? 'unknown');
+    final String publicId = '${sanitizedUserId}_$reg';
 
     if (file is File) {
       return await uploadImage(
@@ -136,7 +162,40 @@ class CloudinaryService {
     return CloudinaryUploadResponse.error('Invalid file type');
   }
 
-  /// Internal upload method menggunakan unsigned upload
+  /// Upload form PDF
+  /// Format penamaan: tgl_noregister_namaupz_timestamp
+  /// Folder: sisfo_upz/form
+  Future<CloudinaryUploadResponse> uploadFormPdf(
+    dynamic file, {
+    String? noRegister,
+    String? namaUpz,
+    String? fileName,
+  }) async {
+    final String tgl = _todayFormatted();
+    final String reg = _sanitize(noRegister ?? 'unknown');
+    final String nama = _sanitize(namaUpz ?? 'unknown');
+    final String uniqueSuffix =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    final String publicId = '${tgl}_${reg}_${nama}_$uniqueSuffix';
+
+    Uint8List bytes;
+    if (file is File) {
+      bytes = await file.readAsBytes();
+    } else if (file is Uint8List) {
+      bytes = file;
+    } else {
+      return CloudinaryUploadResponse.error('Invalid file type for PDF upload');
+    }
+
+    return await _uploadRawBytes(
+      bytes,
+      folder: CloudinaryConfig.folderFormPdf,
+      publicId: publicId,
+      fileName: fileName ?? '$publicId.pdf',
+    );
+  }
+
+  /// Internal upload method menggunakan unsigned upload (untuk gambar)
   Future<CloudinaryUploadResponse> _uploadBytes(
     Uint8List bytes, {
     String? folder,
@@ -144,7 +203,6 @@ class CloudinaryService {
     String? fileName,
   }) async {
     try {
-      // Debug: log configuration
       print('Cloudinary Upload - Cloud Name: ${CloudinaryConfig.cloudName}');
       print(
           'Cloudinary Upload - Upload Preset: ${CloudinaryConfig.uploadPreset}');
@@ -207,6 +265,75 @@ class CloudinaryService {
     } catch (e) {
       print('Cloudinary Upload Exception: $e');
       return CloudinaryUploadResponse.error('Upload error: $e');
+    }
+  }
+
+  /// Internal upload method untuk raw file (PDF, dokumen)
+  Future<CloudinaryUploadResponse> _uploadRawBytes(
+    Uint8List bytes, {
+    String? folder,
+    String? publicId,
+    String? fileName,
+  }) async {
+    try {
+      print(
+          'Cloudinary Raw Upload - Cloud Name: ${CloudinaryConfig.cloudName}');
+      print('Cloudinary Raw Upload - Folder: ${folder ?? 'not specified'}');
+
+      if (CloudinaryConfig.cloudName.isEmpty) {
+        return CloudinaryUploadResponse.error(
+          'Cloud name is not configured.',
+        );
+      }
+
+      if (CloudinaryConfig.uploadPreset.isEmpty) {
+        return CloudinaryUploadResponse.error(
+          'Upload preset is not configured.',
+        );
+      }
+
+      final uri = Uri.parse(CloudinaryConfig.uploadRawUrl);
+      final request = http.MultipartRequest('POST', uri);
+
+      final multipartFile = http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename:
+            fileName ?? 'document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      request.files.add(multipartFile);
+
+      request.fields['upload_preset'] = CloudinaryConfig.uploadPreset;
+
+      if (folder != null) {
+        request.fields['folder'] = folder;
+      }
+
+      if (publicId != null) {
+        request.fields['public_id'] = publicId;
+      }
+
+      print('Cloudinary Raw Upload - URL: ${CloudinaryConfig.uploadRawUrl}');
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      print('Cloudinary Raw Upload - Status Code: ${response.statusCode}');
+      print('Cloudinary Raw Upload - Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        return CloudinaryUploadResponse.fromJson(jsonResponse);
+      } else {
+        final errorBody = json.decode(response.body);
+        final errorMessage = errorBody['error']?['message'] ??
+            'Raw upload failed with status ${response.statusCode}';
+        print('Cloudinary Raw Upload Error: $errorMessage');
+        return CloudinaryUploadResponse.error(errorMessage);
+      }
+    } catch (e) {
+      print('Cloudinary Raw Upload Exception: $e');
+      return CloudinaryUploadResponse.error('Raw upload error: $e');
     }
   }
 

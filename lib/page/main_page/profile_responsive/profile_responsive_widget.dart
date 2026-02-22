@@ -1,9 +1,11 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '/component/dark_light_switch_small/dark_light_switch_small_widget.dart';
 import 'profile_responsive_model.dart';
 export 'profile_responsive_model.dart';
 
@@ -42,7 +44,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(
@@ -87,6 +89,8 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
 
                     // Pengaturan Section
                     _buildSectionTitle('Pengaturan'),
+                    SizedBox(height: 12.0),
+                    _buildThemeToggleMenuItem(),
                     SizedBox(height: 12.0),
                     _buildMenuItem(
                       icon: Icons.person_outline_rounded,
@@ -176,7 +180,10 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
       margin: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF1A3C34), Color(0xFF259148)],
+          colors: [
+            FlutterFlowTheme.of(context).primaryDark,
+            FlutterFlowTheme.of(context).primary
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -246,7 +253,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
     return Text(
       title,
       style: GoogleFonts.inter(
-        color: Color(0xFF1A1A1A),
+        color: FlutterFlowTheme.of(context).primaryText,
         fontSize: 16.0,
         fontWeight: FontWeight.w600,
       ),
@@ -266,10 +273,10 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
       child: Container(
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
-            color: Color(0xFFE5E7EB),
+            color: FlutterFlowTheme.of(context).alternate,
             width: 1.0,
           ),
         ),
@@ -280,7 +287,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
               width: 44.0,
               height: 44.0,
               decoration: BoxDecoration(
-                color: Color(0xFFE8F5E9),
+                color: FlutterFlowTheme.of(context).backgroundMint,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Icon(
@@ -298,7 +305,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                   Text(
                     title,
                     style: GoogleFonts.inter(
-                      color: Color(0xFF1A1A1A),
+                      color: FlutterFlowTheme.of(context).primaryText,
                       fontSize: 15.0,
                       fontWeight: FontWeight.w500,
                     ),
@@ -307,7 +314,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                   Text(
                     subtitle,
                     style: GoogleFonts.inter(
-                      color: Color(0xFF9CA3AF),
+                      color: FlutterFlowTheme.of(context).secondaryText,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w400,
                     ),
@@ -318,7 +325,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
             // Arrow
             Icon(
               Icons.chevron_right_rounded,
-              color: Color(0xFF9CA3AF),
+              color: FlutterFlowTheme.of(context).secondaryText,
               size: 24.0,
             ),
           ],
@@ -340,7 +347,7 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 16.0),
         decoration: BoxDecoration(
-          color: Color(0xFFFEE2E2),
+          color: FlutterFlowTheme.of(context).error.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Row(
@@ -348,14 +355,14 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
           children: [
             Icon(
               Icons.logout_rounded,
-              color: Color(0xFFEF4444),
+              color: FlutterFlowTheme.of(context).error,
               size: 20.0,
             ),
             SizedBox(width: 8.0),
             Text(
               'Keluar',
               style: GoogleFonts.inter(
-                color: Color(0xFFEF4444),
+                color: FlutterFlowTheme.of(context).error,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
               ),
@@ -373,5 +380,65 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
       return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
     }
     return name[0].toUpperCase();
+  }
+
+  Widget _buildThemeToggleMenuItem() {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: FlutterFlowTheme.of(context).alternate,
+          width: 1.0,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Icon Container
+          Container(
+            width: 44.0,
+            height: 44.0,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).backgroundMint,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Icon(
+              Icons.palette_outlined,
+              color: FlutterFlowTheme.of(context).primary,
+              size: 22.0,
+            ),
+          ),
+          SizedBox(width: 16.0),
+          // Title and Subtitle
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tema Aplikasi',
+                  style: GoogleFonts.inter(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 2.0),
+                Text(
+                  'Terang / Gelap',
+                  style: GoogleFonts.inter(
+                    color: FlutterFlowTheme.of(context).secondaryText,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Switch Component
+          DarkLightSwitchSmallWidget(),
+        ],
+      ),
+    );
   }
 }

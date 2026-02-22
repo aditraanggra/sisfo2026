@@ -87,13 +87,13 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: ModernColors.primaryDark,
+                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -112,7 +112,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                 title: Text(
                   'Penerimaan Kotak Amal',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textOnDark,
+                    color: FlutterFlowTheme.of(context).info,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -140,7 +140,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                     width: double.infinity,
                     padding: EdgeInsets.all(ModernSpacing.md),
                     decoration: BoxDecoration(
-                      color: ModernColors.backgroundCard,
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.circular(ModernRadius.xl),
                       boxShadow: ModernShadows.cardShadow,
                     ),
@@ -154,7 +154,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                           Text(
                             'PILIH TANGGAL',
                             style: GoogleFonts.inter(
-                              color: ModernColors.textSecondary,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
@@ -170,7 +170,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                           Text(
                             'DATA PEMBAYAR',
                             style: GoogleFonts.inter(
-                              color: ModernColors.textSecondary,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
@@ -186,7 +186,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                               labelText: 'Nama Muzakki / Donatur',
                             ),
                             style: GoogleFonts.inter(
-                              color: ModernColors.textPrimary,
+                              color: FlutterFlowTheme.of(context).primaryText,
                               fontSize: 16,
                             ),
                             validator: (value) =>
@@ -197,7 +197,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                           Text(
                             'KOTAK AMAL',
                             style: GoogleFonts.inter(
-                              color: ModernColors.textSecondary,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
@@ -227,14 +227,14 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                                       },
                                       child: Icon(
                                         Icons.clear,
-                                        color: ModernColors.primaryAccent,
+                                        color: FlutterFlowTheme.of(context).primary,
                                         size: 22,
                                       ),
                                     )
                                   : null,
                             ),
                             style: GoogleFonts.inter(
-                              color: ModernColors.textPrimary,
+                              color: FlutterFlowTheme.of(context).primaryText,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -265,7 +265,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                                 width: double.infinity,
                                 height: 52,
                                 decoration: BoxDecoration(
-                                  color: ModernColors.primaryDark,
+                                  color: FlutterFlowTheme.of(context).primaryDark,
                                   borderRadius:
                                       BorderRadius.circular(ModernRadius.lg),
                                   boxShadow: ModernShadows.buttonShadow,
@@ -297,7 +297,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                                             duration:
                                                 Duration(milliseconds: 4000),
                                             backgroundColor:
-                                                ModernColors.expenseRed,
+                                                FlutterFlowTheme.of(context).error,
                                           ),
                                         );
                                         return;
@@ -354,7 +354,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                                               ),
                                             ),
                                             backgroundColor:
-                                                ModernColors.expenseRed,
+                                                FlutterFlowTheme.of(context).error,
                                           ),
                                         );
                                       }
@@ -363,7 +363,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                                       child: Text(
                                         'Simpan',
                                         style: GoogleFonts.inter(
-                                          color: ModernColors.textOnDark,
+                                          color: FlutterFlowTheme.of(context).info,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -393,10 +393,10 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
       width: double.infinity,
       padding: EdgeInsets.all(ModernSpacing.md),
       decoration: BoxDecoration(
-        color: ModernColors.primaryDark.withOpacity(0.1),
+        color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         border: Border.all(
-          color: ModernColors.primaryDark.withOpacity(0.3),
+          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -405,12 +405,12 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ModernColors.primaryDark,
+              color: FlutterFlowTheme.of(context).primaryDark,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.volunteer_activism,
-              color: ModernColors.textOnDark,
+              color: FlutterFlowTheme.of(context).info,
               size: 24,
             ),
           ),
@@ -422,7 +422,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                 Text(
                   'Tentang Kotak Amal',
                   style: GoogleFonts.inter(
-                    color: ModernColors.primaryDark,
+                    color: FlutterFlowTheme.of(context).primaryDark,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -431,7 +431,7 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
                 Text(
                   'Kotak Amal untuk infak rutin jamaah masjid',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textSecondary,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 12,
                   ),
                 ),
@@ -452,17 +452,17 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
     return InputDecoration(
       labelText: labelText,
       labelStyle: GoogleFonts.inter(
-        color: ModernColors.textSecondary,
+        color: FlutterFlowTheme.of(context).secondaryText,
         fontSize: 16,
       ),
       floatingLabelStyle: GoogleFonts.inter(
-        color: ModernColors.primaryAccent,
+        color: FlutterFlowTheme.of(context).primary,
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
       prefixText: prefixText,
       prefixStyle: GoogleFonts.inter(
-        color: ModernColors.textPrimary,
+        color: FlutterFlowTheme.of(context).primaryText,
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
@@ -473,27 +473,27 @@ class _KotakAmalWidgetState extends State<KotakAmalWidget>
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.primaryAccent,
+          color: FlutterFlowTheme.of(context).primary,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.expenseRed,
+          color: FlutterFlowTheme.of(context).error,
           width: 1.5,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.expenseRed,
+          color: FlutterFlowTheme.of(context).error,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       filled: true,
-      fillColor: ModernColors.backgroundPrimary,
+      fillColor: FlutterFlowTheme.of(context).primaryBackground,
       contentPadding: EdgeInsets.all(16),
     );
   }

@@ -14,13 +14,15 @@ class CloudinaryConfig {
   static const String uploadPreset = 'sisfo_zis';
 
   // Folder untuk organisasi assets
-  static const String folderBuktiTransfer = 'sisfo_upz/bukti_transfer';
+  static const String folderBuktiSetor = 'sisfo_upz/bukti_setor';
   static const String folderProfilePhoto = 'sisfo_upz/profile';
+  static const String folderFormPdf = 'sisfo_upz/form';
   static const String folderDocuments = 'sisfo_upz/documents';
 
   // Base URL untuk Cloudinary
   static String get baseUrl => 'https://api.cloudinary.com/v1_1/$cloudName';
   static String get uploadUrl => '$baseUrl/image/upload';
+  static String get uploadRawUrl => '$baseUrl/raw/upload';
   static String get uploadVideoUrl => '$baseUrl/video/upload';
 
   // URL untuk mengakses gambar

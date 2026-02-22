@@ -56,10 +56,8 @@ class _PenyerapanHakAmilWidgetState extends State<PenyerapanHakAmilWidget> {
     _model.keteranganFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {
-          _model.rekapAlokasi =
-              TransactionEndPointGroup.getRekapAlokasiCall.call(
+          _model.rekapAlokasi = RekapEndPointGroup.alokasiReportCall.call(
             token: currentAuthenticationToken,
-            periode: 'tahunan',
             unitId: FFAppState().profileUPZ.id,
             year: FFAppState().year,
           );
@@ -150,21 +148,19 @@ class _PenyerapanHakAmilWidgetState extends State<PenyerapanHakAmilWidget> {
                         );
                       }
                       final rekapBody = snapshot.data!.jsonBody;
-                      final sisaAmilZfUang = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .hakAmilZfAmount(rekapBody) ??
+                      final sisaAmilZfUang = RekapEndPointGroup
+                              .alokasiReportCall
+                              .alokasiHaZfUang(rekapBody) ??
                           0;
-                      final sisaAmilZfBeras = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .hakAmilZfRice(rekapBody) ??
+                      final sisaAmilZfBeras = RekapEndPointGroup
+                              .alokasiReportCall
+                              .alokasiHaZfBeras(rekapBody) ??
                           0.0;
-                      final sisaAmilZm = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .hakAmilZm(rekapBody) ??
+                      final sisaAmilZm = RekapEndPointGroup.alokasiReportCall
+                              .alokasiHaZm(rekapBody) ??
                           0;
-                      final sisaAmilIfs = TransactionEndPointGroup
-                              .getRekapAlokasiCall
-                              .hakAmilIfs(rekapBody) ??
+                      final sisaAmilIfs = RekapEndPointGroup.alokasiReportCall
+                              .alokasiHaIfs(rekapBody) ??
                           0;
 
                       return Column(
@@ -652,36 +648,6 @@ class _PenyerapanHakAmilWidgetState extends State<PenyerapanHakAmilWidget> {
                                             ],
                                           ),
                                         ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 12),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Sisa Alokasi Beras Amil',
-                                              style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryText,
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                            Text(
-                                              formatNumber(
-                                                    sisaAmilZfBeras,
-                                                    formatType:
-                                                        FormatType.custom,
-                                                    format: '##.##',
-                                                    locale: 'id_ID',
-                                                  ) +
-                                                  ' Kg',
-                                              style: TextStyle(
-                                                  color: Color(0xFF1A3C34),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -749,42 +715,52 @@ class _PenyerapanHakAmilWidgetState extends State<PenyerapanHakAmilWidget> {
                                         },
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 12),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Sisa Alokasi Uang Amil',
-                                            style: TextStyle(
+                                    if (_model.currentUang != null &&
+                                        _model.currentUang! >
+                                            ((_model.sumberDanaValue ==
+                                                    'zakat fitrah')
+                                                ? sisaAmilZfUang
+                                                : (_model.sumberDanaValue ==
+                                                        'zakat mal')
+                                                    ? sisaAmilZm
+                                                    : sisaAmilIfs))
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.error_outline,
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                fontStyle: FontStyle.italic),
-                                          ),
-                                          Text(
-                                            formatNumber(
-                                              (_model.sumberDanaValue ==
-                                                      'zakat fitrah')
-                                                  ? sisaAmilZfUang
-                                                  : (_model.sumberDanaValue ==
-                                                          'zakat mal')
-                                                      ? sisaAmilZm
-                                                      : sisaAmilIfs,
-                                              formatType: FormatType.decimal,
-                                              decimalType:
-                                                  DecimalType.periodDecimal,
-                                              currency: 'Rp ',
-                                              locale: 'id_ID',
+                                                        .error,
+                                                size: 16),
+                                            SizedBox(width: 4),
+                                            Expanded(
+                                              child: Text(
+                                                'Jumlah melebihi sisa alokasi hak amil ${(_model.sumberDanaValue == 'zakat fitrah') ? 'Zakat Fitrah' : (_model.sumberDanaValue == 'zakat mal') ? 'Zakat Mal' : 'Infak Sedekah'} (${formatNumber(
+                                                  (_model.sumberDanaValue ==
+                                                          'zakat fitrah')
+                                                      ? sisaAmilZfUang
+                                                      : (_model.sumberDanaValue ==
+                                                              'zakat mal')
+                                                          ? sisaAmilZm
+                                                          : sisaAmilIfs,
+                                                  formatType:
+                                                      FormatType.decimal,
+                                                  decimalType:
+                                                      DecimalType.periodDecimal,
+                                                  currency: 'Rp ',
+                                                  locale: 'id_ID',
+                                                )})',
+                                                style: TextStyle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .error,
+                                                    fontSize: 12),
+                                              ),
                                             ),
-                                            style: TextStyle(
-                                                color: Color(0xFF1A3C34),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),

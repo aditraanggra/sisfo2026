@@ -465,7 +465,7 @@ class _SkeletonLoaderWidgetState extends State<SkeletonLoaderWidget>
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
             BoxShadow(

@@ -97,13 +97,13 @@ class _QurbanWidgetState extends State<QurbanWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: ModernColors.primaryDark,
+                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -122,7 +122,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 title: Text(
                   'Penerimaan Qurban',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textOnDark,
+                    color: FlutterFlowTheme.of(context).info,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -150,7 +150,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                     width: double.infinity,
                     padding: EdgeInsets.all(ModernSpacing.md),
                     decoration: BoxDecoration(
-                      color: ModernColors.backgroundCard,
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.circular(ModernRadius.xl),
                       boxShadow: ModernShadows.cardShadow,
                     ),
@@ -1760,7 +1760,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                                     24.0, 0.0, 24.0, 0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF259148),
+                                color: FlutterFlowTheme.of(context).primaryDark,
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
@@ -1809,10 +1809,10 @@ class _QurbanWidgetState extends State<QurbanWidget>
       width: double.infinity,
       padding: EdgeInsets.all(ModernSpacing.md),
       decoration: BoxDecoration(
-        color: ModernColors.primaryDark.withOpacity(0.1),
+        color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         border: Border.all(
-          color: ModernColors.primaryDark.withOpacity(0.3),
+          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -1821,12 +1821,12 @@ class _QurbanWidgetState extends State<QurbanWidget>
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ModernColors.primaryDark,
+              color: FlutterFlowTheme.of(context).primaryDark,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.campaign,
-              color: ModernColors.textOnDark,
+              color: FlutterFlowTheme.of(context).info,
               size: 24,
             ),
           ),
@@ -1838,7 +1838,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 Text(
                   'Tentang Qurban',
                   style: GoogleFonts.inter(
-                    color: ModernColors.primaryDark,
+                    color: FlutterFlowTheme.of(context).primaryDark,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1847,7 +1847,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 Text(
                   'Qurban adalah ibadah penyembelihan hewan pada Hari Raya Idul Adha',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textSecondary,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 12,
                   ),
                 ),
@@ -1866,7 +1866,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
         margin: EdgeInsets.only(bottom: ModernSpacing.sm),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: ModernColors.primaryDark.withOpacity(0.1),
+          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
           borderRadius: BorderRadius.circular(ModernRadius.lg),
         ),
         child: Row(
@@ -1875,14 +1875,14 @@ class _QurbanWidgetState extends State<QurbanWidget>
             Text(
               'Total $animal: $count × Rp ${CurrencyInputFormatter.formatToCurrency(price)}',
               style: GoogleFonts.inter(
-                color: ModernColors.textPrimary,
+                color: FlutterFlowTheme.of(context).primaryText,
                 fontSize: 14,
               ),
             ),
             Text(
               'Rp ${CurrencyInputFormatter.formatToCurrency(count * price)}',
               style: GoogleFonts.inter(
-                color: ModernColors.primaryDark,
+                color: FlutterFlowTheme.of(context).primaryDark,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -1922,7 +1922,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
         margin: EdgeInsets.symmetric(vertical: ModernSpacing.md),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: ModernColors.primaryDark.withOpacity(0.15),
+          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.15),
           borderRadius: BorderRadius.circular(ModernRadius.lg),
         ),
         child: Row(
@@ -1938,7 +1938,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
             Text(
               'Rp ${CurrencyInputFormatter.formatToCurrency(total)}',
               style: GoogleFonts.inter(
-                color: ModernColors.primaryDark,
+                color: FlutterFlowTheme.of(context).primaryDark,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),

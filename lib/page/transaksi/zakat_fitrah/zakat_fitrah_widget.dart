@@ -125,7 +125,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: ModernColors.backgroundPrimary,
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           appBar: _buildAppBar(context),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -148,7 +148,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
     if (!responsiveVisibility(context: context, desktop: false)) return null;
 
     return AppBar(
-      backgroundColor: ModernColors.primaryDark,
+      backgroundColor: FlutterFlowTheme.of(context).primaryDark,
       automaticallyImplyLeading: false,
       elevation: 0,
       leading: FlutterFlowIconButton(
@@ -180,7 +180,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: hasData
-              ? [ModernColors.primaryDark, const Color(0xFF124F23)]
+              ? [FlutterFlowTheme.of(context).primaryDark, const Color(0xFF124F23)]
               : [const Color(0xFF2D5A4A), const Color(0xFF1A3C34)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -263,7 +263,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
   Widget _buildFormCard() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -299,16 +299,16 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: ModernColors.backgroundMint,
+              color: FlutterFlowTheme.of(context).backgroundMint,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: ModernColors.primaryAccent, size: 18),
+            child: Icon(icon, color: FlutterFlowTheme.of(context).primary, size: 18),
           ),
           const SizedBox(width: 12),
           Text(
             title,
             style: GoogleFonts.inter(
-              color: ModernColors.textPrimary,
+              color: FlutterFlowTheme.of(context).primaryText,
               fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
@@ -373,13 +373,12 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           decoration: BoxDecoration(
             color: isSelected
-                ? ModernColors.primaryAccent
-                : ModernColors.backgroundPrimary,
+                ? FlutterFlowTheme.of(context).primaryDark
+                : FlutterFlowTheme.of(context).primaryBackground,
             borderRadius: BorderRadius.circular(ModernRadius.md),
             border: Border.all(
-              color: isSelected
-                  ? ModernColors.primaryAccent
-                  : Colors.grey.shade300,
+              color:
+                  isSelected ? FlutterFlowTheme.of(context).primaryDark : Colors.grey.shade300,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -388,14 +387,14 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             children: [
               Icon(
                 icon,
-                color: isSelected ? Colors.white : ModernColors.textSecondary,
+                color: isSelected ? Colors.white : FlutterFlowTheme.of(context).secondaryText,
                 size: 22,
               ),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: GoogleFonts.inter(
-                  color: isSelected ? Colors.white : ModernColors.textPrimary,
+                  color: isSelected ? Colors.white : FlutterFlowTheme.of(context).primaryText,
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
@@ -424,7 +423,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
         child: Text(
           'Tidak ada nominal uang yang tersedia',
           style: GoogleFonts.inter(
-            color: ModernColors.textSecondary,
+            color: FlutterFlowTheme.of(context).secondaryText,
             fontSize: 13,
           ),
         ),
@@ -439,7 +438,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
           Text(
             'Pilih Nominal per Kulak',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
@@ -480,12 +479,12 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
         decoration: BoxDecoration(
           color: isSelected
-              ? ModernColors.primaryAccent.withOpacity(0.1)
+              ? FlutterFlowTheme.of(context).primary.withOpacity(0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(ModernRadius.sm),
           border: Border.all(
             color:
-                isSelected ? ModernColors.primaryAccent : Colors.grey.shade300,
+                isSelected ? FlutterFlowTheme.of(context).primary : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -496,7 +495,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               Padding(
                 padding: const EdgeInsets.only(right: 6),
                 child: Icon(Icons.check_circle,
-                    color: ModernColors.primaryAccent, size: 18),
+                    color: FlutterFlowTheme.of(context).primary, size: 18),
               ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,8 +504,8 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                   formattedAmount,
                   style: GoogleFonts.inter(
                     color: isSelected
-                        ? ModernColors.primaryAccent
-                        : ModernColors.textPrimary,
+                        ? FlutterFlowTheme.of(context).primary
+                        : FlutterFlowTheme.of(context).primaryText,
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   ),
@@ -515,7 +514,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                   Text(
                     type.name,
                     style: GoogleFonts.inter(
-                      color: ModernColors.textSecondary,
+                      color: FlutterFlowTheme.of(context).secondaryText,
                       fontSize: 11,
                     ),
                   ),
@@ -552,7 +551,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               Text(
                 'Jumlah Muzakki',
                 style: GoogleFonts.inter(
-                  color: ModernColors.textSecondary,
+                  color: FlutterFlowTheme.of(context).secondaryText,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -580,13 +579,13 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: ModernColors.backgroundMint,
+                          color: FlutterFlowTheme.of(context).backgroundMint,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Orang',
                           style: GoogleFonts.inter(
-                            color: ModernColors.primaryAccent,
+                            color: FlutterFlowTheme.of(context).primary,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),
@@ -600,11 +599,11 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: ModernColors.incomeGreen.withOpacity(0.1),
+                          color: FlutterFlowTheme.of(context).success.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(Icons.check,
-                            color: ModernColors.incomeGreen, size: 24),
+                            color: FlutterFlowTheme.of(context).success, size: 24),
                       ),
                     ),
                 ],
@@ -635,12 +634,12 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? ModernColors.primaryAccent
-                      : ModernColors.backgroundPrimary,
+                      ? FlutterFlowTheme.of(context).primary
+                      : FlutterFlowTheme.of(context).primaryBackground,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: isSelected
-                        ? ModernColors.primaryAccent
+                        ? FlutterFlowTheme.of(context).primary
                         : Colors.grey.shade300,
                   ),
                 ),
@@ -649,7 +648,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                     '$amount',
                     style: GoogleFonts.inter(
                       color:
-                          isSelected ? Colors.white : ModernColors.textPrimary,
+                          isSelected ? Colors.white : FlutterFlowTheme.of(context).primaryText,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -715,13 +714,13 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
       children: [
         Container(
           decoration: BoxDecoration(
-            color: ModernColors.backgroundPrimary,
+            color: FlutterFlowTheme.of(context).primaryBackground,
             borderRadius: BorderRadius.circular(ModernRadius.md),
             border: Border.all(
               color: hasError
-                  ? ModernColors.expenseRed
+                  ? FlutterFlowTheme.of(context).error
                   : focusNode.hasFocus
-                      ? ModernColors.primaryAccent
+                      ? FlutterFlowTheme.of(context).primary
                       : Colors.transparent,
               width: hasError || focusNode.hasFocus ? 2 : 0,
             ),
@@ -734,7 +733,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
             style: GoogleFonts.inter(
-              color: ModernColors.textPrimary,
+              color: FlutterFlowTheme.of(context).primaryText,
               fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
@@ -744,7 +743,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               prefixText: prefixText,
               prefixIcon: prefixIcon != null
                   ? Icon(prefixIcon,
-                      color: ModernColors.textSecondary, size: 22)
+                      color: FlutterFlowTheme.of(context).secondaryText, size: 22)
                   : null,
               suffixIcon: suffixWidget != null
                   ? Padding(
@@ -754,17 +753,17 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               suffixIconConstraints:
                   const BoxConstraints(minHeight: 0, minWidth: 0),
               labelStyle: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 14,
               ),
               hintStyle: GoogleFonts.inter(
-                color: ModernColors.textSecondary.withOpacity(0.6),
+                color: FlutterFlowTheme.of(context).secondaryText.withOpacity(0.6),
                 fontSize: 14,
               ),
               floatingLabelStyle: GoogleFonts.inter(
                 color: hasError
-                    ? ModernColors.expenseRed
-                    : ModernColors.primaryAccent,
+                    ? FlutterFlowTheme.of(context).error
+                    : FlutterFlowTheme.of(context).primary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -785,12 +784,12 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             child: Row(
               children: [
                 Icon(Icons.error_outline,
-                    color: ModernColors.expenseRed, size: 14),
+                    color: FlutterFlowTheme.of(context).error, size: 14),
                 const SizedBox(width: 4),
                 Text(
                   errorText,
                   style: GoogleFonts.inter(
-                    color: ModernColors.expenseRed,
+                    color: FlutterFlowTheme.of(context).error,
                     fontSize: 12,
                   ),
                 ),
@@ -810,9 +809,9 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
         child: ElevatedButton(
           onPressed: _model.isSubmitting ? null : _handleSubmit,
           style: ElevatedButton.styleFrom(
-            backgroundColor: ModernColors.primaryAccent,
+            backgroundColor: FlutterFlowTheme.of(context).primaryDark,
             disabledBackgroundColor:
-                ModernColors.primaryAccent.withOpacity(0.5),
+                FlutterFlowTheme.of(context).primary.withOpacity(0.5),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ModernRadius.md),
@@ -878,7 +877,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               Text('Tanggal belum dipilih'),
             ],
           ),
-          backgroundColor: ModernColors.expenseRed,
+          backgroundColor: FlutterFlowTheme.of(context).error,
           behavior: SnackBarBehavior.floating,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -897,7 +896,7 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
               Text('Pilih jenis zakat fitrah'),
             ],
           ),
-          backgroundColor: ModernColors.expenseRed,
+          backgroundColor: FlutterFlowTheme.of(context).error,
           behavior: SnackBarBehavior.floating,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -962,11 +961,11 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.backgroundMint,
+                    color: FlutterFlowTheme.of(context).backgroundMint,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(Icons.help_outline,
-                      color: ModernColors.primaryAccent),
+                      color: FlutterFlowTheme.of(context).primary),
                 ),
                 const SizedBox(width: 12),
                 Text('Konfirmasi',
@@ -991,12 +990,12 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
                 onPressed: () => Navigator.pop(ctx, false),
                 child: Text('Batal',
                     style:
-                        GoogleFonts.inter(color: ModernColors.textSecondary)),
+                        GoogleFonts.inter(color: FlutterFlowTheme.of(context).secondaryText)),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(ctx, true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: ModernColors.primaryAccent,
+                  backgroundColor: FlutterFlowTheme.of(context).primary,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
@@ -1020,14 +1019,14 @@ class _ZakatFitrahWidgetState extends State<ZakatFitrahWidget>
             width: 80,
             child: Text(label,
                 style: GoogleFonts.inter(
-                    color: ModernColors.textSecondary, fontSize: 14)),
+                    color: FlutterFlowTheme.of(context).secondaryText, fontSize: 14)),
           ),
           Text(': ',
-              style: GoogleFonts.inter(color: ModernColors.textSecondary)),
+              style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).secondaryText)),
           Expanded(
             child: Text(value,
                 style: GoogleFonts.inter(
-                    color: ModernColors.textPrimary,
+                    color: FlutterFlowTheme.of(context).primaryText,
                     fontWeight: FontWeight.w500,
                     fontSize: 14)),
           ),

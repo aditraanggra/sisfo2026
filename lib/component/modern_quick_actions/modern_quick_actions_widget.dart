@@ -136,7 +136,7 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: ModernColors.backgroundCard,
+          color: FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.circular(ModernRadius.xl),
           boxShadow: ModernShadows.cardShadow,
         ),

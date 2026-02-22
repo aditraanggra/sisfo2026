@@ -29,7 +29,8 @@ class CloudinaryUploadExample {
       // Upload ke Cloudinary
       final response = await _cloudinary.uploadBuktiTransfer(
         File(image.path),
-        transactionId: transactionId,
+        noRegister: '3203001',
+        namaUpz: 'UPZ Contoh',
       );
 
       if (response.success) {
@@ -46,7 +47,7 @@ class CloudinaryUploadExample {
   }
 
   /// Contoh 2: Upload bukti transfer dari galeri
-  Future<String?> uploadBuktiTransferFromGallery(String transactionId) async {
+  Future<String?> uploadBuktiTransferFromGallery() async {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -59,7 +60,8 @@ class CloudinaryUploadExample {
 
       final response = await _cloudinary.uploadBuktiTransfer(
         File(image.path),
-        transactionId: transactionId,
+        noRegister: '3203001',
+        namaUpz: 'UPZ Contoh',
       );
 
       if (response.success) {
@@ -75,14 +77,15 @@ class CloudinaryUploadExample {
   /// Contoh 3: Upload untuk Web (menggunakan bytes)
   Future<String?> uploadBuktiTransferWeb(
     Uint8List imageBytes,
-    String transactionId,
+    String noRegister,
+    String namaUpz,
   ) async {
     try {
       final response = await _cloudinary.uploadBuktiTransfer(
         imageBytes,
-        transactionId: transactionId,
+        noRegister: noRegister,
+        namaUpz: namaUpz,
       );
-
       if (response.success) {
         return response.secureUrl;
       }
@@ -94,7 +97,7 @@ class CloudinaryUploadExample {
   }
 
   /// Contoh 4: Upload foto profil UPZ
-  Future<String?> uploadProfilePhoto(String unitId) async {
+  Future<String?> uploadProfilePhoto(String userId, String noRegister) async {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -107,7 +110,8 @@ class CloudinaryUploadExample {
 
       final response = await _cloudinary.uploadProfilePhoto(
         File(image.path),
-        unitId: unitId,
+        userId: userId,
+        noRegister: noRegister,
       );
 
       if (response.success) {
@@ -161,7 +165,8 @@ class CloudinaryUploadExample {
 ///       if (image != null) {
 ///         final response = await _cloudinary.uploadBuktiTransfer(
 ///           File(image.path),
-///           transactionId: 'TRX_${DateTime.now().millisecondsSinceEpoch}',
+///           noRegister: '3203001',
+///           namaUpz: 'UPZ Contoh',
 ///         );
 ///
 ///         if (response.success) {

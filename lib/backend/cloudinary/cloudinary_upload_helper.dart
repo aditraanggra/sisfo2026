@@ -96,64 +96,117 @@ Future<String?> uploadCloudinarySingleFile({
   }
 }
 
-/// Upload bukti transfer ke Cloudinary
+/// Upload bukti setor ke Cloudinary
 ///
-/// Wrapper khusus untuk upload bukti transfer dengan folder yang tepat
+/// Folder: sisfo_upz/bukti_setor
+/// Format penamaan file: tgl_noregister_namaupz
+///
+/// [selectedFiles] - List file gambar (jpeg, jpg, png)
+/// [noRegister] - Nomor register UPZ
+/// [namaUpz] - Nama unit UPZ
 Future<List<String>> uploadBuktiTransferToCloudinary({
   required List<SelectedFile> selectedFiles,
-  String? transactionId,
+  String? noRegister,
+  String? namaUpz,
 }) async {
-  return uploadCloudinaryFiles(
-    selectedFiles: selectedFiles,
-    folder: CloudinaryConfig.folderBuktiTransfer,
-    transactionId: transactionId,
-  );
+  final cloudinary = CloudinaryService();
+  final List<String> uploadedUrls = [];
+
+  for (int i = 0; i < selectedFiles.length; i++) {
+    final file = selectedFiles[i];
+    final bytes = file.bytes;
+
+    if (bytes.isEmpty) continue;
+
+    try {
+      final response = await cloudinary.uploadBuktiTransfer(
+        bytes,
+        noRegister: noRegister,
+        namaUpz: namaUpz,
+      );
+
+      if (response.success && response.secureUrl != null) {
+        uploadedUrls.add(response.secureUrl!);
+      } else {
+        print(
+            'Cloudinary bukti setor upload failed for file $i: ${response.error}');
+      }
+    } catch (e) {
+      print('Cloudinary bukti setor upload error for file $i: $e');
+    }
+  }
+
+  return uploadedUrls;
 }
 
 /// Upload foto profil ke Cloudinary
 ///
-/// Wrapper khusus untuk upload foto profil dengan folder yang tepat
+/// Folder: sisfo_upz/profile
+/// Format penamaan file: userId_noregister
+///
+/// [selectedFiles] - List file gambar (jpeg, jpg, png)
+/// [userId] - User ID
+/// [noRegister] - Nomor register UPZ
 Future<List<String>> uploadProfilePhotoToCloudinary({
   required List<SelectedFile> selectedFiles,
-  String? unitId,
+  String? userId,
+  String? noRegister,
 }) async {
-  return uploadCloudinaryFiles(
-    selectedFiles: selectedFiles,
-    folder: CloudinaryConfig.folderProfilePhoto,
-    transactionId: unitId != null ? 'profile_$unitId' : null,
-  );
+  final cloudinary = CloudinaryService();
+  final List<String> uploadedUrls = [];
+
+  for (int i = 0; i < selectedFiles.length; i++) {
+    final file = selectedFiles[i];
+    final bytes = file.bytes;
+
+    if (bytes.isEmpty) continue;
+
+    try {
+      final response = await cloudinary.uploadProfilePhoto(
+        bytes,
+        userId: userId ?? 'anon_${DateTime.now().millisecondsSinceEpoch}',
+        noRegister: noRegister,
+      );
+      if (response.success && response.secureUrl != null) {
+        uploadedUrls.add(response.secureUrl!);
+      } else {
+        print(
+            'Cloudinary profile upload failed for file $i: ${response.error}');
+      }
+    } catch (e) {
+      print('Cloudinary profile upload error for file $i: $e');
+    }
+  }
+
+  return uploadedUrls;
 }
 
-/// Upload dokumen (PDF, etc) ke Cloudinary
+/// Upload dokumen PDF ke Cloudinary
 ///
-/// Fungsi khusus untuk upload dokumen dengan folder yang tepat.
-/// Menggunakan raw upload endpoint untuk dokumen non-gambar.
+/// Folder: sisfo_upz/form
+/// Format penamaan file: tgl_noregister_namaupz
 ///
-/// [bytes] - Bytes dari dokumen yang akan diupload
-/// [fileName] - Nama file original (harus menyertakan ekstensi)
-/// [documentId] - Optional ID untuk penamaan file
-/// [folder] - Folder tujuan (default: folderDocuments)
+/// [bytes] - Bytes dari dokumen PDF
+/// [fileName] - Nama file original (harus menyertakan ekstensi .pdf)
+/// [noRegister] - Nomor register UPZ
+/// [namaUpz] - Nama unit UPZ
 ///
 /// Returns: URL dari dokumen yang berhasil diupload, atau null jika gagal
 Future<String?> uploadDocumentToCloudinary({
   required Uint8List bytes,
   required String fileName,
-  String? documentId,
-  String? folder,
+  String? noRegister,
+  String? namaUpz,
 }) async {
   if (bytes.isEmpty) return null;
 
   final cloudinary = CloudinaryService();
 
-  final String publicId = documentId != null
-      ? 'doc_${documentId}_${DateTime.now().millisecondsSinceEpoch}'
-      : 'doc_${DateTime.now().millisecondsSinceEpoch}';
-
   try {
-    final response = await cloudinary.uploadImageBytes(
+    final response = await cloudinary.uploadFormPdf(
       bytes,
-      folder: folder ?? CloudinaryConfig.folderDocuments,
-      publicId: publicId,
+      noRegister: noRegister,
+      namaUpz: namaUpz,
       fileName: fileName,
     );
 
@@ -171,15 +224,18 @@ Future<String?> uploadDocumentToCloudinary({
 
 /// Upload dokumen dari SelectedFile ke Cloudinary
 ///
-/// Wrapper untuk upload dokumen menggunakan SelectedFile.
+/// Folder: sisfo_upz/form
+/// Format penamaan file: tgl_noregister_namaupz
 ///
 /// [selectedFiles] - List file dari selectFiles()
-/// [documentId] - Optional ID untuk penamaan file
+/// [noRegister] - Nomor register UPZ
+/// [namaUpz] - Nama unit UPZ
 ///
 /// Returns: List<String> berisi URL dari dokumen yang berhasil diupload
 Future<List<String>> uploadDocumentsToCloudinary({
   required List<SelectedFile> selectedFiles,
-  String? documentId,
+  String? noRegister,
+  String? namaUpz,
 }) async {
   final List<String> uploadedUrls = [];
 
@@ -189,15 +245,11 @@ Future<List<String>> uploadDocumentsToCloudinary({
 
     if (bytes.isEmpty) continue;
 
-    final String docId = documentId != null
-        ? '${documentId}_$i'
-        : '${DateTime.now().millisecondsSinceEpoch}_$i';
-
     try {
-      final response = await CloudinaryService().uploadImageBytes(
+      final response = await CloudinaryService().uploadFormPdf(
         bytes,
-        folder: CloudinaryConfig.folderDocuments,
-        publicId: docId,
+        noRegister: noRegister,
+        namaUpz: namaUpz,
         fileName: file.originalFilename,
       );
 

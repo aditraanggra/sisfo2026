@@ -49,73 +49,29 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
   }
 
   // Initialize current values from API data
-  void _initializeCurrentValues(ApiCallResponse rekapAlokasiResponse,
-      ApiCallResponse rekapSetorResponse) {
+  void _initializeCurrentValues(ApiCallResponse alokasiReportResponse) {
+    final body = alokasiReportResponse.jsonBody;
     _model.currentZf = valueOrDefault<int>(
-      valueOrDefault<int>(
-            RekapEndPointGroup.rekapAlokasiCall.setorZfUang(
-              rekapAlokasiResponse.jsonBody,
-            ),
-            0,
-          ) -
-          valueOrDefault<int>(
-            RekapEndPointGroup.rekapSetorCall.realisasiSetorZfUang(
-              rekapSetorResponse.jsonBody,
-            ),
-            0,
-          ),
+      RekapEndPointGroup.alokasiReportCall.alokasiSetorZfUang(body),
       0,
     );
     _model.currentZm = valueOrDefault<int>(
-      valueOrDefault<int>(
-            RekapEndPointGroup.rekapAlokasiCall.setorZm(
-              rekapAlokasiResponse.jsonBody,
-            ),
-            0,
-          ) -
-          valueOrDefault<int>(
-            RekapEndPointGroup.rekapSetorCall.realisasiSetorZm(
-              rekapSetorResponse.jsonBody,
-            ),
-            0,
-          ),
+      RekapEndPointGroup.alokasiReportCall.alokasiSetorZm(body),
       0,
     );
     _model.currentIfs = valueOrDefault<int>(
-      valueOrDefault<int>(
-            RekapEndPointGroup.rekapAlokasiCall.setorIfs(
-              rekapAlokasiResponse.jsonBody,
-            ),
-            0,
-          ) -
-          valueOrDefault<int>(
-            RekapEndPointGroup.rekapSetorCall.realisasiSetorIfs(
-              rekapSetorResponse.jsonBody,
-            ),
-            0,
-          ),
+      RekapEndPointGroup.alokasiReportCall.alokasiSetorIfs(body),
       0,
     );
     _model.currentZfBeras = valueOrDefault<double>(
-      valueOrDefault<double>(
-            RekapEndPointGroup.rekapAlokasiCall.setorZfBeras(
-              rekapAlokasiResponse.jsonBody,
-            ),
-            0.0,
-          ) -
-          valueOrDefault<double>(
-            RekapEndPointGroup.rekapSetorCall.realisasiSetorZfBeras(
-              rekapSetorResponse.jsonBody,
-            ),
-            0.0,
-          ),
+      RekapEndPointGroup.alokasiReportCall.alokasiSetorZfBeras(body),
       0.0,
     );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: ModernColors.primaryDark,
+      backgroundColor: FlutterFlowTheme.of(context).primaryDark,
       automaticallyImplyLeading: false,
       leading: FlutterFlowIconButton(
         borderColor: Colors.transparent,
@@ -150,7 +106,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
         title,
         style: FlutterFlowTheme.of(context).labelMedium.override(
               fontFamily: 'Inter',
-              color: ModernColors.primaryDark,
+              color: FlutterFlowTheme.of(context).primaryDark,
               fontSize: 12.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
@@ -181,14 +137,15 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
         children: [
           Row(
             children: [
-              Icon(icon, color: ModernColors.primaryDark, size: 16.0),
+              Icon(icon,
+                  color: FlutterFlowTheme.of(context).primaryDark, size: 16.0),
               const SizedBox(width: 4.0),
               Expanded(
                 child: Text(
                   label,
                   style: FlutterFlowTheme.of(context).bodySmall.override(
                         fontFamily: 'Inter',
-                        color: ModernColors.textSecondary,
+                        color: FlutterFlowTheme.of(context).secondaryText,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w500,
                       ),
@@ -216,7 +173,7 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                     (suffix ?? ''),
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Inter',
-                  color: ModernColors.primaryDark,
+                  color: FlutterFlowTheme.of(context).primaryDark,
                   fontSize: 13.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -231,44 +188,32 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
     context.watch<FFAppState>();
 
     return FutureBuilder<ApiCallResponse>(
-      future: RekapEndPointGroup.rekapAlokasiCall.call(
-        periode: 'tahunan',
+      future: RekapEndPointGroup.alokasiReportCall.call(
         token: currentAuthenticationToken,
-        unitId: FFAppState().profileUPZ.id.toString(),
+        unitId: FFAppState().profileUPZ.id,
         year: FFAppState().year,
       ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Scaffold(
-            backgroundColor: ModernColors.backgroundPrimary,
+            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
             appBar: _buildAppBar(context),
             body: _buildShimmerLoading(),
           );
         }
-        final rekapAlokasiData = snapshot.data!;
+        final alokasiReportData = snapshot.data!;
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: ModernColors.backgroundPrimary,
+            backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
             appBar: _buildAppBar(context),
             body: SafeArea(
-              child: FutureBuilder<ApiCallResponse>(
-                future: RekapEndPointGroup.rekapSetorCall.call(
-                  periode: 'tahunan',
-                  token: currentAuthenticationToken,
-                  unitId: FFAppState().profileUPZ.id,
-                  year: FFAppState().year,
-                ),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return _buildShimmerLoading();
-                  }
-                  final rekapSetorData = snapshot.data!;
-
+              child: Builder(
+                builder: (context) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _initializeCurrentValues(rekapAlokasiData, rekapSetorData);
+                    _initializeCurrentValues(alokasiReportData);
                   });
 
                   return CustomScrollView(
@@ -296,9 +241,10 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         width: double.infinity,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 12.0, horizontal: 16.0),
-                                        decoration: const BoxDecoration(
-                                          color: ModernColors.primaryDark,
-                                          borderRadius: BorderRadius.only(
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryDark,
+                                          borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(16.0),
                                             topRight: Radius.circular(16.0),
                                           ),
@@ -472,7 +418,9 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                       maxHeight: 800.00,
                                       imageQuality: 80,
                                       allowPhoto: true,
-                                      backgroundColor: ModernColors.primaryDark,
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .primaryDark,
                                       textColor: Colors.white,
                                     );
                                     if (selectedMedia != null &&
@@ -486,6 +434,11 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         final downloadUrls =
                                             await uploadBuktiTransferToCloudinary(
                                           selectedFiles: selectedMedia,
+                                          noRegister: FFAppState()
+                                              .profileUPZ
+                                              .noRegister,
+                                          namaUpz:
+                                              FFAppState().profileUPZ.unitName,
                                         );
                                         if (downloadUrls.isNotEmpty) {
                                           safeSetState(() {
@@ -494,11 +447,12 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                           });
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
+                                            SnackBar(
+                                              content: const Text(
                                                   'Upload Bukti Setor Berhasil'),
                                               backgroundColor:
-                                                  ModernColors.primaryAccent,
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
                                             ),
                                           );
                                         } else {
@@ -533,17 +487,19 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: ModernColors.primaryAccent
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary
                                             .withAlpha(50),
                                         width: 2,
                                       ),
                                     ),
                                     child: _model.isDataUploading_uploadDataF1e
-                                        ? const Column(
+                                        ? Column(
                                             children: [
                                               CircularProgressIndicator(
                                                 color:
-                                                    ModernColors.primaryAccent,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
                                               ),
                                               SizedBox(height: 8),
                                               Text(
@@ -696,7 +652,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                   options: FFButtonOptions(
                                     width: double.infinity,
                                     height: 56.0,
-                                    color: ModernColors.primaryAccent,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryDark,
                                     textStyle: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16.0,

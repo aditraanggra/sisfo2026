@@ -69,7 +69,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -90,19 +90,19 @@ class _FidyahWidgetState extends State<FidyahWidget>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: ModernColors.primaryDark,
+      backgroundColor: FlutterFlowTheme.of(context).primaryDark,
       automaticallyImplyLeading: false,
       leading: FlutterFlowIconButton(
         borderRadius: 30,
         buttonSize: 48,
         icon: Icon(Icons.arrow_back_rounded,
-            color: ModernColors.textOnDark, size: 20),
+            color: FlutterFlowTheme.of(context).info, size: 20),
         onPressed: () => context.safePop(),
       ),
       title: Text(
         'Penerimaan Fidyah',
         style: GoogleFonts.inter(
-            color: ModernColors.textOnDark,
+            color: FlutterFlowTheme.of(context).info,
             fontSize: 16,
             fontWeight: FontWeight.w600),
       ),
@@ -113,10 +113,10 @@ class _FidyahWidgetState extends State<FidyahWidget>
   Widget _buildInfoCard() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.primaryDark.withOpacity(0.1),
+        color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         border: Border.all(
-          color: ModernColors.primaryDark.withOpacity(0.3),
+          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -126,11 +126,11 @@ class _FidyahWidgetState extends State<FidyahWidget>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ModernColors.primaryDark,
+              color: FlutterFlowTheme.of(context).primaryDark,
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.info_outline,
-                color: ModernColors.textOnDark, size: 24),
+                color: FlutterFlowTheme.of(context).info, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -140,7 +140,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
                 Text(
                   'Tentang Fidyah',
                   style: GoogleFonts.inter(
-                    color: ModernColors.primaryDark,
+                    color: FlutterFlowTheme.of(context).primaryDark,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -149,7 +149,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
                 Text(
                   'Fidyah adalah denda bagi yang tidak bisa berpuasa karena uzur',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textSecondary,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 12,
                   ),
                 ),
@@ -164,7 +164,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
   Widget _buildFormCard() {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -178,7 +178,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
             Text(
               'PILIH TANGGAL',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -195,7 +195,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
             Text(
               'DATA PEMBAYAR',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -207,8 +207,8 @@ class _FidyahWidgetState extends State<FidyahWidget>
               focusNode: _model.namaMuzakkiFocusNode,
               decoration: _buildInputDecoration(labelText: 'Nama Pembayar'),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary, fontSize: 16),
-              cursorColor: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16),
+              cursorColor: FlutterFlowTheme.of(context).primary,
               validator: _model.namaMuzakkiTextControllerValidator
                   ?.asValidator(context),
             ),
@@ -218,7 +218,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
             Text(
               'JUMLAH HARI',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -238,10 +238,10 @@ class _FidyahWidgetState extends State<FidyahWidget>
                 suffixText: 'hari',
               ),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary,
+                  color: FlutterFlowTheme.of(context).primaryText,
                   fontSize: 18,
                   fontWeight: FontWeight.w500),
-              cursorColor: ModernColors.primaryAccent,
+              cursorColor: FlutterFlowTheme.of(context).primary,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator:
@@ -253,7 +253,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
             Text(
               'NOMINAL PER HARI',
               style: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -272,13 +272,13 @@ class _FidyahWidgetState extends State<FidyahWidget>
                 labelText: 'Nominal Per Hari',
                 prefixText: 'Rp ',
                 labelStyle: GoogleFonts.inter(
-                    color: ModernColors.textSecondary, fontSize: 16),
+                    color: FlutterFlowTheme.of(context).secondaryText, fontSize: 16),
                 prefixStyle: GoogleFonts.inter(
-                    color: ModernColors.textPrimary,
+                    color: FlutterFlowTheme.of(context).primaryText,
                     fontSize: 18,
                     fontWeight: FontWeight.w500),
                 floatingLabelStyle: GoogleFonts.inter(
-                    color: ModernColors.primaryAccent,
+                    color: FlutterFlowTheme.of(context).primary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
                 enabledBorder: OutlineInputBorder(
@@ -287,23 +287,23 @@ class _FidyahWidgetState extends State<FidyahWidget>
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: ModernColors.primaryAccent, width: 2),
+                      BorderSide(color: FlutterFlowTheme.of(context).primary, width: 2),
                   borderRadius: BorderRadius.circular(ModernRadius.lg),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: ModernColors.expenseRed, width: 1.5),
+                      BorderSide(color: FlutterFlowTheme.of(context).error, width: 1.5),
                   borderRadius: BorderRadius.circular(ModernRadius.lg),
                 ),
                 filled: true,
-                fillColor: ModernColors.backgroundPrimary,
+                fillColor: FlutterFlowTheme.of(context).primaryBackground,
                 contentPadding: const EdgeInsets.all(16),
               ),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary,
+                  color: FlutterFlowTheme.of(context).primaryText,
                   fontSize: 18,
                   fontWeight: FontWeight.w500),
-              cursorColor: ModernColors.primaryAccent,
+              cursorColor: FlutterFlowTheme.of(context).primary,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -315,7 +315,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: ModernColors.primaryDark.withOpacity(0.1),
+                  color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(ModernRadius.lg),
                 ),
                 child: Row(
@@ -324,7 +324,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
                     Text(
                       'Total Fidyah',
                       style: GoogleFonts.inter(
-                        color: ModernColors.textPrimary,
+                        color: FlutterFlowTheme.of(context).primaryText,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -337,7 +337,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
                         currency: 'Rp ',
                       ),
                       style: GoogleFonts.inter(
-                        color: ModernColors.primaryDark,
+                        color: FlutterFlowTheme.of(context).primaryDark,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
@@ -355,8 +355,8 @@ class _FidyahWidgetState extends State<FidyahWidget>
               decoration:
                   _buildInputDecoration(labelText: 'Keterangan (opsional)'),
               style: GoogleFonts.inter(
-                  color: ModernColors.textPrimary, fontSize: 16),
-              cursorColor: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16),
+              cursorColor: FlutterFlowTheme.of(context).primary,
               maxLines: 2,
             ),
 
@@ -377,11 +377,11 @@ class _FidyahWidgetState extends State<FidyahWidget>
       labelText: labelText,
       suffixText: suffixText,
       labelStyle:
-          GoogleFonts.inter(color: ModernColors.textSecondary, fontSize: 16),
+          GoogleFonts.inter(color: FlutterFlowTheme.of(context).secondaryText, fontSize: 16),
       suffixStyle:
-          GoogleFonts.inter(color: ModernColors.textSecondary, fontSize: 14),
+          GoogleFonts.inter(color: FlutterFlowTheme.of(context).secondaryText, fontSize: 14),
       floatingLabelStyle: GoogleFonts.inter(
-          color: ModernColors.primaryAccent,
+          color: FlutterFlowTheme.of(context).primary,
           fontSize: 14,
           fontWeight: FontWeight.w500),
       enabledBorder: OutlineInputBorder(
@@ -389,15 +389,15 @@ class _FidyahWidgetState extends State<FidyahWidget>
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: ModernColors.primaryAccent, width: 2),
+        borderSide: BorderSide(color: FlutterFlowTheme.of(context).primary, width: 2),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: ModernColors.expenseRed, width: 1.5),
+        borderSide: BorderSide(color: FlutterFlowTheme.of(context).error, width: 1.5),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       filled: true,
-      fillColor: ModernColors.backgroundPrimary,
+      fillColor: FlutterFlowTheme.of(context).primaryBackground,
       contentPadding: const EdgeInsets.all(16),
     );
   }
@@ -417,9 +417,9 @@ class _FidyahWidgetState extends State<FidyahWidget>
           options: FFButtonOptions(
             width: double.infinity,
             height: 52,
-            color: ModernColors.primaryDark,
+            color: FlutterFlowTheme.of(context).primaryDark,
             textStyle: GoogleFonts.inter(
-                color: ModernColors.textOnDark,
+                color: FlutterFlowTheme.of(context).info,
                 fontSize: 16,
                 fontWeight: FontWeight.w600),
             elevation: 0,
@@ -437,8 +437,8 @@ class _FidyahWidgetState extends State<FidyahWidget>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Tanggal belum diisi',
-              style: GoogleFonts.inter(color: ModernColors.textOnDark)),
-          backgroundColor: ModernColors.expenseRed,
+              style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).info)),
+          backgroundColor: FlutterFlowTheme.of(context).error,
         ),
       );
       return;
@@ -448,8 +448,8 @@ class _FidyahWidgetState extends State<FidyahWidget>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Jumlah hari dan nominal harus diisi',
-              style: GoogleFonts.inter(color: ModernColors.textOnDark)),
-          backgroundColor: ModernColors.expenseRed,
+              style: GoogleFonts.inter(color: FlutterFlowTheme.of(context).info)),
+          backgroundColor: FlutterFlowTheme.of(context).error,
         ),
       );
       return;
@@ -480,7 +480,7 @@ class _FidyahWidgetState extends State<FidyahWidget>
             onPressed: () => Navigator.pop(ctx),
             child: Text('Ok',
                 style: GoogleFonts.inter(
-                    color: ModernColors.primaryAccent,
+                    color: FlutterFlowTheme.of(context).primary,
                     fontWeight: FontWeight.w500)),
           ),
         ],

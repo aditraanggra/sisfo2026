@@ -80,8 +80,8 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             title: 'Jumlah Muzakki',
             count: widget.jumlahMuzakki,
             icon: Icons.people_outline_rounded,
-            iconBackgroundColor: ModernColors.backgroundMint,
-            iconColor: ModernColors.primaryAccent,
+            iconBackgroundColor: FlutterFlowTheme.of(context).backgroundMint,
+            iconColor: FlutterFlowTheme.of(context).primary,
           ),
         ),
         const SizedBox(width: ModernSpacing.sm),
@@ -92,8 +92,9 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             title: 'Jumlah Munfiq',
             count: widget.jumlahMunfiq,
             icon: Icons.card_giftcard_rounded,
-            iconBackgroundColor: const Color(0xFFE8F0FE),
-            iconColor: const Color(0xFF4285F4),
+            iconBackgroundColor:
+                FlutterFlowTheme.of(context).accent2.withOpacity(0.2),
+            iconColor: FlutterFlowTheme.of(context).secondary,
           ),
         ),
         const SizedBox(width: ModernSpacing.sm),
@@ -104,8 +105,9 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             title: 'Jumlah Mustahik',
             count: widget.jumlahMustahik,
             icon: Icons.volunteer_activism_outlined,
-            iconBackgroundColor: const Color(0xFFFFF4E5),
-            iconColor: ModernColors.goldAccent,
+            iconBackgroundColor:
+                FlutterFlowTheme.of(context).warning.withOpacity(0.15),
+            iconColor: FlutterFlowTheme.of(context).warning,
           ),
         ),
       ],
@@ -124,7 +126,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: ModernColors.backgroundCard,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.lg),
         boxShadow: ModernShadows.cardShadow,
       ),
@@ -154,7 +156,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
               title,
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: 'Inter',
-                    color: ModernColors.textSecondary,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     fontSize: 11,
                     fontWeight: FontWeight.normal,
                   ),
@@ -167,7 +169,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
               _formatNumber(count),
               style: FlutterFlowTheme.of(context).titleMedium.override(
                     fontFamily: 'Inter',
-                    color: ModernColors.textPrimary,
+                    color: FlutterFlowTheme.of(context).primaryText,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

@@ -2049,6 +2049,7 @@ class RekapEndPointGroup {
   static RekapSetorCall rekapSetorCall = RekapSetorCall();
   static RekapAlokasiCall rekapAlokasiCall = RekapAlokasiCall();
   static RekapZisReportCall rekapZisReportCall = RekapZisReportCall();
+  static AlokasiReportCall alokasiReportCall = AlokasiReportCall();
 }
 
 class RekapZISCall {
@@ -2607,6 +2608,122 @@ class RekapZisReportCall {
         response,
         r'''$.data''',
       );
+}
+
+class AlokasiReportCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? unitId,
+    int? year,
+  }) async {
+    final baseUrl = RekapEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Alokasi Report',
+      apiUrl: '${baseUrl}/rekap/alokasi-report',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        'unit_id': unitId,
+        'year': year,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  // Kelola fields
+  int? alokasiKelolaZfUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_kelola_zf_uang''',
+      ));
+  double? alokasiKelolaZfBeras(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.data.alokasi_kelola_zf_beras''',
+      ));
+  int? alokasiKelolaZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_kelola_zm''',
+      ));
+  int? alokasiKelolaIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_kelola_ifs''',
+      ));
+
+  // Setor fields
+  int? alokasiSetorZfUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_setor_zf_uang''',
+      ));
+  double? alokasiSetorZfBeras(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.data.alokasi_setor_zf_beras''',
+      ));
+  int? alokasiSetorZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_setor_zm''',
+      ));
+  int? alokasiSetorIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_setor_ifs''',
+      ));
+
+  // Pendis fields
+  int? alokasiPendisZfUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_pendis_zf_uang''',
+      ));
+  double? alokasiPendisZfBeras(dynamic response) =>
+      castToType<double>(getJsonField(
+        response,
+        r'''$.data.alokasi_pendis_zf_beras''',
+      ));
+  int? alokasiPendisZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_pendis_zm''',
+      ));
+  int? alokasiPendisIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_pendis_ifs''',
+      ));
+
+  // Hak Amil fields
+  int? alokasiHaZfUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_ha_zf_uang''',
+      ));
+  double? alokasiHaZfBeras(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.alokasi_ha_zf_beras''',
+      ));
+  int? alokasiHaZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_ha_zm''',
+      ));
+  int? alokasiHaIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_ha_ifs''',
+      ));
+
+  // Operasional fields
+  int? alokasiOpUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.alokasi_op_uang''',
+      ));
+  double? alokasiOpBeras(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.alokasi_op_beras''',
+      ));
 }
 
 /// End RekapEndPoint Group Code

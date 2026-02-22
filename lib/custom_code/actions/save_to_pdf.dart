@@ -240,82 +240,7 @@ Future<void> saveToPdf(
           ],
         ),
 
-        if (listSetoran != null && listSetoran.isNotEmpty) ...[
-          pw.Header(
-              level: 1,
-              child: pw.Text('REKAP SETORAN UPZ',
-                  style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold))),
-          pw.SizedBox(height: 20),
-          pw.Table(
-            border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
-            columnWidths: {
-              0: pw.FlexColumnWidth(2),
-              1: pw.FlexColumnWidth(2),
-              2: pw.FlexColumnWidth(2),
-              3: pw.FlexColumnWidth(3),
-            },
-            children: [
-              pw.TableRow(
-                decoration: pw.BoxDecoration(color: PdfColors.grey200),
-                children: [
-                  _buildHeaderCell('TANGGAL'),
-                  _buildHeaderCell('JUMLAH (Rp)'),
-                  _buildHeaderCell('KET (BERAS)'),
-                  _buildHeaderCell('BUKTI SETOR'),
-                ],
-              ),
-              ...List.generate(listSetoran.length, (index) {
-                final item = listSetoran[index];
-                final img =
-                    setoranImages.length > index ? setoranImages[index] : null;
-                return pw.TableRow(
-                  children: [
-                    pw.Padding(
-                        padding: pw.EdgeInsets.all(5),
-                        child: pw.Text(item['trx_date'] ?? '-',
-                            style: pw.TextStyle(fontSize: 10))),
-                    pw.Padding(
-                        padding: pw.EdgeInsets.all(5),
-                        child: pw.Text(
-                            formatNumber(
-                              item['total_deposit'],
-                              formatType: FormatType.custom,
-                              currency: 'Rp ',
-                              format: '###,###',
-                              locale: 'ID',
-                            ),
-                            style: pw.TextStyle(fontSize: 10),
-                            textAlign: pw.TextAlign.right)),
-                    pw.Padding(
-                        padding: pw.EdgeInsets.all(5),
-                        child: pw.Text(
-                            formatNumber(
-                                  item['zf_rice_deposit'],
-                                  formatType: FormatType.custom,
-                                  format: '###,###',
-                                  locale: 'ID',
-                                ) +
-                                ' Kg',
-                            style: pw.TextStyle(fontSize: 10),
-                            textAlign: pw.TextAlign.right)),
-                    pw.Padding(
-                      padding: pw.EdgeInsets.all(5),
-                      child: img != null
-                          ? pw.Container(
-                              height: 80,
-                              child: pw.Image(img, fit: pw.BoxFit.contain))
-                          : pw.Text('-'),
-                    ),
-                  ],
-                );
-              }),
-            ],
-          ),
-          pw.SizedBox(height: 40),
-        ],
-
-        // MOVED SIGNATURE SECTION
+        // SIGNATURE SECTION
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
           crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -332,11 +257,208 @@ Future<void> saveToPdf(
         pw.SizedBox(height: 40),
         pw.Center(
             child: pw.Text(
-                'Laporan ini dicetak otomatis pada ${DateTime.now().year}',
+                'Laporan ini dicetak otomatis pada ' +
+                    DateFormat('yyyy-MM-dd HH:mm:ss')
+                        .format(DateTime.now().toLocal()),
                 style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600))),
       ],
     ),
   );
+
+  // ===== HALAMAN 2: REKAP SETORAN UPZ =====
+  if (listSetoran != null && listSetoran.isNotEmpty) {
+    final int colCount = 6; // ignore: unused_local_variable
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(32),
+        build: (context) => [
+          pw.Header(
+              level: 1,
+              child: pw.Text('REKAP SETORAN UPZ',
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold))),
+          pw.SizedBox(height: 10),
+          pw.Column(
+            children: [
+              // Header Table
+              pw.Table(
+                border: const pw.TableBorder(
+                  top: pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                  bottom: pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                  left: pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                  right: pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                  verticalInside:
+                      pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                ),
+                columnWidths: {
+                  0: pw.FlexColumnWidth(2), // Tanggal
+                  1: pw.FlexColumnWidth(2), // ZF Uang
+                  2: pw.FlexColumnWidth(1.5), // ZF Beras
+                  3: pw.FlexColumnWidth(2), // Zakat Mal
+                  4: pw.FlexColumnWidth(2), // Infak Sedekah
+                  5: pw.FlexColumnWidth(2), // Keterangan
+                },
+                children: [
+                  pw.TableRow(
+                    decoration: pw.BoxDecoration(color: PdfColors.grey200),
+                    children: [
+                      _buildHeaderCell('TANGGAL'),
+                      _buildHeaderCell('ZF (Uang)'),
+                      _buildHeaderCell('ZF (Beras)'),
+                      _buildHeaderCell('ZAKAT MAL'),
+                      _buildHeaderCell('INFAK\nSEDEKAH'),
+                      _buildHeaderCell('KET'),
+                    ],
+                  ),
+                ],
+              ),
+              // Data rows + image containers
+              ...List.generate(listSetoran.length, (index) {
+                final item = listSetoran[index];
+                final img =
+                    setoranImages.length > index ? setoranImages[index] : null;
+
+                return pw.Column(
+                  children: [
+                    // Data Table
+                    pw.Table(
+                      border: const pw.TableBorder(
+                        bottom:
+                            pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                        left:
+                            pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                        right:
+                            pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                        verticalInside:
+                            pw.BorderSide(color: PdfColors.grey400, width: 0.5),
+                      ),
+                      columnWidths: {
+                        0: pw.FlexColumnWidth(2), // Tanggal
+                        1: pw.FlexColumnWidth(2), // ZF Uang
+                        2: pw.FlexColumnWidth(1.5), // ZF Beras
+                        3: pw.FlexColumnWidth(2), // Zakat Mal
+                        4: pw.FlexColumnWidth(2), // Infak Sedekah
+                        5: pw.FlexColumnWidth(2), // Keterangan
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(item['trx_date'] ?? '-',
+                                    style: pw.TextStyle(fontSize: 9))),
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(
+                                    formatNumber(
+                                      item['zf_amount_deposit'],
+                                      formatType: FormatType.custom,
+                                      currency: 'Rp ',
+                                      format: '###,###',
+                                      locale: 'ID',
+                                    ),
+                                    style: pw.TextStyle(fontSize: 9),
+                                    textAlign: pw.TextAlign.right)),
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(
+                                    formatNumber(
+                                          item['zf_rice_deposit'],
+                                          formatType: FormatType.custom,
+                                          format: '###,###',
+                                          locale: 'ID',
+                                        ) +
+                                        ' Kg',
+                                    style: pw.TextStyle(fontSize: 9),
+                                    textAlign: pw.TextAlign.right)),
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(
+                                    formatNumber(
+                                      item['zm_amount_deposit'],
+                                      formatType: FormatType.custom,
+                                      currency: 'Rp ',
+                                      format: '###,###',
+                                      locale: 'ID',
+                                    ),
+                                    style: pw.TextStyle(fontSize: 9),
+                                    textAlign: pw.TextAlign.right)),
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(
+                                    formatNumber(
+                                      item['ifs_amount_deposit'],
+                                      formatType: FormatType.custom,
+                                      currency: 'Rp ',
+                                      format: '###,###',
+                                      locale: 'ID',
+                                    ),
+                                    style: pw.TextStyle(fontSize: 9),
+                                    textAlign: pw.TextAlign.right)),
+                            pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.Text(item['status'] ?? '-',
+                                    style: pw.TextStyle(fontSize: 9))),
+                          ],
+                        ),
+                      ],
+                    ),
+                    // Image Container
+                    pw.Container(
+                      width: double.infinity,
+                      decoration: pw.BoxDecoration(
+                        color: PdfColors.grey50,
+                        border: const pw.Border(
+                          bottom: pw.BorderSide(
+                              color: PdfColors.grey400, width: 0.5),
+                          left: pw.BorderSide(
+                              color: PdfColors.grey400, width: 0.5),
+                          right: pw.BorderSide(
+                              color: PdfColors.grey400, width: 0.5),
+                        ),
+                      ),
+                      padding: pw.EdgeInsets.all(8),
+                      child: img != null
+                          ? pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text('Bukti Setor:',
+                                    style: pw.TextStyle(
+                                        fontSize: 8,
+                                        fontWeight: pw.FontWeight.bold,
+                                        color: PdfColors.grey700)),
+                                pw.SizedBox(height: 4),
+                                pw.Container(
+                                  height: 180,
+                                  width: double.infinity,
+                                  child: pw.Row(
+                                    mainAxisAlignment:
+                                        pw.MainAxisAlignment.center,
+                                    children: [
+                                      pw.Expanded(
+                                        child: pw.Image(img,
+                                            fit: pw.BoxFit.contain),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : pw.Text('Bukti Setor: -',
+                              style: pw.TextStyle(
+                                  fontSize: 8, color: PdfColors.grey500)),
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+          pw.SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 
   await Printing.layoutPdf(
     onLayout: (PdfPageFormat format) async => pdf.save(),

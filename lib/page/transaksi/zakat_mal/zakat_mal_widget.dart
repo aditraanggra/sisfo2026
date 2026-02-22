@@ -93,50 +93,50 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
       hintText: hintText,
       prefixText: prefixText,
       labelStyle: GoogleFonts.inter(
-        color: ModernColors.textSecondary,
+        color: FlutterFlowTheme.of(context).secondaryText,
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
       ),
       hintStyle: GoogleFonts.inter(
-        color: ModernColors.textSecondary.withOpacity(0.7),
+        color: FlutterFlowTheme.of(context).secondaryText.withOpacity(0.7),
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
       ),
       floatingLabelStyle: GoogleFonts.inter(
-        color: hasError ? ModernColors.expenseRed : ModernColors.primaryAccent,
+        color: hasError ? FlutterFlowTheme.of(context).error : FlutterFlowTheme.of(context).primary,
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
       ),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       enabledBorder: OutlineInputBorder(
         borderSide: hasError
-            ? BorderSide(color: ModernColors.expenseRed, width: 1.5)
+            ? BorderSide(color: FlutterFlowTheme.of(context).error, width: 1.5)
             : BorderSide.none,
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.primaryAccent,
+          color: FlutterFlowTheme.of(context).primary,
           width: 2.0,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.expenseRed,
+          color: FlutterFlowTheme.of(context).error,
           width: 1.5,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ModernColors.expenseRed,
+          color: FlutterFlowTheme.of(context).error,
           width: 2.0,
         ),
         borderRadius: BorderRadius.circular(ModernRadius.lg),
       ),
       filled: true,
-      fillColor: ModernColors.backgroundPrimary,
+      fillColor: FlutterFlowTheme.of(context).primaryBackground,
       contentPadding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
       suffixIcon: suffixIcon,
     );
@@ -153,13 +153,13 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: ModernColors.primaryDark,
+                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -168,7 +168,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                   buttonSize: 48.0,
                   icon: Icon(
                     Icons.arrow_back_rounded,
-                    color: ModernColors.textOnDark,
+                    color: FlutterFlowTheme.of(context).info,
                     size: 20.0,
                   ),
                   onPressed: () async {
@@ -178,7 +178,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                 title: Text(
                   'Penerimaan Zakat Mal',
                   style: GoogleFonts.inter(
-                    color: ModernColors.textOnDark,
+                    color: FlutterFlowTheme.of(context).info,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -200,7 +200,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: ModernColors.backgroundCard,
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.circular(ModernRadius.xl),
                       boxShadow: ModernShadows.cardShadow,
                     ),
@@ -243,7 +243,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
           child: Text(
             'PILIH TANGGAL',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12.0,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -268,7 +268,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
           child: Text(
             'DATA MUZAKKI',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12.0,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -299,18 +299,18 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                         },
                         child: Icon(
                           Icons.clear,
-                          color: ModernColors.textSecondary,
+                          color: FlutterFlowTheme.of(context).secondaryText,
                           size: 22,
                         ),
                       )
                     : null,
               ),
               style: GoogleFonts.inter(
-                color: ModernColors.textPrimary,
+                color: FlutterFlowTheme.of(context).primaryText,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
               ),
-              cursorColor: ModernColors.primaryAccent,
+              cursorColor: FlutterFlowTheme.of(context).primary,
               validator: _model.namaMuzakkiTextControllerValidator
                   .asValidator(context),
             ),
@@ -341,18 +341,18 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                         },
                         child: Icon(
                           Icons.clear,
-                          color: ModernColors.textSecondary,
+                          color: FlutterFlowTheme.of(context).secondaryText,
                           size: 22,
                         ),
                       )
                     : null,
               ),
               style: GoogleFonts.inter(
-                color: ModernColors.textPrimary,
+                color: FlutterFlowTheme.of(context).primaryText,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
               ),
-              cursorColor: ModernColors.primaryAccent,
+              cursorColor: FlutterFlowTheme.of(context).primary,
               keyboardType: TextInputType.phone,
               validator: _model.muzakkiPhoneTextControllerValidator
                   .asValidator(context),
@@ -379,17 +379,17 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
           width: double.infinity,
           height: 56.0,
           textStyle: GoogleFonts.inter(
-            color: ModernColors.textPrimary,
+            color: FlutterFlowTheme.of(context).primaryText,
             fontSize: 16.0,
             fontWeight: FontWeight.w400,
           ),
           hintText: 'Pilih Jenis Zakat Mal',
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: ModernColors.textSecondary,
+            color: FlutterFlowTheme.of(context).secondaryText,
             size: 24.0,
           ),
-          fillColor: ModernColors.backgroundPrimary,
+          fillColor: FlutterFlowTheme.of(context).primaryBackground,
           elevation: 0,
           borderColor: Colors.transparent,
           borderWidth: 0,
@@ -412,7 +412,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
           child: Text(
             'NOMINAL ZAKAT MAL',
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12.0,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -434,17 +434,17 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
             decoration: InputDecoration(
               labelText: 'Isi Nominal',
               labelStyle: GoogleFonts.inter(
-                color: ModernColors.textSecondary,
+                color: FlutterFlowTheme.of(context).secondaryText,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
               ),
               hintStyle: GoogleFonts.inter(
-                color: ModernColors.textSecondary.withOpacity(0.7),
+                color: FlutterFlowTheme.of(context).secondaryText.withOpacity(0.7),
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
               ),
               floatingLabelStyle: GoogleFonts.inter(
-                color: ModernColors.primaryAccent,
+                color: FlutterFlowTheme.of(context).primary,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w500,
               ),
@@ -457,21 +457,21 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: ModernColors.primaryAccent,
+                  color: FlutterFlowTheme.of(context).primary,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(ModernRadius.sm),
               ),
               errorBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: ModernColors.expenseRed,
+                  color: FlutterFlowTheme.of(context).error,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(ModernRadius.sm),
               ),
               focusedErrorBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: ModernColors.expenseRed,
+                  color: FlutterFlowTheme.of(context).error,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(ModernRadius.sm),
@@ -484,18 +484,18 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                       },
                       child: Icon(
                         Icons.clear,
-                        color: ModernColors.primaryAccent,
+                        color: FlutterFlowTheme.of(context).primary,
                         size: 22,
                       ),
                     )
                   : null,
             ),
             style: GoogleFonts.inter(
-              color: ModernColors.textPrimary,
+              color: FlutterFlowTheme.of(context).primaryText,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
-            cursorColor: ModernColors.primaryAccent,
+            cursorColor: FlutterFlowTheme.of(context).primary,
             maxLines: null,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             validator:
@@ -534,18 +534,18 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                     },
                     child: Icon(
                       Icons.clear,
-                      color: ModernColors.textSecondary,
+                      color: FlutterFlowTheme.of(context).secondaryText,
                       size: 22,
                     ),
                   )
                 : null,
           ),
           style: GoogleFonts.inter(
-            color: ModernColors.textPrimary,
+            color: FlutterFlowTheme.of(context).primaryText,
             fontSize: 16.0,
             fontWeight: FontWeight.w400,
           ),
-          cursorColor: ModernColors.primaryAccent,
+          cursorColor: FlutterFlowTheme.of(context).primary,
           validator:
               _model.keteranganTextControllerValidator.asValidator(context),
         ),
@@ -586,13 +586,13 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                     content: Text(
                       'Tanggal Belum Dipilih',
                       style: GoogleFonts.inter(
-                        color: ModernColors.textOnDark,
+                        color: FlutterFlowTheme.of(context).info,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     duration: Duration(milliseconds: 4000),
-                    backgroundColor: ModernColors.expenseRed,
+                    backgroundColor: FlutterFlowTheme.of(context).error,
                   ),
                 );
                 return;
@@ -603,13 +603,13 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                     content: Text(
                       'Jenis Zakat Mal Belum Dipilih',
                       style: GoogleFonts.inter(
-                        color: ModernColors.textOnDark,
+                        color: FlutterFlowTheme.of(context).info,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     duration: Duration(milliseconds: 4000),
-                    backgroundColor: ModernColors.expenseRed,
+                    backgroundColor: FlutterFlowTheme.of(context).error,
                   ),
                 );
                 return;
@@ -652,7 +652,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                             child: Text(
                               'Batal',
                               style: GoogleFonts.inter(
-                                color: ModernColors.textSecondary,
+                                color: FlutterFlowTheme.of(context).secondaryText,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -663,7 +663,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                             child: Text(
                               'Proses',
                               style: GoogleFonts.inter(
-                                color: ModernColors.primaryAccent,
+                                color: FlutterFlowTheme.of(context).primary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -694,7 +694,7 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
                           child: Text(
                             'Ok',
                             style: GoogleFonts.inter(
-                              color: ModernColors.primaryAccent,
+                              color: FlutterFlowTheme.of(context).primary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -713,9 +713,9 @@ class _ZakatMalWidgetState extends State<ZakatMalWidget>
               height: 52.0,
               padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
               iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-              color: ModernColors.primaryDark,
+              color: FlutterFlowTheme.of(context).primaryDark,
               textStyle: GoogleFonts.inter(
-                color: ModernColors.textOnDark,
+                color: FlutterFlowTheme.of(context).info,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
               ),

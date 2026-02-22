@@ -303,13 +303,13 @@ class _LaporanWidgetState extends State<LaporanWidget>
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: ModernColors.backgroundPrimary,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: responsiveVisibility(
           context: context,
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: ModernColors.primaryDark,
+                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
                 automaticallyImplyLeading: false,
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -360,19 +360,22 @@ class _LaporanWidgetState extends State<LaporanWidget>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline,
-                            color: ModernColors.expenseRed, size: 48),
+                            color: FlutterFlowTheme.of(context).error,
+                            size: 48),
                         SizedBox(height: 16),
                         Text(
                           _model.errorMessage!,
                           style: GoogleFonts.inter(
-                              color: ModernColors.textSecondary),
+                              color:
+                                  FlutterFlowTheme.of(context).secondaryText),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: _loadData,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: ModernColors.primaryDark,
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).primaryDark,
                           ),
                           child: Text('Coba Lagi',
                               style: TextStyle(color: Colors.white)),
@@ -389,20 +392,22 @@ class _LaporanWidgetState extends State<LaporanWidget>
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
                           border: Border(
                             bottom: BorderSide(color: Colors.grey.shade200),
                           ),
                         ),
                         child: TabBar(
                           controller: _tabController,
-                          labelColor: ModernColors.primaryAccent,
+                          labelColor: FlutterFlowTheme.of(context).primary,
                           labelStyle: GoogleFonts.inter(
                               fontWeight: FontWeight.w600, fontSize: 13),
-                          unselectedLabelColor: ModernColors.textSecondary,
+                          unselectedLabelColor:
+                              FlutterFlowTheme.of(context).secondaryText,
                           unselectedLabelStyle: GoogleFonts.inter(
                               fontWeight: FontWeight.normal, fontSize: 13),
-                          indicatorColor: ModernColors.primaryAccent,
+                          indicatorColor: FlutterFlowTheme.of(context).primary,
                           indicatorSize: TabBarIndicatorSize.tab,
                           tabs: [
                             Tab(text: 'Penerimaan'),
@@ -413,7 +418,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                       ),
                       Expanded(
                         child: Container(
-                          color: ModernColors.backgroundPrimary,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
                           child: TabBarView(
                             controller: _tabController,
                             physics: const BouncingScrollPhysics(),
@@ -436,7 +441,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                 onPressed: () async {
                   await _generatePdf();
                 },
-                backgroundColor: ModernColors.primaryDark,
+                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
                 elevation: 4.0,
                 icon: Icon(
                   Icons.picture_as_pdf_outlined,
@@ -458,7 +463,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
 
   Widget _buildFilterPanel() {
     return Container(
-      color: Colors.white,
+      color: FlutterFlowTheme.of(context).secondaryBackground,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -512,20 +517,22 @@ class _LaporanWidgetState extends State<LaporanWidget>
                         _loadData(); // Auto refresh
                       }
                     },
-                    selectedColor: ModernColors.primaryAccent.withOpacity(0.1),
+                    selectedColor:
+                        FlutterFlowTheme.of(context).primary.withOpacity(0.1),
                     labelStyle: TextStyle(
                       color: isSelected
-                          ? ModernColors.primaryAccent
-                          : ModernColors.textSecondary,
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
-                    backgroundColor: Colors.grey.shade100,
+                    backgroundColor:
+                        FlutterFlowTheme.of(context).primaryBackground,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(
                         color: isSelected
-                            ? ModernColors.primaryAccent
+                            ? FlutterFlowTheme.of(context).primary
                             : Colors.transparent,
                       ),
                     ),
@@ -643,7 +650,8 @@ class _LaporanWidgetState extends State<LaporanWidget>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.calendar_today,
-                    size: 16, color: ModernColors.textSecondary),
+                    size: 16,
+                    color: FlutterFlowTheme.of(context).secondaryText),
                 SizedBox(width: 8),
                 Text(
                   _model.selectedDate != null
@@ -681,7 +689,8 @@ class _LaporanWidgetState extends State<LaporanWidget>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.date_range,
-                    size: 16, color: ModernColors.textSecondary),
+                    size: 16,
+                    color: FlutterFlowTheme.of(context).secondaryText),
                 SizedBox(width: 8),
                 Text(
                   _model.fromDate != null && _model.toDate != null
@@ -714,6 +723,15 @@ class _LaporanWidgetState extends State<LaporanWidget>
           RekapEndPointGroup.rekapZisReportCall
               .totalPendisRice(reportData.jsonBody),
           0.0);
+    } else if (_tabController.index == 2) {
+      // Hak Amil Tab
+      titleUang = 'Penerimaan Hak Amil Uang';
+      titleBeras = 'Penerimaan Hak Amil Beras';
+      totalUang = valueOrDefault<int>(
+          RekapEndPointGroup.rekapZisReportCall
+              .totalHakAmil(reportData.jsonBody),
+          0);
+      totalBeras = 0.0;
     } else {
       // Penerimaan Tab (default)
       totalUang = (valueOrDefault<int>(
@@ -736,7 +754,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
 
     return Container(
       width: double.infinity,
-      color: ModernColors.primaryDark,
+      color: FlutterFlowTheme.of(context).primaryDark,
       padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Column(
         children: [
@@ -834,7 +852,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   locale: 'ID',
                 ),
                 isBoldValue: true,
-                valueColor: ModernColors.primaryAccent,
+                valueColor: FlutterFlowTheme.of(context).primary,
               ),
               _buildDetailRow(
                 'Subtotal Beras',
@@ -869,7 +887,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   locale: 'ID',
                 ),
                 isBoldValue: true,
-                valueColor: ModernColors.primaryAccent,
+                valueColor: FlutterFlowTheme.of(context).primary,
               ),
               _buildDetailRow(
                 'Jumlah Muzakki',
@@ -893,7 +911,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   locale: 'ID',
                 ),
                 isBoldValue: true,
-                valueColor: ModernColors.primaryAccent,
+                valueColor: FlutterFlowTheme.of(context).primary,
               ),
               _buildDetailRow(
                 'Jumlah Munfiq',
@@ -927,7 +945,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   format: '###,###',
                   locale: 'ID',
                 ),
-                valueColor: ModernColors.expenseRed,
+                valueColor: FlutterFlowTheme.of(context).error,
               ),
               _buildDetailRow(
                 'Zakat Fitrah Beras',
@@ -938,7 +956,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   format: '##.## Kg',
                   locale: 'ID',
                 ),
-                valueColor: ModernColors.expenseRed,
+                valueColor: FlutterFlowTheme.of(context).error,
               ),
               _buildDetailRow(
                 'Zakat Maal',
@@ -950,7 +968,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   format: '###,###',
                   locale: 'ID',
                 ),
-                valueColor: ModernColors.expenseRed,
+                valueColor: FlutterFlowTheme.of(context).error,
               ),
               _buildDetailRow(
                 'Infak Sedekah',
@@ -962,7 +980,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   format: '###,###',
                   locale: 'ID',
                 ),
-                valueColor: ModernColors.expenseRed,
+                valueColor: FlutterFlowTheme.of(context).error,
               ),
             ],
           ),
@@ -1001,7 +1019,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                 'Penyerapan Hak Amil',
                 'Rp 0 | 0 Kg',
                 isBoldValue: true,
-                valueColor: ModernColors.textSecondary,
+                valueColor: FlutterFlowTheme.of(context).secondaryText,
               ),
             ],
           ),
@@ -1015,7 +1033,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
     return Text(
       title,
       style: GoogleFonts.inter(
-        color: ModernColors.textPrimary,
+        color: FlutterFlowTheme.of(context).primaryText,
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
@@ -1026,7 +1044,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(ModernRadius.md),
         boxShadow: [
           BoxShadow(
@@ -1053,14 +1071,14 @@ class _LaporanWidgetState extends State<LaporanWidget>
           Text(
             label,
             style: GoogleFonts.inter(
-              color: ModernColors.textSecondary,
+              color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 14,
             ),
           ),
           Text(
             value,
             style: GoogleFonts.inter(
-              color: valueColor ?? ModernColors.textPrimary,
+              color: valueColor ?? FlutterFlowTheme.of(context).primaryText,
               fontSize: 14,
               fontWeight: isBoldValue ? FontWeight.bold : FontWeight.w500,
             ),

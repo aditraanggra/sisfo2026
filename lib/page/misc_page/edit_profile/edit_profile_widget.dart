@@ -270,6 +270,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                       downloadUrls =
                                           await uploadProfilePhotoToCloudinary(
                                         selectedFiles: selectedMedia,
+                                        userId: FFAppState()
+                                            .profileUPZ
+                                            .userId
+                                            .toString(),
+                                        noRegister:
+                                            FFAppState().profileUPZ.noRegister,
                                       );
                                     } finally {
                                       _model.isDataUploading_uploadDataR0t =
