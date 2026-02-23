@@ -2572,6 +2572,22 @@ class RekapZisReportCall {
         response,
         r'''$.data.total_hak_amil''',
       ));
+  double? hakAmilZfBeras(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.data.hak_amil_zf_beras''',
+      ));
+  int? hakAmilZfUang(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.hak_amil_zf_uang''',
+      ));
+  int? hakAmilZm(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.hak_amil_zm''',
+      ));
+  int? hakAmilIfs(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.hak_amil_ifs''',
+      ));
   int? totalSetorZfAmount(dynamic response) => castToType<int>(getJsonField(
         response,
         r'''$.data.total_setor_zf_amount''',

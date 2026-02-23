@@ -731,7 +731,10 @@ class _LaporanWidgetState extends State<LaporanWidget>
           RekapEndPointGroup.rekapZisReportCall
               .totalHakAmil(reportData.jsonBody),
           0);
-      totalBeras = 0.0;
+      totalBeras = valueOrDefault<double>(
+          RekapEndPointGroup.rekapZisReportCall
+              .hakAmilZfBeras(reportData.jsonBody),
+          0.0);
     } else {
       // Penerimaan Tab (default)
       totalUang = (valueOrDefault<int>(
@@ -982,6 +985,10 @@ class _LaporanWidgetState extends State<LaporanWidget>
                 ),
                 valueColor: FlutterFlowTheme.of(context).error,
               ),
+              _buildDetailRow(
+                'Jumlah Mustahik',
+                '${RekapEndPointGroup.rekapZisReportCall.totalPm(reportData.jsonBody) ?? 0} Jiwa',
+              ),
             ],
           ),
           SizedBox(height: ModernSpacing.md),
@@ -998,12 +1005,60 @@ class _LaporanWidgetState extends State<LaporanWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Hak Amil (Uang & Beras)'),
+          _buildSectionTitle('Penerimaan Hak Amil (Uang & Beras)'),
           SizedBox(height: ModernSpacing.sm),
           _buildDetailCard(
             items: [
               _buildDetailRow(
-                'Penerimaan Hak Amil',
+                'Zakat Fitrah Uang',
+                formatNumber(
+                  RekapEndPointGroup.rekapZisReportCall
+                      .hakAmilZfUang(reportData.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: FlutterFlowTheme.of(context).primaryText,
+              ),
+              _buildDetailRow(
+                'Zakat Fitrah Beras',
+                formatNumber(
+                  RekapEndPointGroup.rekapZisReportCall
+                      .hakAmilZfBeras(reportData.jsonBody),
+                  formatType: FormatType.custom,
+                  format: '##.## Kg',
+                  locale: 'ID',
+                ),
+                valueColor: FlutterFlowTheme.of(context).primaryText,
+              ),
+              _buildDetailRow(
+                'Zakat Maal',
+                formatNumber(
+                  RekapEndPointGroup.rekapZisReportCall
+                      .hakAmilZm(reportData.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: FlutterFlowTheme.of(context).primaryText,
+              ),
+              _buildDetailRow(
+                'Infak Sedekah',
+                formatNumber(
+                  RekapEndPointGroup.rekapZisReportCall
+                      .hakAmilIfs(reportData.jsonBody),
+                  formatType: FormatType.custom,
+                  currency: 'Rp ',
+                  format: '###,###',
+                  locale: 'ID',
+                ),
+                valueColor: FlutterFlowTheme.of(context).primaryText,
+              ),
+              Divider(height: 24),
+              _buildDetailRow(
+                'Total Penerimaan Hak Amil',
                 '${formatNumber(
                   RekapEndPointGroup.rekapZisReportCall
                       .totalHakAmil(reportData.jsonBody),
@@ -1011,7 +1066,13 @@ class _LaporanWidgetState extends State<LaporanWidget>
                   currency: 'Rp ',
                   format: '###,###',
                   locale: 'ID',
-                )} | 0 Kg',
+                )} | ${formatNumber(
+                  RekapEndPointGroup.rekapZisReportCall
+                      .hakAmilZfBeras(reportData.jsonBody),
+                  formatType: FormatType.custom,
+                  format: '##.## Kg',
+                  locale: 'ID',
+                )}',
                 isBoldValue: true,
               ),
               Divider(height: 24),
