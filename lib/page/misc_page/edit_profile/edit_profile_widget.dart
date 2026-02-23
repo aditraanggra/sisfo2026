@@ -151,191 +151,203 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+      backgroundColor: Colors.white,
       appBar: responsiveVisibility(
         context: context,
         desktop: false,
       )
           ? AppBar(
-              backgroundColor: Color(0xFF259148),
+              backgroundColor: Color(0xFF1A3C34),
               automaticallyImplyLeading: false,
               leading: FlutterFlowIconButton(
                 borderColor: Colors.transparent,
                 borderRadius: 30.0,
                 borderWidth: 1.0,
-                buttonSize: 48.0,
+                buttonSize: 54.0,
                 icon: Icon(
                   Icons.arrow_back_rounded,
                   color: Colors.white,
-                  size: 20.0,
+                  size: 24.0,
                 ),
                 onPressed: () async {
                   context.pop();
                 },
               ),
-              title: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
-                child: Text(
-                  'Edit Profil',
-                  style: FlutterFlowTheme.of(context).titleSmall.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .fontWeight,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                        ),
-                        fontSize: 14.0,
-                        letterSpacing: 0.0,
-                        fontWeight:
-                            FlutterFlowTheme.of(context).titleSmall.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                      ),
-                ),
+              title: Text(
+                'Edit Profil',
+                style: FlutterFlowTheme.of(context).headlineMedium.override(
+                      fontFamily: GoogleFonts.inter().fontFamily,
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               actions: [],
-              centerTitle: false,
-              elevation: 2.0,
+              centerTitle: true,
+              elevation: 0.0,
             )
           : null,
       body: SafeArea(
         top: true,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(1.0, 1.0),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 0.6,
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  final selectedMedia =
-                                      await selectMediaWithSourceBottomSheet(
-                                    context: context,
-                                    storageFolderPath: 'upz/avatar',
-                                    maxWidth: 100.00,
-                                    maxHeight: 100.00,
-                                    imageQuality: 80,
-                                    allowPhoto: true,
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                    textColor: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    pickerFontFamily: 'Outfit',
-                                  );
-                                  if (selectedMedia != null &&
-                                      selectedMedia.every((m) =>
-                                          validateFileFormat(
-                                              m.storagePath, context))) {
-                                    safeSetState(() => _model
-                                        .isDataUploading_uploadDataR0t = true);
-                                    var selectedUploadedFiles =
-                                        <FFUploadedFile>[];
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 32.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 120.0,
+                      height: 120.0,
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                final selectedMedia =
+                                    await selectMediaWithSourceBottomSheet(
+                                  context: context,
+                                  storageFolderPath: 'upz/avatar',
+                                  maxWidth: 100.00,
+                                  maxHeight: 100.00,
+                                  imageQuality: 80,
+                                  allowPhoto: true,
+                                  backgroundColor: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  textColor:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  pickerFontFamily: 'Outfit',
+                                );
+                                if (selectedMedia != null &&
+                                    selectedMedia.every((m) =>
+                                        validateFileFormat(
+                                            m.storagePath, context))) {
+                                  safeSetState(() => _model
+                                      .isDataUploading_uploadDataR0t = true);
+                                  var selectedUploadedFiles =
+                                      <FFUploadedFile>[];
 
-                                    var downloadUrls = <String>[];
-                                    try {
-                                      selectedUploadedFiles = selectedMedia
-                                          .map((m) => FFUploadedFile(
-                                                name: m.storagePath
-                                                    .split('/')
-                                                    .last,
-                                                bytes: m.bytes,
-                                                height: m.dimensions?.height,
-                                                width: m.dimensions?.width,
-                                                blurHash: m.blurHash,
-                                                originalFilename:
-                                                    m.originalFilename,
-                                              ))
-                                          .toList();
+                                  var downloadUrls = <String>[];
+                                  try {
+                                    selectedUploadedFiles = selectedMedia
+                                        .map((m) => FFUploadedFile(
+                                              name:
+                                                  m.storagePath.split('/').last,
+                                              bytes: m.bytes,
+                                              height: m.dimensions?.height,
+                                              width: m.dimensions?.width,
+                                              blurHash: m.blurHash,
+                                              originalFilename:
+                                                  m.originalFilename,
+                                            ))
+                                        .toList();
 
-                                      downloadUrls =
-                                          await uploadProfilePhotoToCloudinary(
-                                        selectedFiles: selectedMedia,
-                                        userId: FFAppState()
-                                            .profileUPZ
-                                            .userId
-                                            .toString(),
-                                        noRegister:
-                                            FFAppState().profileUPZ.noRegister,
-                                      );
-                                    } finally {
-                                      _model.isDataUploading_uploadDataR0t =
-                                          false;
-                                    }
-                                    if (selectedUploadedFiles.length ==
-                                            selectedMedia.length &&
-                                        downloadUrls.length ==
-                                            selectedMedia.length) {
-                                      safeSetState(() {
-                                        _model.uploadedLocalFile_uploadDataR0t =
-                                            selectedUploadedFiles.first;
-                                        _model.uploadedFileUrl_uploadDataR0t =
-                                            downloadUrls.first;
-                                      });
-                                    } else {
-                                      safeSetState(() {});
-                                      return;
-                                    }
+                                    downloadUrls =
+                                        await uploadProfilePhotoToCloudinary(
+                                      selectedFiles: selectedMedia,
+                                      userId: FFAppState()
+                                          .profileUPZ
+                                          .userId
+                                          .toString(),
+                                      noRegister:
+                                          FFAppState().profileUPZ.noRegister,
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Gagal mengunggah foto: $e')),
+                                    );
+                                    return;
+                                  } finally {
+                                    _model.isDataUploading_uploadDataR0t =
+                                        false;
                                   }
-                                },
-                                child: Container(
-                                  width: 100.0,
-                                  height: 100.0,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Container(
-                                      width: 100.0,
-                                      height: 100.0,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.network(
-                                        'https://ui-avatars.com/api/?name=admin',
-                                        fit: BoxFit.fitWidth,
-                                      ),
+                                  if (selectedUploadedFiles.length ==
+                                          selectedMedia.length &&
+                                      downloadUrls.length ==
+                                          selectedMedia.length) {
+                                    safeSetState(() {
+                                      _model.uploadedLocalFile_uploadDataR0t =
+                                          selectedUploadedFiles.first;
+                                      _model.uploadedFileUrl_uploadDataR0t =
+                                          downloadUrls.first;
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Gagal mengunggah foto')),
+                                    );
+                                    return;
+                                  }
+                                }
+                              },
+                              child: Container(
+                                width: 120.0,
+                                height: 120.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 8.0,
+                                      color: Colors.black.withOpacity(0.05),
+                                      offset: Offset(0.0, 4.0),
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Container(
+                                    width: 120.0,
+                                    height: 120.0,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.network(
+                                      'https://ui-avatars.com/api/?name=${Uri.encodeComponent(currentUserData?.name ?? 'AD')}&background=E1EFED&color=1A3C34',
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            if (!_model.isEdited)
-                              Align(
-                                alignment: AlignmentDirectional(0.28, 0.53),
+                          ),
+                          if (!_model.isEdited)
+                            Align(
+                              alignment: AlignmentDirectional(1.0, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0.0, 2.0),
+                                    ),
+                                  ],
+                                ),
                                 child: FlutterFlowIconButton(
                                   borderColor: Color(0xFF259148),
                                   borderRadius: 20.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 48.0,
-                                  fillColor: FlutterFlowTheme.of(context).info,
-                                  icon: Icon(
-                                    Icons.check,
+                                  borderWidth: 1.5,
+                                  buttonSize: 40.0,
+                                  fillColor: Colors.white,
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.pen,
                                     color: Color(0xFF259148),
-                                    size: 18.0,
+                                    size: 16.0,
                                   ),
                                   onPressed: () async {
                                     _model.isEdited = true;
@@ -343,17 +355,30 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                   },
                                 ),
                               ),
-                            if (_model.isEdited)
-                              Align(
-                                alignment: AlignmentDirectional(0.28, 0.53),
+                            ),
+                          if (_model.isEdited)
+                            Align(
+                              alignment: AlignmentDirectional(1.0, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0.0, 2.0),
+                                    ),
+                                  ],
+                                ),
                                 child: FlutterFlowIconButton(
                                   borderColor: Color(0xFF259148),
                                   borderRadius: 20.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 48.0,
-                                  fillColor: FlutterFlowTheme.of(context).info,
-                                  icon: FaIcon(
-                                    FontAwesomeIcons.pen,
+                                  borderWidth: 1.5,
+                                  buttonSize: 40.0,
+                                  fillColor: Colors.white,
+                                  icon: Icon(
+                                    Icons.check,
                                     color: Color(0xFF259148),
                                     size: 18.0,
                                   ),
@@ -363,261 +388,239 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                   },
                                 ),
                               ),
-                          ],
-                        ),
-                      ).animateOnPageLoad(
-                          animationsMap['stackOnPageLoadAnimation']!),
+                            ),
+                        ],
+                      ),
+                    ).animateOnPageLoad(
+                        animationsMap['stackOnPageLoadAnimation']!),
+                  ],
+                ),
+              ),
+              if (_model.isEdited)
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      final selectedMedia =
+                          await selectMediaWithSourceBottomSheet(
+                        context: context,
+                        storageFolderPath: 'upz/avatar',
+                        maxWidth: 100.00,
+                        maxHeight: 100.00,
+                        imageQuality: 80,
+                        allowPhoto: true,
+                        backgroundColor:
+                            FlutterFlowTheme.of(context).primaryBackground,
+                        textColor: FlutterFlowTheme.of(context).primaryText,
+                        pickerFontFamily: 'Outfit',
+                      );
+                      if (selectedMedia != null &&
+                          selectedMedia.every((m) =>
+                              validateFileFormat(m.storagePath, context))) {
+                        safeSetState(
+                            () => _model.isDataUploading_uploadDataR0t = true);
+                        var selectedUploadedFiles = <FFUploadedFile>[];
+
+                        var downloadUrls = <String>[];
+                        try {
+                          selectedUploadedFiles = selectedMedia
+                              .map((m) => FFUploadedFile(
+                                    name: m.storagePath.split('/').last,
+                                    bytes: m.bytes,
+                                    height: m.dimensions?.height,
+                                    width: m.dimensions?.width,
+                                    blurHash: m.blurHash,
+                                    originalFilename: m.originalFilename,
+                                  ))
+                              .toList();
+
+                          downloadUrls = await uploadProfilePhotoToCloudinary(
+                            selectedFiles: selectedMedia,
+                            userId: FFAppState().profileUPZ.userId.toString(),
+                            noRegister: FFAppState().profileUPZ.noRegister,
+                          );
+                        } finally {
+                          _model.isDataUploading_uploadDataR0t = false;
+                        }
+                        if (selectedUploadedFiles.length ==
+                                selectedMedia.length &&
+                            downloadUrls.length == selectedMedia.length) {
+                          safeSetState(() {
+                            _model.uploadedLocalFile_uploadDataR0t =
+                                selectedUploadedFiles.first;
+                            _model.uploadedFileUrl_uploadDataR0t =
+                                downloadUrls.first;
+                          });
+                        } else {
+                          safeSetState(() {});
+                          return;
+                        }
+                      }
+                    },
+                    child: Text(
+                      'Ubah Foto Profil',
+                      style: GoogleFonts.inter(
+                        color: Color(0xFF259148),
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            if (!_model.isEdited)
+                ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                child: FFButtonWidget(
-                  onPressed: () {
-                    print('editPhoto pressed ...');
-                  },
-                  text: 'Ganti profil',
-                  options: FFButtonOptions(
-                    height: 32.0,
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: Colors.white,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          font: GoogleFonts.notoSans(
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .fontStyle,
-                          ),
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .fontWeight,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                        ),
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 1.0,
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 20.0),
+                child: TextFormField(
+                  controller: _model.yourNameTextController,
+                  focusNode: _model.yourNameFocusNode,
+                  textCapitalization: TextCapitalization.words,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Nama Operator',
+                    labelStyle: GoogleFonts.inter(
+                      color: Color(0xFF6B7280),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    hintStyle: GoogleFonts.inter(
+                      color: Color(0xFF6B7280),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFE5E7EB),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF259148),
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    filled: true,
+                    fillColor: Color(0xFFF9FAFB),
+                    contentPadding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    prefixIcon: Icon(
+                      Icons.person_outline_rounded,
+                      color: Color(0xFF6B7280),
+                      size: 20.0,
+                    ),
                   ),
-                ),
+                  style: GoogleFonts.inter(
+                    color: Color(0xFF1F2937),
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  validator: _model.yourNameTextControllerValidator
+                      .asValidator(context),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s]')),
+                  ],
+                ).animateOnPageLoad(
+                    animationsMap['textFieldOnPageLoadAnimation1']!),
               ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 16.0),
-              child: TextFormField(
-                controller: _model.yourNameTextController,
-                focusNode: _model.yourNameFocusNode,
-                textCapitalization: TextCapitalization.words,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'Nama Operator',
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontWeight,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
-                        ),
-                        letterSpacing: 0.0,
-                        fontWeight:
-                            FlutterFlowTheme.of(context).labelMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 20.0),
+                child: TextFormField(
+                  controller: _model.noTelpTextController,
+                  focusNode: _model.noTelpFocusNode,
+                  textCapitalization: TextCapitalization.none,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'No Telp',
+                    labelStyle: GoogleFonts.inter(
+                      color: Color(0xFF6B7280),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    hintStyle: GoogleFonts.inter(
+                      color: Color(0xFF6B7280),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFE5E7EB),
+                        width: 1.0,
                       ),
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontWeight,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
-                        ),
-                        letterSpacing: 0.0,
-                        fontWeight:
-                            FlutterFlowTheme.of(context).labelMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF259148),
+                        width: 2.0,
                       ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 2.0,
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF259148),
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  filled: true,
-                  fillColor: FlutterFlowTheme.of(context).secondaryBackground,
-                  contentPadding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0),
-                ),
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      font: GoogleFonts.notoSans(
-                        fontWeight:
-                            FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 1.0,
                       ),
-                      letterSpacing: 0.0,
-                      fontWeight:
-                          FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                validator:
-                    _model.yourNameTextControllerValidator.asValidator(context),
-                inputFormatters: [
-                  if (!isAndroid && !isiOS)
-                    TextInputFormatter.withFunction((oldValue, newValue) {
-                      return TextEditingValue(
-                        selection: newValue.selection,
-                        text: newValue.text
-                            .toCapitalization(TextCapitalization.words),
-                      );
-                    }),
-                ],
-              ).animateOnPageLoad(
-                  animationsMap['textFieldOnPageLoadAnimation1']!),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 16.0),
-              child: TextFormField(
-                controller: _model.noTelpTextController,
-                focusNode: _model.noTelpFocusNode,
-                textCapitalization: TextCapitalization.words,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'No Telp',
-                  labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontWeight,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
-                        ),
-                        letterSpacing: 0.0,
-                        fontWeight:
-                            FlutterFlowTheme.of(context).labelMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 2.0,
                       ),
-                  hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                        font: GoogleFonts.notoSans(
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontWeight,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .fontStyle,
-                        ),
-                        letterSpacing: 0.0,
-                        fontWeight:
-                            FlutterFlowTheme.of(context).labelMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
-                      ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                      width: 2.0,
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    filled: true,
+                    fillColor: Color(0xFFF9FAFB),
+                    contentPadding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    prefixIcon: Icon(
+                      Icons.phone_outlined,
+                      color: Color(0xFF6B7280),
+                      size: 20.0,
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF259148),
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
+                  style: GoogleFonts.inter(
+                    color: Color(0xFF1F2937),
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
                   ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).error,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  filled: true,
-                  fillColor: FlutterFlowTheme.of(context).secondaryBackground,
-                  contentPadding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0),
-                ),
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      font: GoogleFonts.notoSans(
-                        fontWeight:
-                            FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                      ),
-                      letterSpacing: 0.0,
-                      fontWeight:
-                          FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                    ),
-                keyboardType: TextInputType.phone,
-                validator:
-                    _model.noTelpTextControllerValidator.asValidator(context),
-                inputFormatters: [
-                  if (!isAndroid && !isiOS)
-                    TextInputFormatter.withFunction((oldValue, newValue) {
-                      return TextEditingValue(
-                        selection: newValue.selection,
-                        text: newValue.text
-                            .toCapitalization(TextCapitalization.words),
-                      );
-                    }),
-                ],
-              ).animateOnPageLoad(
-                  animationsMap['textFieldOnPageLoadAnimation2']!),
-            ),
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.05),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+                  keyboardType: TextInputType.phone,
+                  validator:
+                      _model.noTelpTextControllerValidator.asValidator(context),
+                  inputFormatters: [
+                    if (!isAndroid && !isiOS)
+                      TextInputFormatter.withFunction((oldValue, newValue) {
+                        return TextEditingValue(
+                          selection: newValue.selection,
+                          text: newValue.text
+                              .toCapitalization(TextCapitalization.words),
+                        );
+                      }),
+                  ],
+                ).animateOnPageLoad(
+                    animationsMap['textFieldOnPageLoadAnimation2']!),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 48.0),
                 child: FFButtonWidget(
                   onPressed: () async {
                     await showDialog(
@@ -641,41 +644,29 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                   },
                   text: 'Simpan Perubahan',
                   options: FFButtonOptions(
-                    width: 337.0,
-                    height: 48.0,
+                    width: double.infinity,
+                    height: 52.0,
                     padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     iconPadding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: Color(0xFF259148),
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          font: GoogleFonts.notoSans(
-                            fontWeight: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .fontWeight,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .fontStyle,
-                          ),
-                          fontSize: 14.0,
-                          letterSpacing: 0.0,
-                          fontWeight: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .fontWeight,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                        ),
-                    elevation: 2.0,
+                    textStyle: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    elevation: 0.0,
                     borderSide: BorderSide(
                       color: Colors.transparent,
                       width: 1.0,
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
+                    borderRadius: BorderRadius.circular(26.0),
                   ),
                 ).animateOnPageLoad(
                     animationsMap['buttonOnPageLoadAnimation']!),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

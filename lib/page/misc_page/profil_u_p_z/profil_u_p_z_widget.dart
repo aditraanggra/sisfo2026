@@ -104,11 +104,10 @@ class _ProfilUPZWidgetState extends State<ProfilUPZWidget>
                 title: Text(
                   'Profil UPZ',
                   style: FlutterFlowTheme.of(context).headlineMedium.override(
-                        font: GoogleFonts.outfit(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        fontFamily: GoogleFonts.inter().fontFamily,
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
                       ),
                 ),
                 actions: [],
