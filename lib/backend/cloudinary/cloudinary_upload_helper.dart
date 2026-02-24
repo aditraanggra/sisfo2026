@@ -7,6 +7,8 @@ import 'dart:typed_data';
 import '/flutter_flow/upload_data.dart';
 import 'cloudinary_service.dart';
 import 'cloudinary_config.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 /// Upload files ke Cloudinary dan return list of URLs
 ///
@@ -265,4 +267,94 @@ Future<List<String>> uploadDocumentsToCloudinary({
   }
 
   return uploadedUrls;
+}
+
+/// Convert multiple images into a multi-page PDF and upload to Cloudinary
+///
+/// Folder: sisfo_upz/form (default) atau gunakan folder khusus
+/// Format penamaan file: tgl_noregister_namaupz_images (atau sesuai timestamp)
+///
+/// [selectedFiles] - List file dari selectFiles() (biasanya format gambar)
+/// [noRegister] - Nomor register UPZ
+/// [namaUpz] - Nama unit UPZ
+/// [fileName] - Optional nama file
+/// [folder] - Optional folder tujuan
+///
+/// Returns: URL dari dokumen PDF yang berhasil diupload, atau null jika gagal
+Future<String?> convertImagesToPdfAndUpload({
+  required List<SelectedFile> selectedFiles,
+  String? noRegister,
+  String? namaUpz,
+  String? fileName,
+  String? folder,
+}) async {
+  if (selectedFiles.isEmpty) return null;
+
+  try {
+    // 1. Initialize empty PDF Document
+    final pdf = pw.Document();
+
+    // 2. Loop through all images and add each to a new PDF page
+    for (int i = 0; i < selectedFiles.length; i++) {
+      final file = selectedFiles[i];
+      final bytes = file.bytes;
+
+      if (bytes.isNotEmpty) {
+        // Create an ImageProvider from the memory bytes
+        final image = pw.MemoryImage(bytes);
+
+        // Add a new page with the image covering the full page
+        pdf.addPage(
+          pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(image, fit: pw.BoxFit.contain),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // 3. Save the PDF as a byte array
+    final Uint8List pdfBytes = await pdf.save();
+
+    if (pdfBytes.isEmpty) {
+      print('Pdf generation failed, resulting bytes are empty');
+      return null;
+    }
+
+    // 4. Generate public ID string
+    final String tgl = DateTime.now().year.toString() +
+        DateTime.now().month.toString().padLeft(2, '0') +
+        DateTime.now().day.toString().padLeft(2, '0');
+    final String reg =
+        noRegister?.replaceAll(RegExp(r'[^a-zA-Z0-9_\-]'), '_').toLowerCase() ??
+            'unregistered';
+    final String nama =
+        namaUpz?.replaceAll(RegExp(r'[^a-zA-Z0-9_\-]'), '_').toLowerCase() ??
+            'unknown';
+    final String uniqueSuffix =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    final String publicId = '${tgl}_${reg}_${nama}_images_$uniqueSuffix';
+
+    // 5. Upload to Cloudinary using the new uploadPdfBytes method
+    final response = await CloudinaryService().uploadPdfBytes(
+      pdfBytes,
+      folder: folder ?? CloudinaryConfig.folderFormPdf,
+      publicId: publicId,
+      fileName: fileName ?? '$publicId.pdf',
+    );
+
+    if (response.success && response.secureUrl != null) {
+      return response.secureUrl;
+    } else {
+      print('Cloudinary PDF from Images upload failed: ${response.error}');
+      return null;
+    }
+  } catch (e) {
+    print('Error converting images to PDF and uploading: $e');
+    return null;
+  }
 }

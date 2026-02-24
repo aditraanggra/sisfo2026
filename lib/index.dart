@@ -42,3 +42,5 @@ export '/page/misc_page/regulasi_page/regulasi_page_widget.dart'
     show RegulasiPageWidget;
 export '/page/misc_page/tahun_pengelolaan/tahun_pengelolaan_widget.dart'
     show TahunPengelolaanWidget;
+export '/page/misc_page/upload_laporan/upload_laporan_widget.dart'
+    show UploadLaporanWidget;

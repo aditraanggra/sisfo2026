@@ -195,6 +195,23 @@ class CloudinaryService {
     );
   }
 
+  /// Upload PDF bytes secara eksplisit (untuk file hasil konversi)
+  /// Menggunakan signed/unsigned upload untuk raw file
+  Future<CloudinaryUploadResponse> uploadPdfBytes(
+    Uint8List bytes, {
+    String? folder,
+    String? publicId,
+    String? fileName,
+  }) async {
+    return await _uploadRawBytes(
+      bytes,
+      folder: folder ?? CloudinaryConfig.folderDocuments,
+      publicId: publicId,
+      fileName:
+          fileName ?? 'converted_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
+  }
+
   /// Internal upload method menggunakan unsigned upload (untuk gambar)
   Future<CloudinaryUploadResponse> _uploadBytes(
     Uint8List bytes, {

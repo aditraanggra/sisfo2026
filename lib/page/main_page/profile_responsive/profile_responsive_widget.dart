@@ -74,6 +74,16 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                         context.pushNamed(ProfilUPZWidget.routeName);
                       },
                     ),
+                    SizedBox(height: 12.0),
+                    _buildMenuItem(
+                      icon: Icons.file_upload_rounded,
+                      iconColor: Color(0xFF259148),
+                      title: 'Upload Laporan',
+                      subtitle: 'Formulir 101, 102 & LPZ',
+                      onTap: () {
+                        context.pushNamed('UploadLaporan');
+                      },
+                    ),
                     /* SizedBox(height: 12.0),
                     _buildMenuItem(
                       icon: Icons.people_outline_rounded,

@@ -355,6 +355,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: TahunPengelolaanWidget.routePath,
           requireAuth: true,
           builder: (context, params) => TahunPengelolaanWidget(),
+        ),
+        FFRoute(
+          name: UploadLaporanWidget.routeName,
+          path: UploadLaporanWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => UploadLaporanWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
