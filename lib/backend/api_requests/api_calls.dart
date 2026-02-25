@@ -715,6 +715,46 @@ class TransactionEndPointGroup {
       GetPendistribusianCall();
   static GetSetorZISCall getSetorZISCall = GetSetorZISCall();
   static GetRekapAlokasiCall getRekapAlokasiCall = GetRekapAlokasiCall();
+  static UploadLpzCall uploadLpzCall = UploadLpzCall();
+}
+
+class UploadLpzCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? unitId,
+    String? trxDate = '',
+    int? lpzYear,
+    FFUploadedFile? form101,
+    FFUploadedFile? form102,
+    FFUploadedFile? lpz,
+  }) async {
+    final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Upload LPZ',
+      apiUrl: '$baseUrl/lpz',
+      callType: ApiCallType.POST,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      params: {
+        'unit_id': unitId,
+        'trx_date': trxDate,
+        'lpz_year': lpzYear,
+        if (form101 != null) 'form101': form101,
+        if (form102 != null) 'form102': form102,
+        if (lpz != null) 'lpz': lpz,
+      },
+      bodyType: BodyType.MULTIPART,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
 }
 
 class GetRekapAlokasiCall {

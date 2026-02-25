@@ -358,3 +358,55 @@ Future<String?> convertImagesToPdfAndUpload({
     return null;
   }
 }
+
+/// Convert multiple images into a multi-page PDF bytes
+///
+/// [selectedFiles] - List file dari selectFiles() (biasanya format gambar)
+///
+/// Returns: Uint8List dari dokumen PDF, atau null jika gagal
+Future<Uint8List?> convertImagesToPdfBytes({
+  required List<SelectedFile> selectedFiles,
+}) async {
+  if (selectedFiles.isEmpty) return null;
+
+  try {
+    // 1. Initialize empty PDF Document
+    final pdf = pw.Document();
+
+    // 2. Loop through all images and add each to a new PDF page
+    for (int i = 0; i < selectedFiles.length; i++) {
+      final file = selectedFiles[i];
+      final bytes = file.bytes;
+
+      if (bytes.isNotEmpty) {
+        // Create an ImageProvider from the memory bytes
+        final image = pw.MemoryImage(bytes);
+
+        // Add a new page with the image covering the full page
+        pdf.addPage(
+          pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(image, fit: pw.BoxFit.contain),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // 3. Save the PDF as a byte array
+    final Uint8List pdfBytes = await pdf.save();
+
+    if (pdfBytes.isEmpty) {
+      print('Pdf generation failed, resulting bytes are empty');
+      return null;
+    }
+
+    return pdfBytes;
+  } catch (e) {
+    print('Error converting images to PDF bytes: $e');
+    return null;
+  }
+}

@@ -3,7 +3,10 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import '/auth/custom_auth/auth_util.dart';
 import '/backend/cloudinary/cloudinary_upload_helper.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -61,77 +64,96 @@ class _UploadLaporanWidgetState extends State<UploadLaporanWidget> {
           ? FFAppState().profileUPZ.noRegister
           : 'unknown';
 
-      // 1. Convert & Upload Formulir 101
-      final String url101 = _model.uploadedLocalFiles101.isNotEmpty
-          ? await convertImagesToPdfAndUpload(
-                selectedFiles: _model.uploadedLocalFiles101
-                    .map((f) => SelectedFile(
-                        bytes: f.bytes ?? Uint8List(0),
-                        originalFilename: f.name ?? 'image'))
-                    .toList(),
-                fileName: '${noRegister}_form101.pdf',
-              ) ??
-              ''
-          : '';
+      // 1. Convert Formulir 101 to PDF bytes locally
+      final Uint8List? bytes101 = _model.uploadedLocalFiles101.isNotEmpty
+          ? await convertImagesToPdfBytes(
+              selectedFiles: _model.uploadedLocalFiles101
+                  .map((f) => SelectedFile(
+                      bytes: f.bytes ?? Uint8List(0),
+                      originalFilename: f.name ?? 'image'))
+                  .toList(),
+            )
+          : null;
 
-      // 2. Convert & Upload Formulir 102
-      final String url102 = _model.uploadedLocalFiles102.isNotEmpty
-          ? await convertImagesToPdfAndUpload(
-                selectedFiles: _model.uploadedLocalFiles102
-                    .map((f) => SelectedFile(
-                        bytes: f.bytes ?? Uint8List(0),
-                        originalFilename: f.name ?? 'image'))
-                    .toList(),
-                fileName: '${noRegister}_form102.pdf',
-              ) ??
-              ''
-          : '';
+      // 2. Convert Formulir 102 to PDF bytes locally
+      final Uint8List? bytes102 = _model.uploadedLocalFiles102.isNotEmpty
+          ? await convertImagesToPdfBytes(
+              selectedFiles: _model.uploadedLocalFiles102
+                  .map((f) => SelectedFile(
+                      bytes: f.bytes ?? Uint8List(0),
+                      originalFilename: f.name ?? 'image'))
+                  .toList(),
+            )
+          : null;
 
-      // 3. Convert & Upload LPZ
-      final String urlLpz = _model.uploadedLocalFilesLpz.isNotEmpty
-          ? await convertImagesToPdfAndUpload(
-                selectedFiles: _model.uploadedLocalFilesLpz
-                    .map((f) => SelectedFile(
-                        bytes: f.bytes ?? Uint8List(0),
-                        originalFilename: f.name ?? 'image'))
-                    .toList(),
-                fileName: '${noRegister}_lpz.pdf',
-              ) ??
-              ''
-          : '';
+      // 3. Convert LPZ to PDF bytes locally
+      final Uint8List? bytesLpz = _model.uploadedLocalFilesLpz.isNotEmpty
+          ? await convertImagesToPdfBytes(
+              selectedFiles: _model.uploadedLocalFilesLpz
+                  .map((f) => SelectedFile(
+                      bytes: f.bytes ?? Uint8List(0),
+                      originalFilename: f.name ?? 'image'))
+                  .toList(),
+            )
+          : null;
+
+      final now = DateTime.now();
+      final trxDate = DateFormat('yyyy-MM-dd').format(now);
+      final lpzYear = now.year;
+
+      final response = await TransactionEndPointGroup.uploadLpzCall.call(
+        token: currentAuthenticationToken,
+        unitId: FFAppState().profileUPZ.id,
+        trxDate: trxDate,
+        lpzYear: lpzYear,
+        form101: bytes101 != null
+            ? FFUploadedFile(name: '${noRegister}_form101.pdf', bytes: bytes101)
+            : null,
+        form102: bytes102 != null
+            ? FFUploadedFile(name: '${noRegister}_form102.pdf', bytes: bytes102)
+            : null,
+        lpz: bytesLpz != null
+            ? FFUploadedFile(name: '${noRegister}_lpz.pdf', bytes: bytesLpz)
+            : null,
+      );
 
       if (mounted) {
-        // Show success
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Berhasil mengupload laporan!'),
-            backgroundColor: FlutterFlowTheme.of(context).success,
-          ),
-        );
-
-        // Print the secure URLs to the console for the backend devs
-        print('====== SUCCESS UPLOAD LAPORAN ======');
-        print('URL 101: $url101');
-        print('URL 102: $url102');
-        print('URL LPZ: $urlLpz');
-        print('====================================');
-
-        // Pop route upon success
-        context.pop();
+        if (response.succeeded) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Berhasil mengupload laporan!'),
+              backgroundColor: FlutterFlowTheme.of(context).success,
+            ),
+          );
+          context.pop();
+        } else {
+          final jsonObj = response.jsonBody;
+          final errorMsg = (jsonObj is Map && jsonObj['message'] != null)
+              ? jsonObj['message'].toString()
+              : 'Unknown error';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Gagal mengupload: $errorMsg'),
+              backgroundColor: FlutterFlowTheme.of(context).error,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal mengupload: \$e'),
+            content: Text('Terjadi kesalahan: $e'),
             backgroundColor: FlutterFlowTheme.of(context).error,
           ),
         );
       }
     } finally {
-      setState(() {
-        _isUploadingAll = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isUploadingAll = false;
+        });
+      }
     }
   }
 
