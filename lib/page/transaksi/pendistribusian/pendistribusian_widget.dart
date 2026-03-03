@@ -45,6 +45,9 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
     _model.jumlaUangTextController ??= TextEditingController();
     _model.jumlaUangFocusNode ??= FocusNode();
 
+    _model.berasTextController ??= TextEditingController();
+    _model.berasFocusNode ??= FocusNode();
+
     _model.penerimaManfaatTextController ??= TextEditingController();
     _model.penerimaManfaatFocusNode ??= FocusNode();
 
@@ -672,7 +675,9 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                                     _model.currentBeras =
                                                         double.tryParse(_model
                                                             .berasTextController
-                                                            .text);
+                                                            .text
+                                                            .replaceAll(
+                                                                ',', '.'));
                                                     safeSetState(() {});
                                                   }
                                                 },
@@ -1099,11 +1104,15 @@ class _PendistribusianWidgetState extends State<PendistribusianWidget> {
                                 asnaf: _model.jenisAsnafValue,
                                 program: _model.jenisProgramValue,
                                 totalAmount: valueOrDefault<int>(
-                                  _model.currentUang,
+                                  int.tryParse(_model
+                                      .jumlaUangTextController.text
+                                      .replaceAll(RegExp(r'[^0-9]'), '')),
                                   0,
                                 ),
                                 totalRice: valueOrDefault<double>(
-                                  _model.currentBeras,
+                                  double.tryParse(_model
+                                      .berasTextController.text
+                                      .replaceAll(',', '.')),
                                   0.0,
                                 ),
                                 beneficiary: valueOrDefault<int>(

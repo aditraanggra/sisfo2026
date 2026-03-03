@@ -430,21 +430,25 @@ Future<void> saveToPdf(
                                         color: PdfColors.grey700)),
                                 pw.SizedBox(height: 4),
                                 pw.Container(
-                                  height: 180,
+                                  constraints:
+                                      const pw.BoxConstraints(maxHeight: 500),
                                   width: double.infinity,
                                   child: pw.Row(
                                     mainAxisAlignment:
                                         pw.MainAxisAlignment.center,
                                     children: [
+                                      pw.Spacer(flex: 15),
                                       pw.Expanded(
+                                        flex: 70,
                                         child: pw.Image(img,
                                             fit: pw.BoxFit.contain),
                                       ),
+                                      pw.Spacer(flex: 15),
                                     ],
                                   ),
                                 ),
                               ],
-                            )
+                            )``
                           : pw.Text('Bukti Setor: -',
                               style: pw.TextStyle(
                                   fontSize: 8, color: PdfColors.grey500)),

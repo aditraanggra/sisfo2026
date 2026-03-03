@@ -257,12 +257,14 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                                         final zfData =
                                             DataZfStruct.maybeFromMap(
                                                 listZakatFitrahItem);
-                                        final amount = zfData?.zfRice != null &&
-                                                zfData!.zfRice > 0.0
-                                            ? zfData.zfRice.toInt()
-                                            : zfData?.zfAmount ?? 0;
+
+                                        // Fix: checking if it's rice or money to display correctly
                                         final isRice = zfData?.zfRice != null &&
-                                            zfData!.zfRice > 0.0;
+                                            (zfData?.zfRice ?? 0) > 0.0;
+
+                                        final amount = isRice
+                                            ? (zfData?.zfRice ?? 0)
+                                            : zfData?.zfAmount ?? 0;
 
                                         return Padding(
                                           padding: EdgeInsets.only(
@@ -1169,10 +1171,10 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
                                         final pendisData =
                                             DataPendisStruct.maybeFromMap(
                                                 listTrxPendisItem);
-                                        final amount =
+                                        final num amount =
                                             pendisData?.totalRice != null &&
                                                     pendisData!.totalRice > 0.0
-                                                ? pendisData.totalRice.toInt()
+                                                ? pendisData.totalRice
                                                 : pendisData?.totalAmount ?? 0;
                                         final isRice =
                                             pendisData?.totalRice != null &&
@@ -1317,7 +1319,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
     required BuildContext context,
     required String title,
     required String subtitle,
-    required int amount,
+    required num amount,
     required String dateString,
     required TransactionType type,
     required IconData iconData,

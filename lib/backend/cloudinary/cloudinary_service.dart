@@ -66,6 +66,23 @@ String _sanitize(String input) {
       .toLowerCase();
 }
 
+/// Helper: detect if file is a PDF by extension or magic bytes
+bool _isPdf(Uint8List bytes, String? fileName) {
+  // Check file extension
+  if (fileName != null && fileName.toLowerCase().endsWith('.pdf')) {
+    return true;
+  }
+  // Check PDF magic bytes: %PDF (0x25 0x50 0x44 0x46)
+  if (bytes.length >= 4 &&
+      bytes[0] == 0x25 &&
+      bytes[1] == 0x50 &&
+      bytes[2] == 0x44 &&
+      bytes[3] == 0x46) {
+    return true;
+  }
+  return false;
+}
+
 /// Service untuk upload ke Cloudinary
 class CloudinaryService {
   static final CloudinaryService _instance = CloudinaryService._internal();
@@ -77,6 +94,7 @@ class CloudinaryService {
     File file, {
     String? folder,
     String? publicId,
+    String? fileName,
   }) async {
     try {
       final bytes = await file.readAsBytes();
@@ -84,6 +102,7 @@ class CloudinaryService {
         bytes,
         folder: folder ?? CloudinaryConfig.folderDocuments,
         publicId: publicId,
+        fileName: fileName ?? file.path.split(Platform.pathSeparator).last,
       );
     } catch (e) {
       return CloudinaryUploadResponse.error('Upload failed: $e');
@@ -112,23 +131,26 @@ class CloudinaryService {
     dynamic file, {
     String? noRegister,
     String? namaUpz,
+    String? fileName,
   }) async {
     final String tgl = _todayFormatted();
     final String reg = _sanitize(noRegister ?? 'unknown');
     final String nama = _sanitize(namaUpz ?? 'unknown');
-    final String publicId = '${tgl}_${reg}_$nama';
+    final String publicId = 'bs_${tgl}_${reg}_$nama';
 
     if (file is File) {
       return await uploadImage(
         file,
         folder: CloudinaryConfig.folderBuktiSetor,
         publicId: publicId,
+        fileName: fileName,
       );
     } else if (file is Uint8List) {
       return await uploadImageBytes(
         file,
         folder: CloudinaryConfig.folderBuktiSetor,
         publicId: publicId,
+        fileName: fileName,
       );
     }
     return CloudinaryUploadResponse.error('Invalid file type');
@@ -141,6 +163,7 @@ class CloudinaryService {
     dynamic file, {
     required String userId,
     String? noRegister,
+    String? fileName,
   }) async {
     final String sanitizedUserId = _sanitize(userId);
     final String reg = _sanitize(noRegister ?? 'unknown');
@@ -151,12 +174,14 @@ class CloudinaryService {
         file,
         folder: CloudinaryConfig.folderProfilePhoto,
         publicId: publicId,
+        fileName: fileName,
       );
     } else if (file is Uint8List) {
       return await uploadImageBytes(
         file,
         folder: CloudinaryConfig.folderProfilePhoto,
         publicId: publicId,
+        fileName: fileName,
       );
     }
     return CloudinaryUploadResponse.error('Invalid file type');
@@ -213,12 +238,25 @@ class CloudinaryService {
   }
 
   /// Internal upload method menggunakan unsigned upload (untuk gambar)
+  /// Automatically routes PDF files to _uploadRawBytes to prevent
+  /// "show_original_unsupported_file_format" errors on Cloudinary.
   Future<CloudinaryUploadResponse> _uploadBytes(
     Uint8List bytes, {
     String? folder,
     String? publicId,
     String? fileName,
   }) async {
+    // Auto-detect PDF files and route to raw upload
+    if (_isPdf(bytes, fileName)) {
+      print('Cloudinary Upload - PDF detected, routing to raw upload');
+      return await _uploadRawBytes(
+        bytes,
+        folder: folder,
+        publicId: publicId,
+        fileName: fileName,
+      );
+    }
+
     try {
       print('Cloudinary Upload - Cloud Name: ${CloudinaryConfig.cloudName}');
       print(
@@ -237,6 +275,17 @@ class CloudinaryService {
         );
       }
 
+      String ext = '.jpg';
+      if (fileName != null && fileName.contains('.')) {
+        ext = fileName.substring(fileName.lastIndexOf('.'));
+      }
+
+      String targetFilename =
+          fileName ?? 'upload_${DateTime.now().millisecondsSinceEpoch}$ext';
+      if (publicId != null) {
+        targetFilename = '$publicId$ext';
+      }
+
       final uri = Uri.parse(CloudinaryConfig.uploadUrl);
       final request = http.MultipartRequest('POST', uri);
 
@@ -244,8 +293,7 @@ class CloudinaryService {
       final multipartFile = http.MultipartFile.fromBytes(
         'file',
         bytes,
-        filename:
-            fileName ?? 'upload_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        filename: targetFilename,
       );
       request.files.add(multipartFile);
 
@@ -309,14 +357,24 @@ class CloudinaryService {
         );
       }
 
+      String ext = '.pdf';
+      if (fileName != null && fileName.contains('.')) {
+        ext = fileName.substring(fileName.lastIndexOf('.'));
+      }
+
+      String targetFilename =
+          fileName ?? 'document_${DateTime.now().millisecondsSinceEpoch}$ext';
+      if (publicId != null) {
+        targetFilename = '$publicId$ext';
+      }
+
       final uri = Uri.parse(CloudinaryConfig.uploadRawUrl);
       final request = http.MultipartRequest('POST', uri);
 
       final multipartFile = http.MultipartFile.fromBytes(
         'file',
         bytes,
-        filename:
-            fileName ?? 'document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        filename: targetFilename,
       );
       request.files.add(multipartFile);
 

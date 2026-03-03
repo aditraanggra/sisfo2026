@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
 import 'api_manager.dart';
-import '/app_state.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
 
@@ -724,29 +723,37 @@ class UploadLpzCall {
     int? unitId,
     String? trxDate = '',
     int? lpzYear,
-    FFUploadedFile? form101,
-    FFUploadedFile? form102,
-    FFUploadedFile? lpz,
+    String? form101Url,
+    String? form102Url,
+    String? lpzUrl,
+    String? desc = '',
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    // Use jsonEncode for reliable JSON construction (avoids escaping issues with URLs)
+    final bodyMap = <String, dynamic>{
+      'unit_id': unitId,
+      'trx_date': trxDate ?? '',
+      'lpz_year': lpzYear,
+      'form101': form101Url ?? '',
+      'form102': form102Url ?? '',
+      'lpz': lpzUrl ?? '',
+      'desc': desc ?? '',
+    };
+    final ffApiRequestBody = jsonEncode(bodyMap);
 
     return ApiManager.instance.makeApiCall(
       callName: 'Upload LPZ',
       apiUrl: '$baseUrl/lpz',
       callType: ApiCallType.POST,
       headers: {
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      params: {
-        'unit_id': unitId,
-        'trx_date': trxDate,
-        'lpz_year': lpzYear,
-        if (form101 != null) 'form101': form101,
-        if (form102 != null) 'form102': form102,
-        if (lpz != null) 'lpz': lpz,
-      },
-      bodyType: BodyType.MULTIPART,
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,

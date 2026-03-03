@@ -40,12 +40,25 @@ Future<List<String>> uploadCloudinaryFiles({
         : '${DateTime.now().millisecondsSinceEpoch}_$i';
 
     try {
-      final response = await cloudinary.uploadImageBytes(
-        bytes,
-        folder: folder ?? CloudinaryConfig.folderDocuments,
-        publicId: publicIdSuffix,
-        fileName: file.originalFilename,
-      );
+      // Detect PDF files and route to raw upload
+      final bool isPdf = file.originalFilename.toLowerCase().endsWith('.pdf');
+
+      final CloudinaryUploadResponse response;
+      if (isPdf) {
+        response = await cloudinary.uploadPdfBytes(
+          bytes,
+          folder: folder ?? CloudinaryConfig.folderDocuments,
+          publicId: publicIdSuffix,
+          fileName: file.originalFilename,
+        );
+      } else {
+        response = await cloudinary.uploadImageBytes(
+          bytes,
+          folder: folder ?? CloudinaryConfig.folderDocuments,
+          publicId: publicIdSuffix,
+          fileName: file.originalFilename,
+        );
+      }
 
       if (response.success && response.secureUrl != null) {
         uploadedUrls.add(response.secureUrl!);
@@ -79,12 +92,26 @@ Future<String?> uploadCloudinarySingleFile({
   final cloudinary = CloudinaryService();
 
   try {
-    final response = await cloudinary.uploadImageBytes(
-      bytes,
-      folder: folder ?? CloudinaryConfig.folderDocuments,
-      publicId: transactionId,
-      fileName: fileName,
-    );
+    // Detect PDF files and route to raw upload
+    final bool isPdf =
+        fileName != null && fileName.toLowerCase().endsWith('.pdf');
+
+    final CloudinaryUploadResponse response;
+    if (isPdf) {
+      response = await cloudinary.uploadPdfBytes(
+        bytes,
+        folder: folder ?? CloudinaryConfig.folderDocuments,
+        publicId: transactionId,
+        fileName: fileName,
+      );
+    } else {
+      response = await cloudinary.uploadImageBytes(
+        bytes,
+        folder: folder ?? CloudinaryConfig.folderDocuments,
+        publicId: transactionId,
+        fileName: fileName,
+      );
+    }
 
     if (response.success && response.secureUrl != null) {
       return response.secureUrl;
@@ -125,6 +152,7 @@ Future<List<String>> uploadBuktiTransferToCloudinary({
         bytes,
         noRegister: noRegister,
         namaUpz: namaUpz,
+        fileName: file.originalFilename,
       );
 
       if (response.success && response.secureUrl != null) {
@@ -168,6 +196,7 @@ Future<List<String>> uploadProfilePhotoToCloudinary({
         bytes,
         userId: userId ?? 'anon_${DateTime.now().millisecondsSinceEpoch}',
         noRegister: noRegister,
+        fileName: file.originalFilename,
       );
       if (response.success && response.secureUrl != null) {
         uploadedUrls.add(response.secureUrl!);
@@ -287,6 +316,7 @@ Future<String?> convertImagesToPdfAndUpload({
   String? namaUpz,
   String? fileName,
   String? folder,
+  String? prefix,
 }) async {
   if (selectedFiles.isEmpty) return null;
 
@@ -337,8 +367,10 @@ Future<String?> convertImagesToPdfAndUpload({
             'unknown';
     final String uniqueSuffix =
         DateTime.now().millisecondsSinceEpoch.toString();
-    final String publicId = '${tgl}_${reg}_${nama}_images_$uniqueSuffix';
-
+    final String pfx = prefix != null
+        ? '${prefix.replaceAll(RegExp(r'[^a-zA-Z0-9_\-]'), '_').toLowerCase()}_'
+        : '';
+    final String publicId = '${pfx}${tgl}_${reg}_${nama}_images_$uniqueSuffix';
     // 5. Upload to Cloudinary using the new uploadPdfBytes method
     final response = await CloudinaryService().uploadPdfBytes(
       pdfBytes,

@@ -18,6 +18,9 @@ class CloudinaryConfig {
   static const String folderProfilePhoto = 'sisfo/profile';
   static const String folderFormPdf = 'sisfo/form';
   static const String folderDocuments = 'sisfo/documents';
+  static const String folderLpzForm101 = 'sisfo/form';
+  static const String folderLpzForm102 = 'sisfo/form';
+  static const String folderLpzDokumen = 'sisfo/form';
 
   // Base URL untuk Cloudinary
   static String get baseUrl => 'https://api.cloudinary.com/v1_1/$cloudName';

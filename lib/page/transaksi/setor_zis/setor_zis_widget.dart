@@ -9,7 +9,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
-import '/backend/schema/structs/index.dart';
 import '/component/skeleton_loader/skeleton_loader_widget.dart';
 
 import '/index.dart';

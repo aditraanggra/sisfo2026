@@ -29,6 +29,7 @@ class ModernTransactionItemWidget extends StatefulWidget {
     this.iconData,
     this.iconPath,
     this.onTap,
+    this.isRice = false,
   });
 
   /// Transaction title (e.g., "Zakat Fitrah")
@@ -37,8 +38,8 @@ class ModernTransactionItemWidget extends StatefulWidget {
   /// Transaction subtitle/category (e.g., "Penerimaan")
   final String subtitle;
 
-  /// Transaction amount in integer (will be formatted)
-  final int amount;
+  /// Transaction amount (num to support decimals for rice)
+  final num amount;
 
   /// Transaction date and time
   final DateTime dateTime;
@@ -54,6 +55,9 @@ class ModernTransactionItemWidget extends StatefulWidget {
 
   /// Optional tap callback
   final VoidCallback? onTap;
+
+  /// Whether this transaction is for rice
+  final bool isRice;
 
   @override
   State<ModernTransactionItemWidget> createState() =>
@@ -115,6 +119,14 @@ class _ModernTransactionItemWidgetState
 
   /// Format amount with currency
   String _formatAmount() {
+    if (widget.isRice) {
+      return '${formatNumber(
+        widget.amount.toDouble(),
+        formatType: FormatType.custom,
+        format: '###.###',
+        locale: 'ID',
+      )} Kg';
+    }
     final prefix = widget.type == TransactionType.income ? '+' : '-';
     return '$prefix Rp ${formatNumber(
       widget.amount,
