@@ -79,3 +79,6 @@ local.properties
 
 # Local Netlify folder
 .netlify
+
+*.jks
+*.pem
