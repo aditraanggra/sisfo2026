@@ -172,7 +172,7 @@ Future<List<String>> uploadBuktiTransferToCloudinary({
 /// Upload bukti BAP (Berita Acara Penjualan) beras ke Cloudinary
 ///
 /// Folder: sisfo/bap
-/// Format penamaan file: bap_tgl_noregister_namaupz
+/// Format penamaan file: bap_tgl_noregister_namaupz_timestamp
 ///
 /// [selectedFiles] - List file gambar (jpeg, jpg, png)
 /// [noRegister] - Nomor register UPZ

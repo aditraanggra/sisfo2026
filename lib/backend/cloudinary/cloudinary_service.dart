@@ -159,7 +159,7 @@ class CloudinaryService {
   }
 
   /// Upload bukti BAP (Berita Acara Penjualan) beras
-  /// Format penamaan: bap_tgl_noregister_namaupz
+  /// Format penamaan: bap_tgl_noregister_namaupz_timestamp
   /// Folder: sisfo/bap
   Future<CloudinaryUploadResponse> uploadBap(
     dynamic file, {
@@ -170,7 +170,9 @@ class CloudinaryService {
     final String tgl = _todayFormatted();
     final String reg = _sanitize(noRegister ?? 'unknown');
     final String nama = _sanitize(namaUpz ?? 'unknown');
-    final String publicId = 'bap_${tgl}_${reg}_$nama';
+    final String uniqueSuffix =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    final String publicId = 'bap_${tgl}_${reg}_${nama}_$uniqueSuffix';
 
     if (file is File) {
       return await uploadImage(

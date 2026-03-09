@@ -214,7 +214,9 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
           .profileUPZ
           .unitName
           .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-      final String publicId = 'bap_${tgl}_${reg}_$nama';
+      final String uniqueSuffix =
+          DateTime.now().millisecondsSinceEpoch.toString();
+      final String publicId = 'bap_${tgl}_${reg}_${nama}_$uniqueSuffix';
 
       final response = await cloudinary.uploadPdfBytes(
         pdfFile.bytes!,
