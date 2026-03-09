@@ -716,6 +716,42 @@ class TransactionEndPointGroup {
   static GetRekapAlokasiCall getRekapAlokasiCall = GetRekapAlokasiCall();
   static UploadLpzCall uploadLpzCall = UploadLpzCall();
   static GetLpzCall getLpzCall = GetLpzCall();
+  static GetRiceConsolidationCall getRiceConsolidationCall =
+      GetRiceConsolidationCall();
+}
+
+class GetRiceConsolidationCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? year,
+  }) async {
+    final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get Rice Consolidation',
+      apiUrl: '${baseUrl}/setor/rice-consolidation',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        if (year != null) 'year': year,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  double? totalUnsoldRice(dynamic response) => castToType<double>(getJsonField(
+        response,
+        r'''$.total_unsold_rice''',
+      ));
 }
 
 class GetLpzCall {
@@ -1099,22 +1135,39 @@ class AddSetorZISCall {
     String? status = '',
     String? validation = '',
     String? upload = '',
+    int? zfRiceSoldAmount,
+    int? zfRiceSoldPrice,
+    String? zfRiceSoldProof,
+    String? depositDestination,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
-    final ffApiRequestBody = '''
-{
-  "unit_id": ${unitId},
-  "trx_date": "${escapeStringForJson(trxDate)}",
-  "zf_amount_deposit": ${zfAmountDeposit},
-  "zf_rice_deposit": ${zfRiceDeposit},
-  "zm_amount_deposit": ${zmAmountDeposit},
-  "ifs_amount_deposit": ${ifsAmountDeposit},
-  "total_deposit": ${totalDeposit},
-  "status": "${escapeStringForJson(status)}",
-  "validation": "${escapeStringForJson(validation)}",
-  "upload": "${escapeStringForJson(upload)}"
-}''';
+    final bodyMap = <String, dynamic>{
+      'unit_id': unitId,
+      'trx_date': trxDate ?? '',
+      'zf_amount_deposit': zfAmountDeposit,
+      'zf_rice_deposit': zfRiceDeposit,
+      'zm_amount_deposit': zmAmountDeposit,
+      'ifs_amount_deposit': ifsAmountDeposit,
+      'total_deposit': totalDeposit,
+      'status': status ?? '',
+      'validation': validation ?? '',
+      'upload': upload ?? '',
+    };
+    if (zfRiceSoldAmount != null && zfRiceSoldAmount > 0) {
+      bodyMap['zf_rice_sold_amount'] = zfRiceSoldAmount;
+    }
+    if (zfRiceSoldPrice != null && zfRiceSoldPrice > 0) {
+      bodyMap['zf_rice_sold_price'] = zfRiceSoldPrice;
+    }
+    if (zfRiceSoldProof != null && zfRiceSoldProof.isNotEmpty) {
+      bodyMap['zf_rice_sold_proof'] = zfRiceSoldProof;
+    }
+    if (depositDestination != null && depositDestination.isNotEmpty) {
+      bodyMap['deposit_destination'] = depositDestination;
+    }
+    final ffApiRequestBody = jsonEncode(bodyMap);
+
     return ApiManager.instance.makeApiCall(
       callName: 'Add Setor ZIS',
       apiUrl: '${baseUrl}/setor',
@@ -1151,22 +1204,39 @@ class UpdateSetorZISCall {
     String? validation = '',
     String? upload = '',
     int? id,
+    int? zfRiceSoldAmount,
+    int? zfRiceSoldPrice,
+    String? zfRiceSoldProof,
+    String? depositDestination,
   }) async {
     final baseUrl = TransactionEndPointGroup.getBaseUrl();
 
-    final ffApiRequestBody = '''
-{
-  "unit_id": ${unitId},
-  "trx_date": "${escapeStringForJson(trxDate)}",
-  "zf_amount_deposit": ${zfAmountDeposit},
-  "zf_rice_deposit": ${zfRiceDeposit},
-  "zm_amount_deposit": ${zmAmountDeposit},
-  "ifs_amount_deposit": ${ifsAmountDeposit},
-  "total_deposit": ${totalDeposit},
-  "status": "${escapeStringForJson(status)}",
-  "validation": "${escapeStringForJson(validation)}",
-  "upload": "${escapeStringForJson(upload)}"
-}''';
+    final bodyMap = <String, dynamic>{
+      'unit_id': unitId,
+      'trx_date': trxDate ?? '',
+      'zf_amount_deposit': zfAmountDeposit,
+      'zf_rice_deposit': zfRiceDeposit,
+      'zm_amount_deposit': zmAmountDeposit,
+      'ifs_amount_deposit': ifsAmountDeposit,
+      'total_deposit': totalDeposit,
+      'status': status ?? '',
+      'validation': validation ?? '',
+      'upload': upload ?? '',
+    };
+    if (zfRiceSoldAmount != null && zfRiceSoldAmount > 0) {
+      bodyMap['zf_rice_sold_amount'] = zfRiceSoldAmount;
+    }
+    if (zfRiceSoldPrice != null && zfRiceSoldPrice > 0) {
+      bodyMap['zf_rice_sold_price'] = zfRiceSoldPrice;
+    }
+    if (zfRiceSoldProof != null && zfRiceSoldProof.isNotEmpty) {
+      bodyMap['zf_rice_sold_proof'] = zfRiceSoldProof;
+    }
+    if (depositDestination != null && depositDestination.isNotEmpty) {
+      bodyMap['deposit_destination'] = depositDestination;
+    }
+    final ffApiRequestBody = jsonEncode(bodyMap);
+
     return ApiManager.instance.makeApiCall(
       callName: 'Update Setor ZIS',
       apiUrl: '${baseUrl}/setor/${id}',

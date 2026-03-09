@@ -136,7 +136,9 @@ class CloudinaryService {
     final String tgl = _todayFormatted();
     final String reg = _sanitize(noRegister ?? 'unknown');
     final String nama = _sanitize(namaUpz ?? 'unknown');
-    final String publicId = 'bs_${tgl}_${reg}_$nama';
+    final String uniqueSuffix =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    final String publicId = 'bs_${tgl}_${reg}_${nama}_$uniqueSuffix';
 
     if (file is File) {
       return await uploadImage(
@@ -149,6 +151,38 @@ class CloudinaryService {
       return await uploadImageBytes(
         file,
         folder: CloudinaryConfig.folderBuktiSetor,
+        publicId: publicId,
+        fileName: fileName,
+      );
+    }
+    return CloudinaryUploadResponse.error('Invalid file type');
+  }
+
+  /// Upload bukti BAP (Berita Acara Penjualan) beras
+  /// Format penamaan: bap_tgl_noregister_namaupz
+  /// Folder: sisfo/bap
+  Future<CloudinaryUploadResponse> uploadBap(
+    dynamic file, {
+    String? noRegister,
+    String? namaUpz,
+    String? fileName,
+  }) async {
+    final String tgl = _todayFormatted();
+    final String reg = _sanitize(noRegister ?? 'unknown');
+    final String nama = _sanitize(namaUpz ?? 'unknown');
+    final String publicId = 'bap_${tgl}_${reg}_$nama';
+
+    if (file is File) {
+      return await uploadImage(
+        file,
+        folder: CloudinaryConfig.folderBap,
+        publicId: publicId,
+        fileName: fileName,
+      );
+    } else if (file is Uint8List) {
+      return await uploadImageBytes(
+        file,
+        folder: CloudinaryConfig.folderBap,
         publicId: publicId,
         fileName: fileName,
       );

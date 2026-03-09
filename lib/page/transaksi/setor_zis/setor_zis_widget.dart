@@ -12,7 +12,11 @@ import '/flutter_flow/upload_data.dart';
 import '/component/skeleton_loader/skeleton_loader_widget.dart';
 
 import '/index.dart';
+import 'package:file_picker/file_picker.dart';
+import '/backend/cloudinary/cloudinary_service.dart';
+import '/backend/cloudinary/cloudinary_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'setor_zis_model.dart';
@@ -66,6 +70,182 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
       RekapEndPointGroup.alokasiReportCall.alokasiSetorZfBeras(body),
       0.0,
     );
+  }
+
+  bool _isPdfFile(PlatformFile file) {
+    return file.extension?.toLowerCase() == 'pdf' ||
+        file.name.toLowerCase().endsWith('.pdf');
+  }
+
+  Future<void> _showFilePickerOptionsBap() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+      builder: (BottomSheetContext) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.image, color: Colors.blue),
+                title: Text(
+                  'Pilih dari Galeri / Kamera',
+                  style: GoogleFonts.outfit(),
+                ),
+                onTap: () async {
+                  Navigator.pop(BottomSheetContext);
+                  final selectedMedia = await selectMediaWithSourceBottomSheet(
+                    context: context,
+                    storageFolderPath: 'bap',
+                    maxHeight: 1200.00,
+                    imageQuality: 80,
+                    allowPhoto: true,
+                    backgroundColor: FlutterFlowTheme.of(context).primaryDark,
+                    textColor: Colors.white,
+                  );
+                  if (selectedMedia != null &&
+                      selectedMedia.every(
+                          (m) => validateFileFormat(m.storagePath, context))) {
+                    _uploadBapDirectly(selectedMedia.first);
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                title: Text(
+                  'Pilih File PDF',
+                  style: GoogleFonts.outfit(),
+                ),
+                onTap: () async {
+                  Navigator.pop(BottomSheetContext);
+                  try {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                      allowMultiple: false,
+                      withData: true,
+                    );
+                    if (result != null && result.files.isNotEmpty) {
+                      _uploadBapPdfDirectly(result.files.first);
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error picking PDF: $e')),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _uploadBapDirectly(selectedMedia) async {
+    setState(() => _model.isDataUploading_bap = true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Mengunggah bukti penjualan (BAP)...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    try {
+      final downloadUrls = await uploadBapToCloudinary(
+        selectedFiles: [selectedMedia],
+        noRegister: FFAppState().profileUPZ.noRegister,
+        namaUpz: FFAppState().profileUPZ.unitName,
+      );
+
+      if (downloadUrls.isNotEmpty) {
+        setState(() {
+          _model.uploadedBapUrl = downloadUrls.first;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('BAP Photo berhasil diunggah!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Upload failed');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mengunggah gambar: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() => _model.isDataUploading_bap = false);
+    }
+  }
+
+  Future<void> _uploadBapPdfDirectly(PlatformFile pdfFile) async {
+    if (pdfFile.bytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: No data in PDF file')),
+      );
+      return;
+    }
+
+    setState(() => _model.isDataUploading_bap = true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Mengunggah bukti penjualan PDF...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    try {
+      final cloudinary = CloudinaryService();
+
+      final String tgl = DateFormat('yyMMdd').format(DateTime.now());
+      final String reg = FFAppState()
+          .profileUPZ
+          .noRegister
+          .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+      final String nama = FFAppState()
+          .profileUPZ
+          .unitName
+          .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+      final String publicId = 'bap_${tgl}_${reg}_$nama';
+
+      final response = await cloudinary.uploadPdfBytes(
+        pdfFile.bytes!,
+        folder: CloudinaryConfig.folderBap,
+        publicId: publicId,
+        fileName: pdfFile.name,
+      );
+
+      if (response.success && response.secureUrl != null) {
+        setState(() {
+          _model.uploadedBapUrl = response.secureUrl!;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('BAP PDF berhasil diunggah!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception(response.error ?? 'Upload failed');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mengunggah PDF: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() => _model.isDataUploading_bap = false);
+    }
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -179,6 +359,335 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
           ),
         ],
       ),
+    );
+  }
+
+  /// Build the rice sale section (visible only when beras checkbox is checked)
+  Widget _buildRiceSaleSection(BuildContext context) {
+    final berasAmount = _model.nomSetorZfBeras ?? 0.0;
+
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: berasAmount > 0
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 24.0),
+                _buildSectionTitle('PENJUALAN BERAS (OPSIONAL)'),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: ModernShadows.cardShadow,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Toggle switch
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.sell_outlined,
+                                color: FlutterFlowTheme.of(context).primaryDark,
+                                size: 20.0,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Apakah ada penjualan beras?',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Switch(
+                            value: _model.isRiceSold,
+                            activeColor:
+                                FlutterFlowTheme.of(context).primaryDark,
+                            onChanged: (val) {
+                              safeSetState(() {
+                                _model.isRiceSold = val;
+                                if (!val) {
+                                  _model.zfRiceSoldPrice = 0;
+                                  _model.zfRiceSoldAmount = 0;
+                                  _model.uploadedBapUrl = '';
+                                  _model.ricePriceTextController?.clear();
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      // Rice sale fields (visible when switch is on)
+                      if (_model.isRiceSold) ...[
+                        const SizedBox(height: 16.0),
+                        // Current rice amount info
+                        Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F4F8),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.eco_outlined,
+                                  color: Colors.green, size: 20.0),
+                              const SizedBox(width: 8.0),
+                              Expanded(
+                                child: Text(
+                                  'Beras yang akan dijual: ${formatNumber(berasAmount, formatType: FormatType.custom, format: '##.##', locale: 'id_ID')} Kg',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodySmall
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12.0),
+                        // Harga beras per Kg input
+                        TextFormField(
+                          controller: _model.ricePriceTextController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            labelText: 'Harga Beras per Kg (Rp)',
+                            hintText: 'Masukkan harga per Kg',
+                            prefixIcon: const Icon(Icons.attach_money,
+                                color: Colors.green),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).primaryDark,
+                                width: 2.0,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          onChanged: (value) {
+                            final price = int.tryParse(value) ?? 0;
+                            safeSetState(() {
+                              _model.zfRiceSoldPrice = price;
+                              _model.zfRiceSoldAmount =
+                                  (price * berasAmount).round();
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 12.0),
+                        // Auto-calculated amount display
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xFF259148),
+                                const Color(0xFF124F23),
+                              ],
+                              begin: AlignmentDirectional.topStart,
+                              end: AlignmentDirectional.bottomEnd,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Total Hasil Penjualan',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                formatNumber(
+                                  _model.zfRiceSoldAmount,
+                                  formatType: FormatType.decimal,
+                                  decimalType: DecimalType.periodDecimal,
+                                  currency: 'Rp ',
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (_model.zfRiceSoldPrice > 0)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Text(
+                                    '${formatNumber(berasAmount, formatType: FormatType.custom, format: '##.##', locale: 'id_ID')} Kg × Rp ${formatNumber(_model.zfRiceSoldPrice, formatType: FormatType.decimal, decimalType: DecimalType.periodDecimal)}',
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 11.0,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        // Upload BAP section
+                        Text(
+                          'Upload Bukti BAP',
+                          style:
+                              FlutterFlowTheme.of(context).bodySmall.override(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12.0,
+                                  ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        InkWell(
+                          onTap: () async {
+                            await _showFilePickerOptionsBap();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: FlutterFlowTheme.of(context)
+                                    .primary
+                                    .withAlpha(50),
+                                width: 2,
+                              ),
+                            ),
+                            child: _model.isDataUploading_bap
+                                ? Column(
+                                    children: [
+                                      CircularProgressIndicator(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Mengupload BAP...',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  )
+                                : _model.uploadedBapUrl.isNotEmpty
+                                    ? Column(
+                                        children: [
+                                          const Icon(Icons.check_circle,
+                                              color: ModernColors.primaryAccent,
+                                              size: 32),
+                                          const SizedBox(height: 4),
+                                          const Text('Bukti BAP Terupload',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13)),
+                                          const SizedBox(height: 2),
+                                          Text('Klik untuk mengubah',
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 11)),
+                                        ],
+                                      )
+                                    : Column(
+                                        children: const [
+                                          Icon(Icons.cloud_upload_outlined,
+                                              color: ModernColors.primaryAccent,
+                                              size: 32),
+                                          SizedBox(height: 4),
+                                          Text('Upload Bukti BAP',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13)),
+                                          SizedBox(height: 2),
+                                          Text('Berita Acara Penjualan Beras',
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 11)),
+                                        ],
+                                      ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : const SizedBox.shrink(),
+    );
+  }
+
+  /// Build deposit destination dropdown
+  Widget _buildDepositDestination(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24.0),
+        _buildSectionTitle('TUJUAN SETORAN'),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: ModernShadows.cardShadow,
+          ),
+          child: DropdownButtonFormField<String>(
+            value: _model.depositDestination,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.location_on_outlined,
+                color: FlutterFlowTheme.of(context).primaryDark,
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: 'upz_desa',
+                child: Text('UPZ Desa'),
+              ),
+              DropdownMenuItem(
+                value: 'upz_kecamatan',
+                child: Text('UPZ Kecamatan'),
+              ),
+            ],
+            onChanged: (value) {
+              safeSetState(() {
+                _model.depositDestination = value ?? 'upz_desa';
+              });
+            },
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+      ],
     );
   }
 
@@ -338,6 +847,12 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                     },
                                     resetSetor: () async {
                                       _model.nomSetorZfBeras = 0.0;
+                                      // Reset rice sale when beras unchecked
+                                      _model.isRiceSold = false;
+                                      _model.zfRiceSoldPrice = 0;
+                                      _model.zfRiceSoldAmount = 0;
+                                      _model.uploadedBapUrl = '';
+                                      _model.ricePriceTextController?.clear();
                                       safeSetState(() {});
                                     },
                                     setCurrentSetor: () async {
@@ -406,6 +921,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                     },
                                   ),
                                 ),
+                                // Rice sale section (shown only when beras is checked)
+                                _buildRiceSaleSection(context),
                                 const SizedBox(height: 24.0),
                                 _buildSectionTitle('BUKTI SETORAN'),
                                 InkWell(
@@ -554,6 +1071,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                               ),
                                   ),
                                 ),
+                                // Deposit destination dropdown
+                                _buildDepositDestination(context),
                                 const SizedBox(height: 32.0),
                                 FFButtonWidget(
                                   onPressed: () async {
@@ -596,6 +1115,21 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                       return;
                                     }
 
+                                    // Calculate values for submission
+                                    final bool riceSold = _model.isRiceSold;
+                                    final double riceDeposit =
+                                        _model.nomSetorZfBeras ?? 0.0;
+                                    final int riceSoldAmount =
+                                        riceSold ? _model.zfRiceSoldAmount : 0;
+                                    final int riceSoldPrice =
+                                        riceSold ? _model.zfRiceSoldPrice : 0;
+                                    final int totalDeposit = _model.nomSetorZf +
+                                        _model.nomSetorZm +
+                                        _model.nomSetorIfs +
+                                        (riceSold
+                                            ? _model.zfRiceSoldAmount
+                                            : 0);
+
                                     final confirm = await showDialog<bool>(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
@@ -625,16 +1159,19 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                             .datePickerModel.datePicked
                                             ?.toString(),
                                         zfAmountDeposit: _model.nomSetorZf,
-                                        zfRiceDeposit: _model.nomSetorZfBeras,
+                                        zfRiceDeposit: riceDeposit,
                                         zmAmountDeposit: _model.nomSetorZm,
                                         ifsAmountDeposit: _model.nomSetorIfs,
-                                        totalDeposit: _model.nomSetorZf +
-                                            _model.nomSetorZm +
-                                            _model.nomSetorIfs,
+                                        totalDeposit: totalDeposit,
                                         status: 'Tunai',
                                         validation: 'Belum Valid',
                                         upload: _model
                                             .uploadedFileUrl_uploadDataF1e,
+                                        zfRiceSoldAmount: riceSoldAmount,
+                                        zfRiceSoldPrice: riceSoldPrice,
+                                        zfRiceSoldProof: _model.uploadedBapUrl,
+                                        depositDestination:
+                                            _model.depositDestination,
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

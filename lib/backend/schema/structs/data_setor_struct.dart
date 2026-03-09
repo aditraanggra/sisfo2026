@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_getters_setters
 
-
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
@@ -17,6 +16,14 @@ class DataSetorStruct extends BaseStruct {
     String? status,
     String? validation,
     String? upload,
+    int? zfRiceSoldAmount,
+    int? zfRiceSoldPrice,
+    String? zfRiceSoldProof,
+    bool? isRiceSold,
+    double? unsoldRice,
+    double? originalRiceQty,
+    String? depositDestination,
+    String? desc,
   })  : _id = id,
         _unitSetor = unitSetor,
         _trxDate = trxDate,
@@ -27,7 +34,15 @@ class DataSetorStruct extends BaseStruct {
         _totalDeposit = totalDeposit,
         _status = status,
         _validation = validation,
-        _upload = upload;
+        _upload = upload,
+        _zfRiceSoldAmount = zfRiceSoldAmount,
+        _zfRiceSoldPrice = zfRiceSoldPrice,
+        _zfRiceSoldProof = zfRiceSoldProof,
+        _isRiceSold = isRiceSold,
+        _unsoldRice = unsoldRice,
+        _originalRiceQty = originalRiceQty,
+        _depositDestination = depositDestination,
+        _desc = desc;
 
   // "id" field.
   int? _id;
@@ -127,6 +142,62 @@ class DataSetorStruct extends BaseStruct {
 
   bool hasUpload() => _upload != null;
 
+  // "zf_rice_sold_amount" field.
+  int? _zfRiceSoldAmount;
+  int get zfRiceSoldAmount => _zfRiceSoldAmount ?? 0;
+  set zfRiceSoldAmount(int? val) => _zfRiceSoldAmount = val;
+
+  bool hasZfRiceSoldAmount() => _zfRiceSoldAmount != null;
+
+  // "zf_rice_sold_price" field.
+  int? _zfRiceSoldPrice;
+  int get zfRiceSoldPrice => _zfRiceSoldPrice ?? 0;
+  set zfRiceSoldPrice(int? val) => _zfRiceSoldPrice = val;
+
+  bool hasZfRiceSoldPrice() => _zfRiceSoldPrice != null;
+
+  // "zf_rice_sold_proof" field.
+  String? _zfRiceSoldProof;
+  String get zfRiceSoldProof => _zfRiceSoldProof ?? '';
+  set zfRiceSoldProof(String? val) => _zfRiceSoldProof = val;
+
+  bool hasZfRiceSoldProof() => _zfRiceSoldProof != null;
+
+  // "is_rice_sold" field (computed from API).
+  bool? _isRiceSold;
+  bool get isRiceSold => _isRiceSold ?? false;
+  set isRiceSold(bool? val) => _isRiceSold = val;
+
+  bool hasIsRiceSold() => _isRiceSold != null;
+
+  // "unsold_rice" field (computed from API).
+  double? _unsoldRice;
+  double get unsoldRice => _unsoldRice ?? 0.0;
+  set unsoldRice(double? val) => _unsoldRice = val;
+
+  bool hasUnsoldRice() => _unsoldRice != null;
+
+  // "original_rice_qty" field (computed from API).
+  double? _originalRiceQty;
+  double get originalRiceQty => _originalRiceQty ?? 0.0;
+  set originalRiceQty(double? val) => _originalRiceQty = val;
+
+  bool hasOriginalRiceQty() => _originalRiceQty != null;
+
+  // "deposit_destination" field.
+  String? _depositDestination;
+  String get depositDestination => _depositDestination ?? '';
+  set depositDestination(String? val) => _depositDestination = val;
+
+  bool hasDepositDestination() => _depositDestination != null;
+
+  // "desc" field.
+  String? _desc;
+  String get desc => _desc ?? '';
+  set desc(String? val) => _desc = val;
+
+  bool hasDesc() => _desc != null;
+
   static DataSetorStruct fromMap(Map<String, dynamic> data) => DataSetorStruct(
         id: castToType<int>(data['id']),
         unitSetor: data['unit_setor'] is UnitSetorStruct
@@ -141,6 +212,14 @@ class DataSetorStruct extends BaseStruct {
         status: data['status'] as String?,
         validation: data['validation'] as String?,
         upload: data['upload'] as String?,
+        zfRiceSoldAmount: castToType<int>(data['zf_rice_sold_amount']),
+        zfRiceSoldPrice: castToType<int>(data['zf_rice_sold_price']),
+        zfRiceSoldProof: data['zf_rice_sold_proof'] as String?,
+        isRiceSold: data['is_rice_sold'] as bool?,
+        unsoldRice: castToType<double>(data['unsold_rice']),
+        originalRiceQty: castToType<double>(data['original_rice_qty']),
+        depositDestination: data['deposit_destination'] as String?,
+        desc: data['desc'] as String?,
       );
 
   static DataSetorStruct? maybeFromMap(dynamic data) => data is Map
@@ -159,6 +238,14 @@ class DataSetorStruct extends BaseStruct {
         'status': _status,
         'validation': _validation,
         'upload': _upload,
+        'zf_rice_sold_amount': _zfRiceSoldAmount,
+        'zf_rice_sold_price': _zfRiceSoldPrice,
+        'zf_rice_sold_proof': _zfRiceSoldProof,
+        'is_rice_sold': _isRiceSold,
+        'unsold_rice': _unsoldRice,
+        'original_rice_qty': _originalRiceQty,
+        'deposit_destination': _depositDestination,
+        'desc': _desc,
       }.withoutNulls;
 
   @override
@@ -205,6 +292,38 @@ class DataSetorStruct extends BaseStruct {
         ),
         'upload': serializeParam(
           _upload,
+          ParamType.String,
+        ),
+        'zf_rice_sold_amount': serializeParam(
+          _zfRiceSoldAmount,
+          ParamType.int,
+        ),
+        'zf_rice_sold_price': serializeParam(
+          _zfRiceSoldPrice,
+          ParamType.int,
+        ),
+        'zf_rice_sold_proof': serializeParam(
+          _zfRiceSoldProof,
+          ParamType.String,
+        ),
+        'is_rice_sold': serializeParam(
+          _isRiceSold,
+          ParamType.bool,
+        ),
+        'unsold_rice': serializeParam(
+          _unsoldRice,
+          ParamType.double,
+        ),
+        'original_rice_qty': serializeParam(
+          _originalRiceQty,
+          ParamType.double,
+        ),
+        'deposit_destination': serializeParam(
+          _depositDestination,
+          ParamType.String,
+        ),
+        'desc': serializeParam(
+          _desc,
           ParamType.String,
         ),
       }.withoutNulls;
@@ -267,6 +386,46 @@ class DataSetorStruct extends BaseStruct {
           ParamType.String,
           false,
         ),
+        zfRiceSoldAmount: deserializeParam(
+          data['zf_rice_sold_amount'],
+          ParamType.int,
+          false,
+        ),
+        zfRiceSoldPrice: deserializeParam(
+          data['zf_rice_sold_price'],
+          ParamType.int,
+          false,
+        ),
+        zfRiceSoldProof: deserializeParam(
+          data['zf_rice_sold_proof'],
+          ParamType.String,
+          false,
+        ),
+        isRiceSold: deserializeParam(
+          data['is_rice_sold'],
+          ParamType.bool,
+          false,
+        ),
+        unsoldRice: deserializeParam(
+          data['unsold_rice'],
+          ParamType.double,
+          false,
+        ),
+        originalRiceQty: deserializeParam(
+          data['original_rice_qty'],
+          ParamType.double,
+          false,
+        ),
+        depositDestination: deserializeParam(
+          data['deposit_destination'],
+          ParamType.String,
+          false,
+        ),
+        desc: deserializeParam(
+          data['desc'],
+          ParamType.String,
+          false,
+        ),
       );
 
   @override
@@ -285,7 +444,15 @@ class DataSetorStruct extends BaseStruct {
         totalDeposit == other.totalDeposit &&
         status == other.status &&
         validation == other.validation &&
-        upload == other.upload;
+        upload == other.upload &&
+        zfRiceSoldAmount == other.zfRiceSoldAmount &&
+        zfRiceSoldPrice == other.zfRiceSoldPrice &&
+        zfRiceSoldProof == other.zfRiceSoldProof &&
+        isRiceSold == other.isRiceSold &&
+        unsoldRice == other.unsoldRice &&
+        originalRiceQty == other.originalRiceQty &&
+        depositDestination == other.depositDestination &&
+        desc == other.desc;
   }
 
   @override
@@ -300,7 +467,15 @@ class DataSetorStruct extends BaseStruct {
         totalDeposit,
         status,
         validation,
-        upload
+        upload,
+        zfRiceSoldAmount,
+        zfRiceSoldPrice,
+        zfRiceSoldProof,
+        isRiceSold,
+        unsoldRice,
+        originalRiceQty,
+        depositDestination,
+        desc,
       ]);
 }
 
@@ -316,6 +491,14 @@ DataSetorStruct createDataSetorStruct({
   String? status,
   String? validation,
   String? upload,
+  int? zfRiceSoldAmount,
+  int? zfRiceSoldPrice,
+  String? zfRiceSoldProof,
+  bool? isRiceSold,
+  double? unsoldRice,
+  double? originalRiceQty,
+  String? depositDestination,
+  String? desc,
 }) =>
     DataSetorStruct(
       id: id,
@@ -329,4 +512,12 @@ DataSetorStruct createDataSetorStruct({
       status: status,
       validation: validation,
       upload: upload,
+      zfRiceSoldAmount: zfRiceSoldAmount,
+      zfRiceSoldPrice: zfRiceSoldPrice,
+      zfRiceSoldProof: zfRiceSoldProof,
+      isRiceSold: isRiceSold,
+      unsoldRice: unsoldRice,
+      originalRiceQty: originalRiceQty,
+      depositDestination: depositDestination,
+      desc: desc,
     );

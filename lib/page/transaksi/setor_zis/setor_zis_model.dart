@@ -25,6 +25,16 @@ class SetorZisModel extends FlutterFlowModel<SetorZisWidget> {
 
   double? currentZfBeras = 0.0;
 
+  // Rice sale fields
+  bool isRiceSold = false;
+  int zfRiceSoldPrice = 0;
+  int zfRiceSoldAmount = 0; // auto-calculated: price * beras
+  String uploadedBapUrl = '';
+  bool isDataUploading_bap = false;
+
+  // Deposit destination
+  String depositDestination = 'upz_desa';
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -43,6 +53,9 @@ class SetorZisModel extends FlutterFlowModel<SetorZisWidget> {
       FFUploadedFile(bytes: Uint8List.fromList([]), originalFilename: '');
   String uploadedFileUrl_uploadDataF1e = '';
 
+  // Rice price text controller
+  TextEditingController? ricePriceTextController;
+
   @override
   void initState(BuildContext context) {
     datePickerModel = createModel(context, () => DatePickerModel());
@@ -51,6 +64,7 @@ class SetorZisModel extends FlutterFlowModel<SetorZisWidget> {
     cardSetorZisModel1 = createModel(context, () => CardSetorZisModel());
     cardSetorZisModel2 = createModel(context, () => CardSetorZisModel());
     cardSetorZisModel3 = createModel(context, () => CardSetorZisModel());
+    ricePriceTextController = TextEditingController();
   }
 
   @override
@@ -60,5 +74,6 @@ class SetorZisModel extends FlutterFlowModel<SetorZisWidget> {
     cardSetorZisModel1.dispose();
     cardSetorZisModel2.dispose();
     cardSetorZisModel3.dispose();
+    ricePriceTextController?.dispose();
   }
 }

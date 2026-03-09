@@ -169,6 +169,49 @@ Future<List<String>> uploadBuktiTransferToCloudinary({
   return uploadedUrls;
 }
 
+/// Upload bukti BAP (Berita Acara Penjualan) beras ke Cloudinary
+///
+/// Folder: sisfo/bap
+/// Format penamaan file: bap_tgl_noregister_namaupz
+///
+/// [selectedFiles] - List file gambar (jpeg, jpg, png)
+/// [noRegister] - Nomor register UPZ
+/// [namaUpz] - Nama unit UPZ
+Future<List<String>> uploadBapToCloudinary({
+  required List<SelectedFile> selectedFiles,
+  String? noRegister,
+  String? namaUpz,
+}) async {
+  final cloudinary = CloudinaryService();
+  final List<String> uploadedUrls = [];
+
+  for (int i = 0; i < selectedFiles.length; i++) {
+    final file = selectedFiles[i];
+    final bytes = file.bytes;
+
+    if (bytes.isEmpty) continue;
+
+    try {
+      final response = await cloudinary.uploadBap(
+        bytes,
+        noRegister: noRegister,
+        namaUpz: namaUpz,
+        fileName: file.originalFilename,
+      );
+
+      if (response.success && response.secureUrl != null) {
+        uploadedUrls.add(response.secureUrl!);
+      } else {
+        print('Cloudinary BAP upload failed for file $i: ${response.error}');
+      }
+    } catch (e) {
+      print('Cloudinary BAP upload error for file $i: $e');
+    }
+  }
+
+  return uploadedUrls;
+}
+
 /// Upload foto profil ke Cloudinary
 ///
 /// Folder: sisfo_upz/profile
