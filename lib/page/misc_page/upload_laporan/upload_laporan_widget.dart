@@ -30,12 +30,47 @@ class _UploadLaporanWidgetState extends State<UploadLaporanWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isUploadingAll = false;
   bool _hasSubmittedOnce = false;
+  bool _isLoadingCheck = true;
+  bool _hasUploadedLpz = false;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => UploadLaporanModel());
+    _checkLpzStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+  Future<void> _checkLpzStatus() async {
+    try {
+      final currentYear = DateTime.now().year;
+      final response = await TransactionEndPointGroup.getLpzCall.call(
+        token: currentAuthenticationToken,
+        year: currentYear,
+      );
+
+      if (response.succeeded) {
+        final dataList =
+            TransactionEndPointGroup.getLpzCall.dataListLpz(response.jsonBody);
+        if (dataList != null && dataList.isNotEmpty) {
+          if (mounted) {
+            setState(() {
+              _hasUploadedLpz = true;
+              _isLoadingCheck = false;
+            });
+          }
+          return;
+        }
+      }
+    } catch (e) {
+      print('Error checking LPZ status: $e');
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoadingCheck = false;
+      });
+    }
   }
 
   @override
@@ -646,182 +681,218 @@ class _UploadLaporanWidgetState extends State<UploadLaporanWidget> {
           top: true,
           child: Stack(
             children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      // Instruksi Info
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(
-                            color: FlutterFlowTheme.of(context).alternate,
-                            width: 1.0,
+              if (_isLoadingCheck)
+                Center(
+                  child: CircularProgressIndicator(
+                    color: FlutterFlowTheme.of(context).primary,
+                  ),
+                )
+              else if (_hasUploadedLpz)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.check_circle_rounded,
+                          color: FlutterFlowTheme.of(context).success,
+                          size: 80.0,
+                        ),
+                        const SizedBox(height: 16.0),
+                        Text(
+                          'Terima kasih sudah mengunggah laporan',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 2.0),
-                              child: Icon(
-                                Icons.info_outline_rounded,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                size: 20.0,
-                              ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        // Instruksi Info
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: FlutterFlowTheme.of(context).alternate,
+                              width: 1.0,
                             ),
-                            const SizedBox(width: 12.0),
-                            Expanded(
-                              child: Text(
-                                'Upload foto (akan dikonversi otomatis ke PDF) atau langsung upload file PDF untuk setiap formulir.',
-                                style: GoogleFonts.inter(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontSize: 13.0,
+                          ),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2.0),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 20.0,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24.0),
-
-                      // Formulir 101 Section
-                      _buildSection(
-                        title: 'Formulir 101',
-                        subtitle: 'Upload foto atau PDF Formulir 101',
-                        selectedFiles: _model.uploadedLocalFiles101,
-                        onClear: () {
-                          setState(() {
-                            _model.uploadedLocalFiles101.clear();
-                          });
-                        },
-                        onSelectMedia: () async {
-                          final pickedFiles = await _showFilePickerOptions();
-                          if (pickedFiles != null && pickedFiles.isNotEmpty) {
-                            setState(() {
-                              _model.uploadedLocalFiles101 = pickedFiles;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-
-                      // Formulir 102 Section
-                      _buildSection(
-                        title: 'Formulir 102',
-                        subtitle: 'Upload foto atau PDF Formulir 102',
-                        selectedFiles: _model.uploadedLocalFiles102,
-                        onClear: () {
-                          setState(() {
-                            _model.uploadedLocalFiles102.clear();
-                          });
-                        },
-                        onSelectMedia: () async {
-                          final pickedFiles = await _showFilePickerOptions();
-                          if (pickedFiles != null && pickedFiles.isNotEmpty) {
-                            setState(() {
-                              _model.uploadedLocalFiles102 = pickedFiles;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-
-                      // LPZ Section
-                      _buildSection(
-                        title: 'Laporan Pengelolaan ZIS (LPZ)',
-                        subtitle: 'Upload foto atau PDF LPZ',
-                        selectedFiles: _model.uploadedLocalFilesLpz,
-                        onClear: () {
-                          setState(() {
-                            _model.uploadedLocalFilesLpz.clear();
-                          });
-                        },
-                        onSelectMedia: () async {
-                          final pickedFiles = await _showFilePickerOptions();
-                          if (pickedFiles != null && pickedFiles.isNotEmpty) {
-                            setState(() {
-                              _model.uploadedLocalFilesLpz = pickedFiles;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 32.0),
-
-                      // Validation Info
-                      if (_hasSubmittedOnce &&
-                          (_model.uploadedLocalFiles101.isEmpty ||
-                              _model.uploadedLocalFiles102.isEmpty ||
-                              _model.uploadedLocalFilesLpz.isEmpty))
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.warning_amber_rounded,
-                                color: FlutterFlowTheme.of(context).error,
-                                size: 20.0,
-                              ),
-                              const SizedBox(width: 8.0),
+                              const SizedBox(width: 12.0),
                               Expanded(
                                 child: Text(
-                                  'Harap lengkapi semua dokumen yang wajib (*) sebelum mengirim.',
+                                  'Upload foto (akan dikonversi otomatis ke PDF) atau langsung upload file PDF untuk setiap formulir.',
                                   style: GoogleFonts.inter(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w500,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    fontSize: 13.0,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        const SizedBox(height: 24.0),
 
-                      // Submit Button
-                      FFButtonWidget(
-                        onPressed: _isUploadingAll ? null : _handleUploads,
-                        text:
-                            _isUploadingAll ? 'Mengupload...' : 'Kirim Laporan',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: (_model.uploadedLocalFiles101.isNotEmpty &&
-                                  _model.uploadedLocalFiles102.isNotEmpty &&
-                                  _model.uploadedLocalFilesLpz.isNotEmpty)
-                              ? Color(0xFF1A3C34)
-                              : Color(0xFF1A3C34).withOpacity(0.5),
-                          textStyle: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          elevation: 0.0,
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                          disabledColor:
-                              FlutterFlowTheme.of(context).secondaryText,
+                        // Formulir 101 Section
+                        _buildSection(
+                          title: 'Formulir 101',
+                          subtitle: 'Upload foto atau PDF Formulir 101',
+                          selectedFiles: _model.uploadedLocalFiles101,
+                          onClear: () {
+                            setState(() {
+                              _model.uploadedLocalFiles101.clear();
+                            });
+                          },
+                          onSelectMedia: () async {
+                            final pickedFiles = await _showFilePickerOptions();
+                            if (pickedFiles != null && pickedFiles.isNotEmpty) {
+                              setState(() {
+                                _model.uploadedLocalFiles101 = pickedFiles;
+                              });
+                            }
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 32.0),
-                    ],
+                        const SizedBox(height: 16.0),
+
+                        // Formulir 102 Section
+                        _buildSection(
+                          title: 'Formulir 102',
+                          subtitle: 'Upload foto atau PDF Formulir 102',
+                          selectedFiles: _model.uploadedLocalFiles102,
+                          onClear: () {
+                            setState(() {
+                              _model.uploadedLocalFiles102.clear();
+                            });
+                          },
+                          onSelectMedia: () async {
+                            final pickedFiles = await _showFilePickerOptions();
+                            if (pickedFiles != null && pickedFiles.isNotEmpty) {
+                              setState(() {
+                                _model.uploadedLocalFiles102 = pickedFiles;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+
+                        // LPZ Section
+                        _buildSection(
+                          title: 'Laporan Pengelolaan ZIS (LPZ)',
+                          subtitle: 'Upload foto atau PDF LPZ',
+                          selectedFiles: _model.uploadedLocalFilesLpz,
+                          onClear: () {
+                            setState(() {
+                              _model.uploadedLocalFilesLpz.clear();
+                            });
+                          },
+                          onSelectMedia: () async {
+                            final pickedFiles = await _showFilePickerOptions();
+                            if (pickedFiles != null && pickedFiles.isNotEmpty) {
+                              setState(() {
+                                _model.uploadedLocalFilesLpz = pickedFiles;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 32.0),
+
+                        // Validation Info
+                        if (_hasSubmittedOnce &&
+                            (_model.uploadedLocalFiles101.isEmpty ||
+                                _model.uploadedLocalFiles102.isEmpty ||
+                                _model.uploadedLocalFilesLpz.isEmpty))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: FlutterFlowTheme.of(context).error,
+                                  size: 20.0,
+                                ),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                  child: Text(
+                                    'Harap lengkapi semua dokumen yang wajib (*) sebelum mengirim.',
+                                    style: GoogleFonts.inter(
+                                      color: FlutterFlowTheme.of(context).error,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        // Submit Button
+                        FFButtonWidget(
+                          onPressed: _isUploadingAll ? null : _handleUploads,
+                          text: _isUploadingAll
+                              ? 'Mengupload...'
+                              : 'Kirim Laporan',
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 50.0,
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: (_model.uploadedLocalFiles101.isNotEmpty &&
+                                    _model.uploadedLocalFiles102.isNotEmpty &&
+                                    _model.uploadedLocalFilesLpz.isNotEmpty)
+                                ? Color(0xFF1A3C34)
+                                : Color(0xFF1A3C34).withOpacity(0.5),
+                            textStyle: GoogleFonts.inter(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            elevation: 0.0,
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                            disabledColor:
+                                FlutterFlowTheme.of(context).secondaryText,
+                          ),
+                        ),
+                        const SizedBox(height: 32.0),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
               // Loading Overlay
               if (_isUploadingAll)

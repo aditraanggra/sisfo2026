@@ -715,6 +715,42 @@ class TransactionEndPointGroup {
   static GetSetorZISCall getSetorZISCall = GetSetorZISCall();
   static GetRekapAlokasiCall getRekapAlokasiCall = GetRekapAlokasiCall();
   static UploadLpzCall uploadLpzCall = UploadLpzCall();
+  static GetLpzCall getLpzCall = GetLpzCall();
+}
+
+class GetLpzCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? year,
+  }) async {
+    final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get LPZ',
+      apiUrl: '${baseUrl}/lpz',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        'year': year,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  List? dataListLpz(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      ) as List?;
 }
 
 class UploadLpzCall {
