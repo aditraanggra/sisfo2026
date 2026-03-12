@@ -35,6 +35,9 @@ class SetorZisModel extends FlutterFlowModel<SetorZisWidget> {
   // Deposit destination
   String depositDestination = 'upz_desa';
 
+  // Jenis Setoran
+  String jenisSetor = 'Tunai';
+
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();

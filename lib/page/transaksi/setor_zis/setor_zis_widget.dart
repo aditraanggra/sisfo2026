@@ -641,6 +641,58 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
     );
   }
 
+  /// Build jenis setoran dropdown
+  Widget _buildJenisSetor(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24.0),
+        _buildSectionTitle('JENIS SETORAN'),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: ModernShadows.cardShadow,
+          ),
+          child: DropdownButtonFormField<String>(
+            value: _model.jenisSetor,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.payments_outlined,
+                color: FlutterFlowTheme.of(context).primaryDark,
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: 'Tunai',
+                child: Text('Tunai'),
+              ),
+              DropdownMenuItem(
+                value: 'Non Tunai',
+                child: Text('Non Tunai'),
+              ),
+            ],
+            onChanged: (value) {
+              safeSetState(() {
+                _model.jenisSetor = value ?? 'Tunai';
+              });
+            },
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Build deposit destination dropdown
   Widget _buildDepositDestination(BuildContext context) {
     return Column(
@@ -674,6 +726,10 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
               DropdownMenuItem(
                 value: 'upz_kecamatan',
                 child: Text('UPZ Kecamatan'),
+              ),
+              DropdownMenuItem(
+                value: 'baznas',
+                child: Text('BAZNAS'),
               ),
             ],
             onChanged: (value) {
@@ -1073,6 +1129,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                               ),
                                   ),
                                 ),
+                                // Jenis setoran dropdown
+                                _buildJenisSetor(context),
                                 // Deposit destination dropdown
                                 _buildDepositDestination(context),
                                 const SizedBox(height: 32.0),
@@ -1165,8 +1223,8 @@ class _SetorZisWidgetState extends State<SetorZisWidget>
                                         zmAmountDeposit: _model.nomSetorZm,
                                         ifsAmountDeposit: _model.nomSetorIfs,
                                         totalDeposit: totalDeposit,
-                                        status: 'Tunai',
-                                        validation: 'Belum Valid',
+                                        status: _model.jenisSetor,
+                                        validation: 'Belum Verifikasi',
                                         upload: _model
                                             .uploadedFileUrl_uploadDataF1e,
                                         zfRiceSoldAmount: riceSoldAmount,
