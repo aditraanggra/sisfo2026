@@ -137,17 +137,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
             ?.toString(),
         '0',
       ),
-      // Penerima Manfaat Total (using same value for now as original code seemed to duplicate them)
-      RekapEndPointGroup.rekapZisReportCall
-          .totalPm(reportData.jsonBody)
-          ?.toString(),
-      RekapEndPointGroup.rekapZisReportCall
-          .totalPm(reportData.jsonBody)
-          ?.toString(),
-      RekapEndPointGroup.rekapZisReportCall
-          .totalPm(reportData.jsonBody)
-          ?.toString(),
-      // Hak Amil PM - adjust if specific field exists
+      // Penerima Manfaat Total
       RekapEndPointGroup.rekapZisReportCall
           .totalPm(reportData.jsonBody)
           ?.toString(),

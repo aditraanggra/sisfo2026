@@ -36,12 +36,9 @@ Future<void> saveToPdf(
   String? tPenerimaanIfs,
   String? jmlMunfiqIfs,
   //Pendistribusian
-  String? jmlMustahikZf,
-  String? jmlMustahikZm,
-  String? jmlMustahikIfs,
-  String? jmlAmilZf,
-  String? jmlAmilZm,
-  String? jmlAmilIfs,
+  String? jmlPenerimaManfaatZf,
+  String? jmlPenerimaManfaatZm,
+  String? jmlPenerimaManfaatIfs,
   //String? totalPendis,
   String? pendisZf,
   String? pendisZm,
@@ -214,8 +211,7 @@ Future<void> saveToPdf(
             _buildTableRow('Total Penerimaan (Uang | Beras)', totalZf),
             _buildTableRow('Total Pendistribusian (Uang | Beras)', pendisZf),
             _buildTableRow('Jumlah Muzakki', jmlMuzakkiZf),
-            _buildTableRow('Jumlah Mustahik', jmlMustahikZf),
-            _buildTableRow('Jumlah Amil', jmlAmilZf),
+            _buildTableRow('Jumlah Penerima Manfaat', jmlPenerimaManfaatZf),
             _buildTableRow('Setoran ke BAZNAS (30%)', jmlSetorZf, isBold: true),
 
             // 2. ZAKAT MAAL
@@ -223,8 +219,6 @@ Future<void> saveToPdf(
             _buildTableRow('Total Penerimaan', tPenerimaanZm),
             _buildTableRow('Total Pendistribusian', pendisZm),
             _buildTableRow('Jumlah Muzakki', jmlMuzakkiZm),
-            _buildTableRow('Jumlah Mustahik', jmlMustahikZm),
-            _buildTableRow('Jumlah Amil', jmlAmilZm),
             _buildTableRow('Setoran ke BAZNAS (100%)', jmlSetorZm,
                 isBold: true),
 
@@ -233,8 +227,6 @@ Future<void> saveToPdf(
             _buildTableRow('Total Penerimaan', tPenerimaanIfs),
             _buildTableRow('Total Pendistribusian', pendisIfs),
             _buildTableRow('Jumlah Munfiq', jmlMunfiqIfs),
-            _buildTableRow('Jumlah Mustahik', jmlMustahikIfs),
-            _buildTableRow('Jumlah Amil', jmlAmilIfs),
             _buildTableRow('Setoran ke BAZNAS (80%)', jmlSetorIfs,
                 isBold: true),
           ],
