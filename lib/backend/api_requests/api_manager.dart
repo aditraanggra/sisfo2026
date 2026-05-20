@@ -164,7 +164,23 @@ class ApiCallResponse {
   String get bodyText =>
       response?.body ??
       (jsonBody is String ? jsonBody as String : jsonEncode(jsonBody));
-  String get exceptionMessage => exception.toString();
+  String get exceptionMessage {
+    if (exception != null) return exception.toString();
+    if (jsonBody is Map) {
+      final message = jsonBody['message'];
+      if (message is String && message.isNotEmpty) return message;
+      final error = jsonBody['error'];
+      if (error is String && error.isNotEmpty) return error;
+      final errors = jsonBody['errors'];
+      if (errors is Map && errors.isNotEmpty) {
+        final firstError = errors.values.first;
+        if (firstError is List && firstError.isNotEmpty) return firstError.first.toString();
+        return errors.toString();
+      }
+    }
+    if (succeeded) return '';
+    return 'Terjadi kesalahan pada server (HTTP $statusCode)';
+  }
 
   /// Creates a new [ApiCallResponse] with optionally updated parameters.
   ///

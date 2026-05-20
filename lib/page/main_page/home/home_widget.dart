@@ -6,6 +6,7 @@ import '/component/modern_header/modern_header_widget.dart';
 import '/component/modern_dana_overview/modern_dana_overview_widget.dart';
 import '/component/modern_quick_actions/modern_quick_actions_widget.dart';
 import '/component/recent_transactions/recent_transactions_widget.dart';
+import '/component/laporan_kurban_banner/laporan_kurban_banner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
@@ -222,6 +223,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                   jumlahMustahik: _totalMustahik,
                 ),
               ),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+              child: const LaporanKurbanBannerWidget(),
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),

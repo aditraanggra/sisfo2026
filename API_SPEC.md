@@ -43,9 +43,9 @@ POST /api/v1/register
 
 ```json
 {
-    "message": "Registration successful",
-    "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
-    "token": "1|abc123..."
+  "message": "Registration successful",
+  "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
+  "token": "1|abc123..."
 }
 ```
 
@@ -66,9 +66,9 @@ POST /api/v1/login
 
 ```json
 {
-    "message": "Login successful",
-    "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
-    "token": "1|abc123..."
+  "message": "Login successful",
+  "user": { "id": 1, "name": "John Doe", "email": "john@example.com" },
+  "token": "1|abc123..."
 }
 ```
 
@@ -114,9 +114,9 @@ GET /api/v1/kecamatan
 
 ```json
 {
-    "success": true,
-    "message": "List Data Kecamatan",
-    "data": [{ "id": 1, "name": "Kecamatan A" }]
+  "success": true,
+  "message": "List Data Kecamatan",
+  "data": [{ "id": 1, "name": "Kecamatan A" }]
 }
 ```
 
@@ -136,9 +136,9 @@ GET /api/v1/desa
 
 ```json
 {
-    "success": true,
-    "message": "List Data Desa",
-    "data": [{ "id": 1, "name": "Desa A", "district_id": 1 }]
+  "success": true,
+  "message": "List Data Desa",
+  "data": [{ "id": 1, "name": "Desa A", "district_id": 1 }]
 }
 ```
 
@@ -160,19 +160,19 @@ GET /api/v1/zf-payment-types/{id}
 
 ```json
 {
-    "data": [
-        {
-            "id": 1,
-            "name": "Beras Premium",
-            "type": "beras",
-            "rice_amount": 2.5,
-            "money_amount": null,
-            "sk_reference": "SK/001/2025",
-            "is_active": true,
-            "created_at": "2025-01-01T00:00:00.000000Z",
-            "updated_at": "2025-01-01T00:00:00.000000Z"
-        }
-    ]
+  "data": [
+    {
+      "id": 1,
+      "name": "Beras Premium",
+      "type": "beras",
+      "rice_amount": 2.5,
+      "money_amount": null,
+      "sk_reference": "SK/001/2025",
+      "is_active": true,
+      "created_at": "2025-01-01T00:00:00.000000Z",
+      "updated_at": "2025-01-01T00:00:00.000000Z"
+    }
+  ]
 }
 ```
 
@@ -215,38 +215,40 @@ DELETE /api/v1/unit-zis/{id}     # Delete
 
 ```json
 {
-    "success": true,
-    "message": "List Data UPZ",
-    "data": [
-        {
-            "id": 1,
-            "user_id": 1,
-            "category_id": 1,
-            "village_id": 1,
-            "district_id": 1,
-            "no_sk": "SK/001/2025",
-            "unit_name": "UPZ Masjid Al-Ikhlas",
-            "no_register": "REG001",
-            "address": "Jl. Masjid No. 1",
-            "unit_leader": "Ahmad",
-            "unit_assistant": "Budi",
-            "unit_finance": "Citra",
-            "operator_phone": "08123456789",
-            "rice_price": 15000,
-            "is_verified": true,
-            "village_name": "Desa A",
-            "district_name": "Kecamatan A"
-        }
-    ]
+  "success": true,
+  "message": "List Data UPZ",
+  "data": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "category_id": 1,
+      "village_id": 1,
+      "district_id": 1,
+      "no_sk": "SK/001/2025",
+      "unit_name": "UPZ Masjid Al-Ikhlas",
+      "no_register": "REG001",
+      "address": "Jl. Masjid No. 1",
+      "unit_leader": "Ahmad",
+      "unit_assistant": "Budi",
+      "unit_finance": "Citra",
+      "operator_phone": "08123456789",
+      "rice_price": 15000,
+      "is_verified": true,
+      "village_name": "Desa A",
+      "district_name": "Kecamatan A"
+    }
+  ]
 }
 ```
 
 **Example Request - Filter by Year:**
+
 ```
 GET /api/v1/unit-zis?year=2025
 ```
 
 **Example Request - Filter by Village:**
+
 ```
 GET /api/v1/unit-zis?village_id=1
 ```
@@ -259,19 +261,19 @@ GET /api/v1/unit-zis?village_id=1
 
 **Common Query Parameters:**
 
-| Parameter  | Type   | Description                    |
-| ---------- | ------ | ---------------------------- |
-| search     | string | Pencarian teks               |
-| start_date | date   | Filter tanggal mulai           |
-| end_date   | date   | Filter tanggal akhir           |
-| no_telp    | string | Filter exact phone number      |
-| sort_by     | string  | Sort by field (e.g., no_telp) |
+| Parameter      | Type    | Description                       |
+| -------------- | ------- | --------------------------------- |
+| search         | string  | Pencarian teks                    |
+| start_date     | date    | Filter tanggal mulai              |
+| end_date       | date    | Filter tanggal akhir              |
+| no_telp        | string  | Filter exact phone number         |
+| sort_by        | string  | Sort by field (e.g., no_telp)     |
 | sort_direction | string  | Sort direction: `asc` atau `desc` |
-| per_page    | integer | Items per page (default: 15) |
-| page        | integer | Page number (default: 1)      |
-| total_munfiq | integer | Filter exact total munfiq     |
-| min_munfiq | integer | Filter minimum total munfiq    |
-| max_munfiq | integer | Filter maksimum total munfiq   |
+| per_page       | integer | Items per page (default: 15)      |
+| page           | integer | Page number (default: 1)          |
+| total_munfiq   | integer | Filter exact total munfiq         |
+| min_munfiq     | integer | Filter minimum total munfiq       |
+| max_munfiq     | integer | Filter maksimum total munfiq      |
 
 ### 4.1 Zakat Fitrah (ZF)
 
@@ -284,26 +286,31 @@ DELETE /api/v1/zf/{id}     # Delete
 ```
 
 **Example Request - Get all ZF for year 2025:**
+
 ```
 GET /api/v1/zf?year=2025&per_page=15&page=1
 ```
 
 **Example Request - Filter by month:**
+
 ```
 GET /api/v1/zf?month=1&year=2025
 ```
 
 **Example Request - Search by name:**
+
 ```
 GET /api/v1/zf?search=Ahmad&per_page=10
 ```
 
 **Example Request - Get by date range:**
+
 ```
 GET /api/v1/zf?start_date=2025-01-01&end_date=2025-01-31
 ```
 
 **Example Request - Create new ZF transaction:**
+
 ```json
 POST /api/v1/zf
 Authorization: Bearer {token}
@@ -336,18 +343,18 @@ Content-Type: application/json
 
 **Query Parameters:**
 
-| Parameter   | Type   | Description                    |
-| ----------- | ------ | ---------------------------- |
-| search      | string | Pencarian teks               |
-| year        | int    | Filter berdasarkan tahun       |
-| month       | int    | Filter berdasarkan bulan (1-12)|
-| start_date  | date   | Filter tanggal mulai           |
-| end_date    | date   | Filter tanggal akhir           |
-| unit_id     | int    | Filter by unit                 |
-| sort_by     | string | Sort by field (default: trx_date) |
+| Parameter      | Type   | Description                       |
+| -------------- | ------ | --------------------------------- |
+| search         | string | Pencarian teks                    |
+| year           | int    | Filter berdasarkan tahun          |
+| month          | int    | Filter berdasarkan bulan (1-12)   |
+| start_date     | date   | Filter tanggal mulai              |
+| end_date       | date   | Filter tanggal akhir              |
+| unit_id        | int    | Filter by unit                    |
+| sort_by        | string | Sort by field (default: trx_date) |
 | sort_direction | string | Sort direction: `asc` atau `desc` |
-| per_page    | int    | Items per page (default: 15)   |
-| page        | int    | Page number (default: 1)       |
+| per_page       | int    | Items per page (default: 15)      |
+| page           | int    | Page number (default: 1)          |
 
 ### 4.2 Zakat Maal (ZM)
 
@@ -360,21 +367,25 @@ DELETE /api/v1/zm/{id}     # Delete
 ```
 
 **Example Request - Get all ZM transactions for 2025:**
+
 ```
 GET /api/v1/zm?year=2025&per_page=15
 ```
 
 **Example Request - Filter by category:**
+
 ```
 GET /api/v1/zm?category_maal=Pendidikan
 ```
 
 **Example Request - Search by name:**
+
 ```
 GET /api/v1/zm?search=Budi&per_page=10
 ```
 
 **Example Request - Create new ZM transaction:**
+
 ```json
 POST /api/v1/zm
 Authorization: Bearer {token}
@@ -395,31 +406,31 @@ Content-Type: application/json
 
 **Request Body:**
 
-| Field         | Type    | Required | Description                    |
-| ------------- | ------- | -------- | ------------------------------ |
-| unit_id       | integer | Yes      | ID unit ZIS                   |
-| trx_date      | date    | Yes      | Tanggal transaksi              |
-| category_maal | string  | Yes      | Kategori zakat maal            |
-| muzakki_name  | string  | Yes      | Nama muzakki                 |
-| no_telp       | string  | No       | No. telepon muzakki          |
-| amount        | integer | Yes      | Jumlah (Rp)                  |
-| desc          | string  | No       | Keterangan                     |
+| Field         | Type    | Required | Description         |
+| ------------- | ------- | -------- | ------------------- |
+| unit_id       | integer | Yes      | ID unit ZIS         |
+| trx_date      | date    | Yes      | Tanggal transaksi   |
+| category_maal | string  | Yes      | Kategori zakat maal |
+| muzakki_name  | string  | Yes      | Nama muzakki        |
+| no_telp       | string  | No       | No. telepon muzakki |
+| amount        | integer | Yes      | Jumlah (Rp)         |
+| desc          | string  | No       | Keterangan          |
 
 **Query Parameters:**
 
-| Parameter   | Type   | Description                    |
-| ----------- | ------ | ---------------------------- |
-| search      | string | Pencarian teks               |
-| year        | int    | Filter berdasarkan tahun       |
-| month       | int    | Filter berdasarkan bulan (1-12)|
-| start_date  | date   | Filter tanggal mulai           |
-| end_date    | date   | Filter tanggal akhir           |
-| unit_id     | int    | Filter by unit                 |
-| category_maal | string | Filter by category            |
-| sort_by     | string | Sort by field (default: trx_date) |
+| Parameter      | Type   | Description                       |
+| -------------- | ------ | --------------------------------- |
+| search         | string | Pencarian teks                    |
+| year           | int    | Filter berdasarkan tahun          |
+| month          | int    | Filter berdasarkan bulan (1-12)   |
+| start_date     | date   | Filter tanggal mulai              |
+| end_date       | date   | Filter tanggal akhir              |
+| unit_id        | int    | Filter by unit                    |
+| category_maal  | string | Filter by category                |
+| sort_by        | string | Sort by field (default: trx_date) |
 | sort_direction | string | Sort direction: `asc` atau `desc` |
-| per_page    | int    | Items per page (default: 15)   |
-| page        | int    | Page number (default: 1)       |
+| per_page       | int    | Items per page (default: 15)      |
+| page           | int    | Page number (default: 1)          |
 
 ### 4.3 Infak/Sedekah (IFS)
 
@@ -432,21 +443,25 @@ DELETE /api/v1/ifs/{id}     # Delete
 ```
 
 **Example Request - Get all IFS transactions for 2025:**
+
 ```
 GET /api/v1/ifs?year=2025&per_page=15
 ```
 
 **Example Request - Filter by amount range:**
+
 ```
 GET /api/v1/ifs?min_amount=100000&max_amount=1000000
 ```
 
 **Example Request - Search by name:**
+
 ```
 GET /api/v1/ifs?search=Citra&per_page=10
 ```
 
 **Example Request - Create new IFS transaction:**
+
 ```json
 POST /api/v1/ifs
 Authorization: Bearer {token}
@@ -463,6 +478,7 @@ Content-Type: application/json
 ```
 
 **Example Request - Group donation (total_munfiq > 1):**
+
 ```json
 POST /api/v1/ifs
 Authorization: Bearer {token}
@@ -482,31 +498,31 @@ Content-Type: application/json
 
 **Request Body:**
 
-| Field          | Type    | Required | Description                    |
-| -------------- | ------- | -------- | ------------------------------ |
-| unit_id        | integer | Yes      | ID unit ZIS                   |
-| trx_date       | date    | Yes      | Tanggal transaksi              |
-| munfiq_name   | string  | Yes      | Nama munfiq                  |
-| amount         | integer | Yes      | Jumlah (Rp)                  |
-| total_munfiq  | integer | Yes      | Total jumlah munfiq (min: 1)    |
-| desc           | string  | No       | Keterangan                     |
+| Field        | Type    | Required | Description                  |
+| ------------ | ------- | -------- | ---------------------------- |
+| unit_id      | integer | Yes      | ID unit ZIS                  |
+| trx_date     | date    | Yes      | Tanggal transaksi            |
+| munfiq_name  | string  | Yes      | Nama munfiq                  |
+| amount       | integer | Yes      | Jumlah (Rp)                  |
+| total_munfiq | integer | Yes      | Total jumlah munfiq (min: 1) |
+| desc         | string  | No       | Keterangan                   |
 
 **Query Parameters:**
 
-| Parameter   | Type   | Description                    |
-| ----------- | ------ | ---------------------------- |
-| search      | string | Pencarian teks               |
-| year        | int    | Filter berdasarkan tahun       |
-| month       | int    | Filter berdasarkan bulan (1-12)|
-| start_date  | date   | Filter tanggal mulai           |
-| end_date    | date   | Filter tanggal akhir           |
-| unit_id     | int    | Filter by unit                 |
-| min_amount  | int    | Filter minimum amount         |
-| max_amount  | int    | Filter maximum amount         |
-| sort_by     | string | Sort by field (default: trx_date) |
+| Parameter      | Type   | Description                       |
+| -------------- | ------ | --------------------------------- |
+| search         | string | Pencarian teks                    |
+| year           | int    | Filter berdasarkan tahun          |
+| month          | int    | Filter berdasarkan bulan (1-12)   |
+| start_date     | date   | Filter tanggal mulai              |
+| end_date       | date   | Filter tanggal akhir              |
+| unit_id        | int    | Filter by unit                    |
+| min_amount     | int    | Filter minimum amount             |
+| max_amount     | int    | Filter maximum amount             |
+| sort_by        | string | Sort by field (default: trx_date) |
 | sort_direction | string | Sort direction: `asc` atau `desc` |
-| per_page    | int    | Items per page (default: 15)   |
-| page        | int    | Page number (default: 1)       |
+| per_page       | int    | Items per page (default: 15)      |
+| page           | int    | Page number (default: 1)          |
 
 ### 4.4 Fidyah
 
@@ -519,16 +535,19 @@ DELETE /api/v1/fidyah/{id}     # Delete
 ```
 
 **Example Request - Get all Fidyah transactions for 2025:**
+
 ```
 GET /api/v1/fidyah?year=2025&per_page=15
 ```
 
 **Example Request - Search by name:**
+
 ```
 GET /api/v1/fidyah?search=Ahmad&per_page=10
 ```
 
 **Example Request - Create new Fidyah transaction:**
+
 ```json
 POST /api/v1/fidyah
 Authorization: Bearer {token}
@@ -559,18 +578,18 @@ Content-Type: application/json
 
 **Query Parameters:**
 
-| Parameter   | Type   | Description                    |
-| ----------- | ------ | ---------------------------- |
-| search      | string | Pencarian teks               |
-| year        | int    | Filter berdasarkan tahun       |
-| month       | int    | Filter berdasarkan bulan (1-12)|
-| start_date  | date   | Filter tanggal mulai           |
-| end_date    | date   | Filter tanggal akhir           |
-| unit_id     | int    | Filter by unit                 |
-| sort_by     | string | Sort by field (default: trx_date) |
+| Parameter      | Type   | Description                       |
+| -------------- | ------ | --------------------------------- |
+| search         | string | Pencarian teks                    |
+| year           | int    | Filter berdasarkan tahun          |
+| month          | int    | Filter berdasarkan bulan (1-12)   |
+| start_date     | date   | Filter tanggal mulai              |
+| end_date       | date   | Filter tanggal akhir              |
+| unit_id        | int    | Filter by unit                    |
+| sort_by        | string | Sort by field (default: trx_date) |
 | sort_direction | string | Sort direction: `asc` atau `desc` |
-| per_page    | int    | Items per page (default: 15)   |
-| page        | int    | Page number (default: 1)       |
+| per_page       | int    | Items per page (default: 15)      |
+| page           | int    | Page number (default: 1)          |
 
 ### 4.5 Kotak Amal (Donation Box)
 
@@ -593,26 +612,29 @@ DELETE /api/v1/kotak_amal/{id}     # Delete
 
 **Query Parameters:**
 
-| Parameter  | Type   | Description                    |
+| Parameter  | Type   | Description                  |
 | ---------- | ------ | ---------------------------- |
 | search     | string | Pencarian teks               |
-| start_date | date   | Filter tanggal mulai           |
-| end_date   | date   | Filter tanggal akhir           |
-| year       | int    | Filter berdasarkan tahun       |
-| per_page   | int    | Items per page (default: 15)   |
-| page       | int    | Page number (default: 1)       |
+| start_date | date   | Filter tanggal mulai         |
+| end_date   | date   | Filter tanggal akhir         |
+| year       | int    | Filter berdasarkan tahun     |
+| per_page   | int    | Items per page (default: 15) |
+| page       | int    | Page number (default: 1)     |
 
 **Example Request - Get all Kotak Amal for 2025:**
+
 ```
 GET /api/v1/kotak_amal?year=2025&per_page=15
 ```
 
 **Example Request - Search by description:**
+
 ```
 GET /api/v1/kotak_amal?search=Pembangunan&per_page=10
 ```
 
 **Example Request - Create new Kotak Amal transaction:**
+
 ```json
 POST /api/v1/kotak_amal
 Authorization: Bearer {token}
@@ -644,48 +666,51 @@ DELETE /api/v1/pendis/{id}     # Delete
 
 **Query Parameters:**
 
-| Parameter    | Type   | Description                    |
-| ------------ | ------ | ---------------------------- |
-| year         | int    | Filter berdasarkan tahun       |
-| month        | int    | Filter berdasarkan bulan (1-12)|
-| start_date   | date   | Filter tanggal mulai           |
-| end_date     | date   | Filter tanggal akhir           |
-| unit_id      | int    | Filter by unit                 |
-| fund_type    | string | Filter by fund type (ZF/ZM/IFS) |
-| asnaf        | string | Filter by asnaf category       |
-| program      | string | Filter by program              |
-| sort_by      | string | Sort by field (default: trx_date) |
+| Parameter      | Type   | Description                       |
+| -------------- | ------ | --------------------------------- |
+| year           | int    | Filter berdasarkan tahun          |
+| month          | int    | Filter berdasarkan bulan (1-12)   |
+| start_date     | date   | Filter tanggal mulai              |
+| end_date       | date   | Filter tanggal akhir              |
+| unit_id        | int    | Filter by unit                    |
+| fund_type      | string | Filter by fund type (ZF/ZM/IFS)   |
+| asnaf          | string | Filter by asnaf category          |
+| program        | string | Filter by program                 |
+| sort_by        | string | Sort by field (default: trx_date) |
 | sort_direction | string | Sort direction: `asc` atau `desc` |
-| per_page     | int    | Items per page (default: 15)   |
-| page         | int    | Page number (default: 1)       |
+| per_page       | int    | Items per page (default: 15)      |
+| page           | int    | Page number (default: 1)          |
 
 **Request Body:**
 
-| Field            | Type    | Required | Description             |
-| ---------------- | ------- | -------- | ----------------------- |
-| unit_id          | integer | Yes      | ID unit ZIS             |
-| trx_date         | date    | Yes      | Tanggal transaksi       |
-| mustahik_name    | string  | Yes      | Nama mustahik           |
-| nik              | string  | Yes      | NIK (16 digit)          |
-| fund_type        | string  | Yes      | Jenis dana (ZF/ZM/IFS)  |
-| asnaf            | string  | Yes      | Kategori asnaf          |
-| program          | string  | Yes      | Nama program            |
-| total_rice       | numeric | Yes      | Jumlah beras (kg)       |
-| total_amount     | integer | Yes      | Jumlah uang (Rp)        |
-| beneficiary      | integer | Yes      | Jumlah penerima manfaat |
-| desc             | string  | No       | Keterangan              |
+| Field         | Type    | Required | Description             |
+| ------------- | ------- | -------- | ----------------------- |
+| unit_id       | integer | Yes      | ID unit ZIS             |
+| trx_date      | date    | Yes      | Tanggal transaksi       |
+| mustahik_name | string  | Yes      | Nama mustahik           |
+| nik           | string  | Yes      | NIK (16 digit)          |
+| fund_type     | string  | Yes      | Jenis dana (ZF/ZM/IFS)  |
+| asnaf         | string  | Yes      | Kategori asnaf          |
+| program       | string  | Yes      | Nama program            |
+| total_rice    | numeric | Yes      | Jumlah beras (kg)       |
+| total_amount  | integer | Yes      | Jumlah uang (Rp)        |
+| beneficiary   | integer | Yes      | Jumlah penerima manfaat |
+| desc          | string  | No       | Keterangan              |
 
 **Example Request - Get Pendis for year 2025:**
+
 ```
 GET /api/v1/pendis?year=2025&fund_type=ZF&per_page=15
 ```
 
 **Example Request - Filter by asnaf:**
+
 ```
 GET /api/v1/pendis?asnaf=Fakir&fund_type=IFS
 ```
 
 **Example Request - Create new Pendis transaction:**
+
 ```json
 POST /api/v1/pendis
 Authorization: Bearer {token}
@@ -722,78 +747,80 @@ DELETE /api/v1/setor/{id}     # Delete
 
 **Request Body (Create/Update):**
 
-| Field                | Type    | Required | Description                                          |
-| -------------------- | ------- | -------- | ---------------------------------------------------- |
-| unit_id              | integer | Yes      | ID unit ZIS                                          |
-| trx_date             | date    | Yes      | Tanggal transaksi                                    |
-| zf_amount_deposit    | integer | Yes      | Setoran ZF uang (Rp)                                |
-| zf_rice_deposit      | numeric | Yes      | Setoran ZF beras (Kg)                                |
-| zf_rice_sold_amount  | integer | No       | Nilai uang (Rp) dari beras yang terjual (default: 0) |
-| zf_rice_sold_price   | integer | No       | Harga beras per Kg saat dijual (default: 0)          |
-| zf_rice_sold_proof   | string  | No       | URL bukti penjualan beras (max 500 karakter)         |
-| zm_amount_deposit    | integer | Yes      | Setoran ZM (Rp)                                     |
-| ifs_amount_deposit   | integer | Yes      | Setoran IFS (Rp)                                    |
-| total_deposit        | integer | Yes      | Total setoran (Rp)                                  |
-| status               | string  | Yes      | Status setoran                                       |
-| validation           | string  | Yes      | Status validasi                                      |
-| upload               | string  | Yes      | URL bukti transfer                                   |
-| deposit_destination  | string  | No       | Tujuan setoran: `upz_desa` atau `upz_kecamatan`     |
-| desc                 | string  | No       | Keterangan                                           |
+| Field               | Type    | Required | Description                                          |
+| ------------------- | ------- | -------- | ---------------------------------------------------- |
+| unit_id             | integer | Yes      | ID unit ZIS                                          |
+| trx_date            | date    | Yes      | Tanggal transaksi                                    |
+| zf_amount_deposit   | integer | Yes      | Setoran ZF uang (Rp)                                 |
+| zf_rice_deposit     | numeric | Yes      | Setoran ZF beras (Kg)                                |
+| zf_rice_sold_amount | integer | No       | Nilai uang (Rp) dari beras yang terjual (default: 0) |
+| zf_rice_sold_price  | integer | No       | Harga beras per Kg saat dijual (default: 0)          |
+| zf_rice_sold_proof  | string  | No       | URL bukti penjualan beras (max 500 karakter)         |
+| zm_amount_deposit   | integer | Yes      | Setoran ZM (Rp)                                      |
+| ifs_amount_deposit  | integer | Yes      | Setoran IFS (Rp)                                     |
+| total_deposit       | integer | Yes      | Total setoran (Rp)                                   |
+| status              | string  | Yes      | Status setoran                                       |
+| validation          | string  | Yes      | Status validasi                                      |
+| upload              | string  | Yes      | URL bukti transfer                                   |
+| deposit_destination | string  | No       | Tujuan setoran: `upz_desa` atau `upz_kecamatan`      |
+| desc                | string  | No       | Keterangan                                           |
 
 **Query Parameters (List):**
 
-| Parameter   | Type   | Description                    |
-| ----------- | ------ | ------------------------------ |
-| search      | string | Pencarian teks                 |
-| year        | int    | Filter berdasarkan tahun       |
-| start_date  | date   | Filter tanggal mulai           |
-| end_date    | date   | Filter tanggal akhir           |
+| Parameter  | Type   | Description              |
+| ---------- | ------ | ------------------------ |
+| search     | string | Pencarian teks           |
+| year       | int    | Filter berdasarkan tahun |
+| start_date | date   | Filter tanggal mulai     |
+| end_date   | date   | Filter tanggal akhir     |
 
 **Response (200 - Show / 201 - Created):**
 
 ```json
 {
-    "data": {
-        "id": 1,
-        "unit_id": 1,
-        "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
-        "trx_date": "2026-03-01",
-        "zf_amount_deposit": 5000000,
-        "zf_rice_deposit": 100.5,
-        "zf_rice_sold_amount": 1105500,
-        "zf_rice_sold_price": 11000,
-        "zf_rice_sold_proof": "https://res.cloudinary.com/<cloud_name>/raw/upload/sisfo/bap/xxxxx.pdf",
-        "is_rice_sold": true,
-        "unsold_rice": 0,
-        "original_rice_qty": 100.5,
-        "zm_amount_deposit": 2000000,
-        "ifs_amount_deposit": 1000000,
-        "total_deposit": 8000000,
-        "status": "sudah_setor",
-        "validation": "valid",
-        "upload": "https://res.cloudinary.com/<cloud_name>/raw/upload/sisfo/bukti_setor/xxxxx.pdf",
-        "deposit_destination": "upz_desa",
-        "desc": "Setoran bulan Maret"
-    }
+  "data": {
+    "id": 1,
+    "unit_id": 1,
+    "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
+    "trx_date": "2026-03-01",
+    "zf_amount_deposit": 5000000,
+    "zf_rice_deposit": 100.5,
+    "zf_rice_sold_amount": 1105500,
+    "zf_rice_sold_price": 11000,
+    "zf_rice_sold_proof": "https://res.cloudinary.com/<cloud_name>/raw/upload/sisfo/bap/xxxxx.pdf",
+    "is_rice_sold": true,
+    "unsold_rice": 0,
+    "original_rice_qty": 100.5,
+    "zm_amount_deposit": 2000000,
+    "ifs_amount_deposit": 1000000,
+    "total_deposit": 8000000,
+    "status": "sudah_setor",
+    "validation": "valid",
+    "upload": "https://res.cloudinary.com/<cloud_name>/raw/upload/sisfo/bukti_setor/xxxxx.pdf",
+    "deposit_destination": "upz_desa",
+    "desc": "Setoran bulan Maret"
+  }
 }
 ```
 
 **Response Fields (Computed — read-only):**
 
-| Field              | Type    | Description                                                             |
-| ------------------ | ------- | ----------------------------------------------------------------------- |
-| is_rice_sold       | boolean | `true` jika beras sudah terjual (`zf_rice_sold_amount > 0`)            |
-| unsold_rice        | float   | Sisa beras belum terjual (= `zf_rice_deposit` jika belum, `0` jika sudah) |
-| original_rice_qty  | float   | Kuantitas beras asli (derive dari `zf_rice_sold_amount / zf_rice_sold_price`) |
+| Field             | Type    | Description                                                                   |
+| ----------------- | ------- | ----------------------------------------------------------------------------- |
+| is_rice_sold      | boolean | `true` jika beras sudah terjual (`zf_rice_sold_amount > 0`)                   |
+| unsold_rice       | float   | Sisa beras belum terjual (= `zf_rice_deposit` jika belum, `0` jika sudah)     |
+| original_rice_qty | float   | Kuantitas beras asli (derive dari `zf_rice_sold_amount / zf_rice_sold_price`) |
 
 > [!NOTE]
 > **Dua skenario penjualan beras:**
+>
 > 1. **Unit jual langsung** (via Flutter) — unit mengisi `zf_rice_sold_amount` dan `zf_rice_sold_price` sendiri saat input SetorZis.
 > 2. **Desa/Kecamatan jual batch** (via Filament admin) — BulkAction "Jual Beras" otomatis mengisi `zf_rice_sold_amount`, `zf_rice_sold_price`, `zf_rice_sold_proof`, dan set `zf_rice_deposit = 0` secara massal.
 >
 > Saat beras terjual, `zf_rice_deposit` di-set ke `0` dan nilai uangnya disimpan di `zf_rice_sold_amount`. Kuantitas beras asli selalu bisa dihitung ulang dari `zf_rice_sold_amount / zf_rice_sold_price`.
 
 **Example Request - Create new SetorZis:**
+
 ```json
 POST /api/v1/setor
 Authorization: Bearer {token}
@@ -815,6 +842,7 @@ Content-Type: application/json
 ```
 
 **Example Request - Update with rice sale data (unit jual langsung):**
+
 ```json
 PUT /api/v1/setor/1
 Authorization: Bearer {token}
@@ -849,6 +877,7 @@ GET /api/v1/setor/rice-consolidation
 ```
 
 **Access Control:**
+
 - **Admin**: Melihat semua data.
 - **UPZ Kecamatan**: Hanya data unit di kecamatan yang sama.
 - **UPZ Desa**: Hanya data unit di desa yang sama.
@@ -861,6 +890,7 @@ GET /api/v1/setor/rice-consolidation
 | year      | int  | No       | Filter berdasarkan tahun (default: all) |
 
 **Example Request:**
+
 ```
 GET /api/v1/setor/rice-consolidation?year=2026
 ```
@@ -869,67 +899,67 @@ GET /api/v1/setor/rice-consolidation?year=2026
 
 ```json
 {
-    "total_unsold_rice": 170.0,
-    "by_destination": {
-        "upz_desa": {
-            "total_rice": 150.0,
-            "total_records": 2,
-            "units": [
-                {
-                    "id": 1,
-                    "unit_id": 1,
-                    "unit_name": "UPZ Masjid Al-Ikhlas",
-                    "village": "Desa A",
-                    "district": "Kecamatan A",
-                    "rice_kg": 100.0,
-                    "trx_date": "2026-03-01"
-                },
-                {
-                    "id": 2,
-                    "unit_id": 2,
-                    "unit_name": "UPZ Masjid Baiturrahman",
-                    "village": "Desa A",
-                    "district": "Kecamatan A",
-                    "rice_kg": 50.0,
-                    "trx_date": "2026-03-02"
-                }
-            ]
+  "total_unsold_rice": 170.0,
+  "by_destination": {
+    "upz_desa": {
+      "total_rice": 150.0,
+      "total_records": 2,
+      "units": [
+        {
+          "id": 1,
+          "unit_id": 1,
+          "unit_name": "UPZ Masjid Al-Ikhlas",
+          "village": "Desa A",
+          "district": "Kecamatan A",
+          "rice_kg": 100.0,
+          "trx_date": "2026-03-01"
         },
-        "upz_kecamatan": {
-            "total_rice": 20.0,
-            "total_records": 1,
-            "units": [
-                {
-                    "id": 3,
-                    "unit_id": 3,
-                    "unit_name": "UPZ Musholla As-Syafi'i",
-                    "village": "Desa B",
-                    "district": "Kecamatan A",
-                    "rice_kg": 20.0,
-                    "trx_date": "2026-03-01"
-                }
-            ]
+        {
+          "id": 2,
+          "unit_id": 2,
+          "unit_name": "UPZ Masjid Baiturrahman",
+          "village": "Desa A",
+          "district": "Kecamatan A",
+          "rice_kg": 50.0,
+          "trx_date": "2026-03-02"
         }
+      ]
+    },
+    "upz_kecamatan": {
+      "total_rice": 20.0,
+      "total_records": 1,
+      "units": [
+        {
+          "id": 3,
+          "unit_id": 3,
+          "unit_name": "UPZ Musholla As-Syafi'i",
+          "village": "Desa B",
+          "district": "Kecamatan A",
+          "rice_kg": 20.0,
+          "trx_date": "2026-03-01"
+        }
+      ]
     }
+  }
 }
 ```
 
 **Response Fields:**
 
-| Field                         | Type   | Description                                      |
-| ----------------------------- | ------ | ------------------------------------------------ |
-| total_unsold_rice             | float  | Total beras belum terjual (Kg)                   |
-| by_destination                | object | Data dikelompokkan per `deposit_destination`     |
-| by_destination.*.total_rice   | float  | Total beras (Kg) per destination                 |
-| by_destination.*.total_records| int    | Jumlah record per destination                    |
-| by_destination.*.units        | array  | Detail per unit                                  |
-| by_destination.*.units[].id   | int    | ID record SetorZis                               |
-| by_destination.*.units[].unit_id | int | ID unit ZIS                                      |
-| by_destination.*.units[].unit_name | string | Nama unit                                   |
-| by_destination.*.units[].village | string | Nama desa (nullable)                          |
-| by_destination.*.units[].district | string | Nama kecamatan (nullable)                    |
-| by_destination.*.units[].rice_kg | float | Jumlah beras belum terjual (Kg)                |
-| by_destination.*.units[].trx_date | date | Tanggal transaksi (Y-m-d)                      |
+| Field                               | Type   | Description                                  |
+| ----------------------------------- | ------ | -------------------------------------------- |
+| total_unsold_rice                   | float  | Total beras belum terjual (Kg)               |
+| by_destination                      | object | Data dikelompokkan per `deposit_destination` |
+| by_destination.\*.total_rice        | float  | Total beras (Kg) per destination             |
+| by_destination.\*.total_records     | int    | Jumlah record per destination                |
+| by_destination.\*.units             | array  | Detail per unit                              |
+| by_destination.\*.units[].id        | int    | ID record SetorZis                           |
+| by_destination.\*.units[].unit_id   | int    | ID unit ZIS                                  |
+| by_destination.\*.units[].unit_name | string | Nama unit                                    |
+| by_destination.\*.units[].village   | string | Nama desa (nullable)                         |
+| by_destination.\*.units[].district  | string | Nama kecamatan (nullable)                    |
+| by_destination.\*.units[].rice_kg   | float  | Jumlah beras belum terjual (Kg)              |
+| by_destination.\*.units[].trx_date  | date   | Tanggal transaksi (Y-m-d)                    |
 
 ---
 
@@ -956,20 +986,20 @@ GET /api/v1/allocation-configs
 
 ```json
 {
-    "data": [
-        {
-            "id": 1,
-            "zis_type": "zf",
-            "zis_type_label": "Zakat Fitrah",
-            "effective_year": 2025,
-            "setor_percentage": 30.0,
-            "kelola_percentage": 70.0,
-            "amil_percentage": 12.5,
-            "description": "Konfigurasi ZF 2025",
-            "created_at": "2025-01-01T00:00:00.000000Z",
-            "updated_at": "2025-01-01T00:00:00.000000Z"
-        }
-    ]
+  "data": [
+    {
+      "id": 1,
+      "zis_type": "zf",
+      "zis_type_label": "Zakat Fitrah",
+      "effective_year": 2025,
+      "setor_percentage": 30.0,
+      "kelola_percentage": 70.0,
+      "amil_percentage": 12.5,
+      "description": "Konfigurasi ZF 2025",
+      "created_at": "2025-01-01T00:00:00.000000Z",
+      "updated_at": "2025-01-01T00:00:00.000000Z"
+    }
+  ]
 }
 ```
 
@@ -1007,16 +1037,16 @@ POST /api/v1/allocation-configs
 
 ```json
 {
-    "data": {
-        "id": 1,
-        "zis_type": "zf",
-        "zis_type_label": "Zakat Fitrah",
-        "effective_year": 2025,
-        "setor_percentage": 30.0,
-        "kelola_percentage": 70.0,
-        "amil_percentage": 12.5,
-        "description": "Konfigurasi ZF 2025"
-    }
+  "data": {
+    "id": 1,
+    "zis_type": "zf",
+    "zis_type_label": "Zakat Fitrah",
+    "effective_year": 2025,
+    "setor_percentage": 30.0,
+    "kelola_percentage": 70.0,
+    "amil_percentage": 12.5,
+    "description": "Konfigurasi ZF 2025"
+  }
 }
 ```
 
@@ -1057,15 +1087,15 @@ GET /api/v1/allocation-configs-active
 
 ```json
 {
-    "data": {
-        "id": 1,
-        "zis_type": "zf",
-        "zis_type_label": "Zakat Fitrah",
-        "effective_year": 2025,
-        "setor_percentage": 30.0,
-        "kelola_percentage": 70.0,
-        "amil_percentage": 12.5
-    }
+  "data": {
+    "id": 1,
+    "zis_type": "zf",
+    "zis_type_label": "Zakat Fitrah",
+    "effective_year": 2025,
+    "setor_percentage": 30.0,
+    "kelola_percentage": 70.0,
+    "amil_percentage": 12.5
+  }
 }
 ```
 
@@ -1073,15 +1103,15 @@ GET /api/v1/allocation-configs-active
 
 ```json
 {
-    "message": "No configuration found, using defaults",
-    "data": {
-        "zis_type": "zf",
-        "effective_year": 2025,
-        "setor_percentage": 30.0,
-        "kelola_percentage": 70.0,
-        "amil_percentage": 12.5,
-        "is_default": true
-    }
+  "message": "No configuration found, using defaults",
+  "data": {
+    "zis_type": "zf",
+    "effective_year": 2025,
+    "setor_percentage": 30.0,
+    "kelola_percentage": 70.0,
+    "amil_percentage": 12.5,
+    "is_default": true
+  }
 }
 ```
 
@@ -1109,42 +1139,42 @@ GET /api/v1/statistics/overview
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
+| Parameter | Type   | Description                       |
+| --------- | ------ | --------------------------------- |
 | year      | int    | Filter by year (default: current) |
-| zis_type  | string | Filter by ZIS type (zf/zm/ifs)   |
+| zis_type  | string | Filter by ZIS type (zf/zm/ifs)    |
 
 **Response (200):**
 
 ```json
 {
-    "zf": {
-        "total_amount": 50000000,
-        "total_rice": 1000.5,
-        "total_muzakki": 500,
-        "transactions": 245,
-        "avg_per_muzakki": 102040.8,
-        "avg_per_transaction": 204081.6
-    },
-    "zm": {
-        "total_amount": 20000000,
-        "total_muzakki": 100,
-        "transactions": 72,
-        "avg_per_muzakki": 200000,
-        "avg_per_transaction": 277777.8
-    },
-    "ifs": {
-        "total_amount": 10000000,
-        "total_munfiq": 200,
-        "transactions": 14761,
-        "avg_per_munfiq": 50000,
-        "avg_per_transaction": 678.0
-    },
-    "summary": {
-        "grand_total": 80000000,
-        "total_transactions": 15078,
-        "total_participants": 800
-    }
+  "zf": {
+    "total_amount": 50000000,
+    "total_rice": 1000.5,
+    "total_muzakki": 500,
+    "transactions": 245,
+    "avg_per_muzakki": 102040.8,
+    "avg_per_transaction": 204081.6
+  },
+  "zm": {
+    "total_amount": 20000000,
+    "total_muzakki": 100,
+    "transactions": 72,
+    "avg_per_muzakki": 200000,
+    "avg_per_transaction": 277777.8
+  },
+  "ifs": {
+    "total_amount": 10000000,
+    "total_munfiq": 200,
+    "transactions": 14761,
+    "avg_per_munfiq": 50000,
+    "avg_per_transaction": 678.0
+  },
+  "summary": {
+    "grand_total": 80000000,
+    "total_transactions": 15078,
+    "total_participants": 800
+  }
 }
 ```
 
@@ -1156,42 +1186,42 @@ GET /api/v1/statistics/trends
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                          |
-| --------- | ------ | ------------------------------------ |
-| start_date| date  | Start date for analysis               |
-| end_date  | date  | End date for analysis                 |
-| zis_type  | string | Filter by ZIS type                   |
-| period    | string | Period type: `daily`, `monthly`, `yearly` (default: monthly) |
-| group_by  | string | Group by: `day`, `month`, `year`     |
+| Parameter  | Type   | Description                                                  |
+| ---------- | ------ | ------------------------------------------------------------ |
+| start_date | date   | Start date for analysis                                      |
+| end_date   | date   | End date for analysis                                        |
+| zis_type   | string | Filter by ZIS type                                           |
+| period     | string | Period type: `daily`, `monthly`, `yearly` (default: monthly) |
+| group_by   | string | Group by: `day`, `month`, `year`                             |
 
 **Response (200):**
 
 ```json
 [
-    {
-        "period": "2025-01",
-        "zf_amount": 5000000,
-        "zf_rice": 100.5,
-        "zf_muzakki": 50,
-        "zm_amount": 2000000,
-        "zm_muzakki": 10,
-        "ifs_amount": 1000000,
-        "ifs_munfiq": 20,
-        "total_amount": 8000000,
-        "total_participants": 80
-    },
-    {
-        "period": "2025-02",
-        "zf_amount": 6000000,
-        "zf_rice": 120.5,
-        "zf_muzakki": 60,
-        "zm_amount": 2500000,
-        "zm_muzakki": 12,
-        "ifs_amount": 1500000,
-        "ifs_munfiq": 25,
-        "total_amount": 10000000,
-        "total_participants": 97
-    }
+  {
+    "period": "2025-01",
+    "zf_amount": 5000000,
+    "zf_rice": 100.5,
+    "zf_muzakki": 50,
+    "zm_amount": 2000000,
+    "zm_muzakki": 10,
+    "ifs_amount": 1000000,
+    "ifs_munfiq": 20,
+    "total_amount": 8000000,
+    "total_participants": 80
+  },
+  {
+    "period": "2025-02",
+    "zf_amount": 6000000,
+    "zf_rice": 120.5,
+    "zf_muzakki": 60,
+    "zm_amount": 2500000,
+    "zm_muzakki": 12,
+    "ifs_amount": 1500000,
+    "ifs_munfiq": 25,
+    "total_amount": 10000000,
+    "total_participants": 97
+  }
 ]
 ```
 
@@ -1203,39 +1233,39 @@ GET /api/v1/statistics/units
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| year      | int    | Filter by year                    |
-| zis_type  | string | Filter by ZIS type               |
+| Parameter | Type   | Description        |
+| --------- | ------ | ------------------ |
+| year      | int    | Filter by year     |
+| zis_type  | string | Filter by ZIS type |
 
 **Response (200):**
 
 ```json
 [
-    {
-        "unit_id": 1,
-        "unit_name": "UPZ Masjid Al-Ikhlas",
-        "zf_amount": 5000000,
-        "zf_muzakki": 50,
-        "zm_amount": 2000000,
-        "zm_muzakki": 10,
-        "ifs_amount": 1000000,
-        "ifs_munfiq": 20,
-        "total_amount": 8000000,
-        "total_participants": 80
-    },
-    {
-        "unit_id": 2,
-        "unit_name": "UPZ Pusat",
-        "zf_amount": 3000000,
-        "zf_muzakki": 30,
-        "zm_amount": 1500000,
-        "zm_muzakki": 8,
-        "ifs_amount": 500000,
-        "ifs_munfiq": 10,
-        "total_amount": 5000000,
-        "total_participants": 48
-    }
+  {
+    "unit_id": 1,
+    "unit_name": "UPZ Masjid Al-Ikhlas",
+    "zf_amount": 5000000,
+    "zf_muzakki": 50,
+    "zm_amount": 2000000,
+    "zm_muzakki": 10,
+    "ifs_amount": 1000000,
+    "ifs_munfiq": 20,
+    "total_amount": 8000000,
+    "total_participants": 80
+  },
+  {
+    "unit_id": 2,
+    "unit_name": "UPZ Pusat",
+    "zf_amount": 3000000,
+    "zf_muzakki": 30,
+    "zm_amount": 1500000,
+    "zm_muzakki": 8,
+    "ifs_amount": 500000,
+    "ifs_munfiq": 10,
+    "total_amount": 5000000,
+    "total_participants": 48
+  }
 ]
 ```
 
@@ -1247,35 +1277,35 @@ GET /api/v1/statistics/distribution
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| zis_type  | string | Filter by ZIS type               |
-| period    | string | Period type: `daily`, `monthly`, `yearly` |
-| start_date| date  | Start date                       |
-| end_date  | date  | End date                         |
+| Parameter  | Type   | Description                               |
+| ---------- | ------ | ----------------------------------------- |
+| zis_type   | string | Filter by ZIS type                        |
+| period     | string | Period type: `daily`, `monthly`, `yearly` |
+| start_date | date   | Start date                                |
+| end_date   | date   | End date                                  |
 
 **Response (200):**
 
 ```json
 {
-    "zf": {
-        "by_kategori": [
-            {"kategori": "Rukun Ibadah", "jumlah": 50, "persentase": 20},
-            {"kategori": "Rukun Islam", "jumlah": 100, "persentase": 40},
-            {"kategori": "Rukun Iman", "jumlah": 100, "persentase": 40}
-        ],
-        "by_masjid": [
-            {"masjid": "Masjid Al-Ikhlas", "jumlah": 5000000, "persentase": 50},
-            {"masjid": "Masjid Baiturrahman", "jumlah": 5000000, "persentase": 50}
-        ]
-    },
-    "zm": {
-        "by_kategori": [
-            {"kategori": "Pendidikan", "jumlah": 5000000, "persentase": 25},
-            {"kategori": "Kesehatan", "jumlah": 5000000, "persentase": 25},
-            {"kategori": "Dakwah", "jumlah": 10000000, "persentase": 50}
-        ]
-    }
+  "zf": {
+    "by_kategori": [
+      { "kategori": "Rukun Ibadah", "jumlah": 50, "persentase": 20 },
+      { "kategori": "Rukun Islam", "jumlah": 100, "persentase": 40 },
+      { "kategori": "Rukun Iman", "jumlah": 100, "persentase": 40 }
+    ],
+    "by_masjid": [
+      { "masjid": "Masjid Al-Ikhlas", "jumlah": 5000000, "persentase": 50 },
+      { "masjid": "Masjid Baiturrahman", "jumlah": 5000000, "persentase": 50 }
+    ]
+  },
+  "zm": {
+    "by_kategori": [
+      { "kategori": "Pendidikan", "jumlah": 5000000, "persentase": 25 },
+      { "kategori": "Kesehatan", "jumlah": 5000000, "persentase": 25 },
+      { "kategori": "Dakwah", "jumlah": 10000000, "persentase": 50 }
+    ]
+  }
 }
 ```
 
@@ -1287,26 +1317,26 @@ GET /api/v1/statistics/peak-dates
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                      |
-| --------- | ------ | -------------------------------- |
-| zis_type  | string | Filter by ZIS type               |
-| start_date| date  | Start date                       |
-| end_date  | date  | End date                         |
+| Parameter  | Type   | Description        |
+| ---------- | ------ | ------------------ |
+| zis_type   | string | Filter by ZIS type |
+| start_date | date   | Start date         |
+| end_date   | date   | End date           |
 
 **Response (200):**
 
 ```json
 {
-    "top_days": [
-        {"date": "2025-01-01", "jumlah": 15000000, "persentase": 25.5},
-        {"date": "2025-02-14", "jumlah": 10000000, "persentase": 17.0},
-        {"date": "2025-01-01", "jumlah": 8000000, "persentase": 13.6}
-    ],
-    "top_days_of_week": [
-        {"day": "Ahad", "jumlah": 35000000, "persentase": 59.3},
-        {"day": "Jumat", "jumlah": 15000000, "persentase": 25.4},
-        {"day": "Sabtu", "jumlah": 8000000, "persentase": 13.6}
-    ]
+  "top_days": [
+    { "date": "2025-01-01", "jumlah": 15000000, "persentase": 25.5 },
+    { "date": "2025-02-14", "jumlah": 10000000, "persentase": 17.0 },
+    { "date": "2025-01-01", "jumlah": 8000000, "persentase": 13.6 }
+  ],
+  "top_days_of_week": [
+    { "day": "Ahad", "jumlah": 35000000, "persentase": 59.3 },
+    { "day": "Jumat", "jumlah": 15000000, "persentase": 25.4 },
+    { "day": "Sabtu", "jumlah": 8000000, "persentase": 13.6 }
+  ]
 }
 ```
 
@@ -1318,24 +1348,24 @@ GET /api/v1/ifs/statistics
 
 **Query Parameters:**
 
-| Parameter  | Type    | Description                    |
-| ---------- | ------- | ---------------------------- |
-| unit_id   | integer | Filter by specific unit ID     |
-| start_date | date    | Filter tanggal mulai           |
-| end_date   | date    | Filter tanggal akhir           |
+| Parameter  | Type    | Description                |
+| ---------- | ------- | -------------------------- |
+| unit_id    | integer | Filter by specific unit ID |
+| start_date | date    | Filter tanggal mulai       |
+| end_date   | date    | Filter tanggal akhir       |
 
 **Response (200):**
 
 ```json
 {
-    "total_transactions": 14761,
-    "total_amount": 7694450000,
-    "total_munfiq": 14771,
-    "average_amount": 521234,
-    "average_munfiq": 1,
-    "highest_munfiq": 5,
-    "individual_donors": 14759,
-    "group_donors": 2
+  "total_transactions": 14761,
+  "total_amount": 7694450000,
+  "total_munfiq": 14771,
+  "average_amount": 521234,
+  "average_munfiq": 1,
+  "highest_munfiq": 5,
+  "individual_donors": 14759,
+  "group_donors": 2
 }
 ```
 
@@ -1371,28 +1401,28 @@ GET /api/v1/rekap/zis-monthly      # Monthly statistics
 
 ```json
 {
-    "data": [
-        {
-            "id": 1,
-            "unit_id": 1,
-            "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
-            "period": "bulanan",
-            "period_date": "2025-03-01",
-            "total_zf_rice": 100.5,
-            "total_zf_amount": 5000000,
-            "total_zf_muzakki": 50,
-            "total_zm_amount": 2000000,
-            "total_zm_muzakki": 10,
-            "total_ifs_amount": 1000000,
-            "total_ifs_munfiq": 20
-        }
-    ],
-    "meta": {
-        "total": 100,
-        "per_page": 15,
-        "current_page": 1,
-        "total_pages": 7
+  "data": [
+    {
+      "id": 1,
+      "unit_id": 1,
+      "unit": { "id": 1, "unit_name": "UPZ Masjid Al-Ikhlas" },
+      "period": "bulanan",
+      "period_date": "2025-03-01",
+      "total_zf_rice": 100.5,
+      "total_zf_amount": 5000000,
+      "total_zf_muzakki": 50,
+      "total_zm_amount": 2000000,
+      "total_zm_muzakki": 10,
+      "total_ifs_amount": 1000000,
+      "total_ifs_munfiq": 20
     }
+  ],
+  "meta": {
+    "total": 100,
+    "per_page": 15,
+    "current_page": 1,
+    "total_pages": 7
+  }
 }
 ```
 
@@ -1400,13 +1430,13 @@ GET /api/v1/rekap/zis-monthly      # Monthly statistics
 
 ```json
 {
-    "total_zf_amount": 50000000,
-    "total_zf_rice": 1000.5,
-    "total_zf_muzakki": 500,
-    "total_zm_amount": 20000000,
-    "total_zm_muzakki": 100,
-    "total_ifs_amount": 10000000,
-    "total_ifs_munfiq": 200
+  "total_zf_amount": 50000000,
+  "total_zf_rice": 1000.5,
+  "total_zf_muzakki": 500,
+  "total_zm_amount": 20000000,
+  "total_zm_muzakki": 100,
+  "total_ifs_amount": 10000000,
+  "total_ifs_munfiq": 200
 }
 ```
 
@@ -1416,13 +1446,13 @@ Query params: `year`, `unit_id`
 
 ```json
 [
-    {
-        "month": "2025-01",
-        "zf_amount": 5000000,
-        "zf_rice": 100.5,
-        "zm_amount": 2000000,
-        "ifs_amount": 1000000
-    }
+  {
+    "month": "2025-01",
+    "zf_amount": 5000000,
+    "zf_rice": 100.5,
+    "zm_amount": 2000000,
+    "ifs_amount": 1000000
+  }
 ]
 ```
 
@@ -1434,11 +1464,11 @@ GET /api/v1/zm/statistics
 
 **Query Parameters:**
 
-| Parameter  | Type    | Description                    |
-| ---------- | ------- | ---------------------------- |
-| unit_id   | integer | Filter by specific unit ID     |
-| start_date | date    | Filter tanggal mulai           |
-| end_date   | date    | Filter tanggal akhir           |
+| Parameter  | Type    | Description                |
+| ---------- | ------- | -------------------------- |
+| unit_id    | integer | Filter by specific unit ID |
+| start_date | date    | Filter tanggal mulai       |
+| end_date   | date    | Filter tanggal akhir       |
 
 **Response (200):**
 
@@ -1468,16 +1498,16 @@ GET /api/v1/rekap/alokasi-monthly      # Monthly stats
 
 **Query Parameters (List):**
 
-| Parameter  | Type    | Description                                      |
-| ---------- | ------- | ------------------------------------------------ |
-| unit_id    | integer | Filter by unit                                   |
-| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan`|
-| year       | integer | Filter by year (e.g., 2025)                      |
-| from_date  | date    | Tanggal mulai                                    |
-| to_date    | date    | Tanggal akhir                                    |
-| sort_by    | string  | Field untuk sorting (default: `periode_date`)    |
-| sort_order | string  | `asc` atau `desc` (default: `desc`)              |
-| per_page   | integer | Items per page (default: 15)                     |
+| Parameter  | Type    | Description                                       |
+| ---------- | ------- | ------------------------------------------------- |
+| unit_id    | integer | Filter by unit                                    |
+| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan` |
+| year       | integer | Filter by year (e.g., 2025)                       |
+| from_date  | date    | Tanggal mulai                                     |
+| to_date    | date    | Tanggal akhir                                     |
+| sort_by    | string  | Field untuk sorting (default: `periode_date`)     |
+| sort_order | string  | `asc` atau `desc` (default: `desc`)               |
+| per_page   | integer | Items per page (default: 15)                      |
 
 ### 8.3 Rekap Pendis (Distribusi)
 
@@ -1491,16 +1521,16 @@ GET /api/v1/rekap/pendis-distribution  # Distribution by asnaf/program
 
 **Query Parameters (List):**
 
-| Parameter  | Type    | Description                                      |
-| ---------- | ------- | ------------------------------------------------ |
-| unit_id    | integer | Filter by unit                                   |
-| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan`|
-| year       | integer | Filter by year (e.g., 2025)                      |
-| from_date  | date    | Tanggal mulai                                    |
-| to_date    | date    | Tanggal akhir                                    |
-| sort_by    | string  | Field untuk sorting (default: `periode_date`)    |
-| sort_order | string  | `asc` atau `desc` (default: `desc`)              |
-| per_page   | integer | Items per page (default: 15)                     |
+| Parameter  | Type    | Description                                       |
+| ---------- | ------- | ------------------------------------------------- |
+| unit_id    | integer | Filter by unit                                    |
+| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan` |
+| year       | integer | Filter by year (e.g., 2025)                       |
+| from_date  | date    | Tanggal mulai                                     |
+| to_date    | date    | Tanggal akhir                                     |
+| sort_by    | string  | Field untuk sorting (default: `periode_date`)     |
+| sort_order | string  | `asc` atau `desc` (default: `desc`)               |
+| per_page   | integer | Items per page (default: 15)                      |
 
 ### 8.4 Rekap Hak Amil
 
@@ -1514,16 +1544,16 @@ GET /api/v1/rekap/hak-amil-distribution  # Distribution stats
 
 **Query Parameters (List):**
 
-| Parameter  | Type    | Description                                      |
-| ---------- | ------- | ------------------------------------------------ |
-| unit_id    | integer | Filter by unit                                   |
-| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan`|
-| year       | integer | Filter by year (e.g., 2025)                      |
-| from_date  | date    | Tanggal mulai                                    |
-| to_date    | date    | Tanggal akhir                                    |
-| sort_by    | string  | Field untuk sorting (default: `periode_date`)    |
-| sort_order | string  | `asc` atau `desc` (default: `desc`)              |
-| per_page   | integer | Items per page (default: 15)                     |
+| Parameter  | Type    | Description                                       |
+| ---------- | ------- | ------------------------------------------------- |
+| unit_id    | integer | Filter by unit                                    |
+| periode    | string  | Filter by periode: `harian`, `bulanan`, `tahunan` |
+| year       | integer | Filter by year (e.g., 2025)                       |
+| from_date  | date    | Tanggal mulai                                     |
+| to_date    | date    | Tanggal akhir                                     |
+| sort_by    | string  | Field untuk sorting (default: `periode_date`)     |
+| sort_order | string  | `asc` atau `desc` (default: `desc`)               |
+| per_page   | integer | Items per page (default: 15)                      |
 
 ### 8.5 Rekap Setor
 
@@ -1534,17 +1564,17 @@ GET /api/v1/rekap/setor/{id}     # Detail
 
 **Query Parameters:**
 
-| Parameter      | Type    | Description               |
-| -------------- | ------- | ------------------------- |
-| unit_id        | integer | Filter by unit            |
-| periode        | string  | Filter by periode         |
-| year           | integer | Filter by year (e.g., 2025)|
-| from_date      | date    | Tanggal mulai             |
-| to_date        | date    | Tanggal akhir             |
-| with_unit      | string  | `true` untuk include unit |
-| sort_by        | string  | Field untuk sorting       |
-| sort_direction | string  | `asc` atau `desc`         |
-| per_page       | integer | Items per page            |
+| Parameter      | Type    | Description                 |
+| -------------- | ------- | --------------------------- |
+| unit_id        | integer | Filter by unit              |
+| periode        | string  | Filter by periode           |
+| year           | integer | Filter by year (e.g., 2025) |
+| from_date      | date    | Tanggal mulai               |
+| to_date        | date    | Tanggal akhir               |
+| with_unit      | string  | `true` untuk include unit   |
+| sort_by        | string  | Field untuk sorting         |
+| sort_direction | string  | `asc` atau `desc`           |
+| per_page       | integer | Items per page              |
 
 ### 8.6 Rekap ZIS Report (Consolidated)
 
@@ -1556,116 +1586,121 @@ GET /api/v1/rekap/zis-report
 
 **Query Parameters:**
 
-| Parameter   | Type   | Required | Description                              |
-| ----------- | ------ | -------- | ---------------------------------------- |
-| unit_id     | int    | Yes      | ID unit ZIS                              |
-| periode     | string | No       | Periode: `harian`, `bulanan`, `tahunan`  |
-| year        | int    | No       | Filter by year (e.g., 2025)              |
-| from_date   | date   | No       | Tanggal mulai (Y-m-d)                    |
-| to_date     | date   | No       | Tanggal akhir (Y-m-d), harus >= from_date |
+| Parameter | Type   | Required | Description                               |
+| --------- | ------ | -------- | ----------------------------------------- |
+| unit_id   | int    | Yes      | ID unit ZIS                               |
+| periode   | string | No       | Periode: `harian`, `bulanan`, `tahunan`   |
+| year      | int    | No       | Filter by year (e.g., 2025)               |
+| from_date | date   | No       | Tanggal mulai (Y-m-d)                     |
+| to_date   | date   | No       | Tanggal akhir (Y-m-d), harus >= from_date |
 
 **Example Request - Get consolidated report for unit:**
+
 ```
 GET /api/v1/rekap/zis-report?unit_id=1
 ```
 
 **Example Request - Filter by year:**
+
 ```
 GET /api/v1/rekap/zis-report?unit_id=1&year=2025
 ```
 
 **Example Request - Filter by date range:**
+
 ```
 GET /api/v1/rekap/zis-report?unit_id=1&from_date=2025-01-01&to_date=2025-12-31
 ```
 
 **Example Request - Filter by period:**
+
 ```
 GET /api/v1/rekap/zis-report?unit_id=1&periode=bulanan&from_date=2025-01-01&to_date=2025-03-31
 ```
 
 > **🚨 BREAKING CHANGE NOTICE: Hak Amil Fields Replacement**
 > The unified `total_hak_amil` field is being replaced by granular fields (`hak_amil_zf_beras`, `hak_amil_zf_uang`, `hak_amil_zm`, `hak_amil_ifs`) to better distinguish between money and rice, as well as distinct ZIS types.
-> 
+>
 > **Migration Mapping:**
+>
 > - `total money` = `hak_amil_zf_uang` + `hak_amil_zm` + `hak_amil_ifs`
 > - `total rice` = `hak_amil_zf_beras`
 >
 > **Temporary Backward Compatibility:**
 > `total_hak_amil` is temporarily kept alongside the new fields to prevent breaking existing clients. It contains the sum of all money fields as it did previously. This field is **DEPRECATED** and will be fully removed in **v2 API**. Clients should migrate to using the individual granular fields as soon as possible.
-> 
+>
 > **Example Before vs After for Migration:**
-> *Old Behavior:* `{"total_hak_amil": 2600000 }` (only accounted for money)
-> *New Behavior:* `{"hak_amil_zf_beras": 20.5, "hak_amil_zf_uang": 1500000, "hak_amil_zm": 600000, "hak_amil_ifs": 500000, "total_hak_amil": 2600000}`
-> *(Notice that clients can now track rice amil rights separately!)*
+> _Old Behavior:_ `{"total_hak_amil": 2600000 }` (only accounted for money)
+> _New Behavior:_ `{"hak_amil_zf_beras": 20.5, "hak_amil_zf_uang": 1500000, "hak_amil_zm": 600000, "hak_amil_ifs": 500000, "total_hak_amil": 2600000}`
+> _(Notice that clients can now track rice amil rights separately!)_
 
 **Response (200):**
 
 ```json
 {
-    "data": {
-        "total_zf_amount": 50000000,
-        "total_zf_rice": 1000.5,
-        "total_zf_muzakki": 500,
-        "total_zm_amount": 20000000,
-        "total_zm_muzakki": 100,
-        "total_ifs_amount": 10000000,
-        "total_ifs_munfiq": 200,
-        "total_pendis_zf_amount": 15000000,
-        "total_pendis_zf_rice": 300.5,
-        "total_pendis_zm": 5000000,
-        "total_pendis_ifs": 3000000,
-        "total_pendis_amount": 23000000,
-        "total_pendis_rice": 300.5,
-        "total_pm": 150,
-        "hak_amil_zf_beras": 20.5,
-        "hak_amil_zf_uang": 1500000,
-        "hak_amil_zm": 600000,
-        "hak_amil_ifs": 500000,
-        "total_hak_amil": 2600000,
-        "total_setor_zf_amount": 12000000,
-        "total_setor_zf_rice": 250.0,
-        "total_setor_zm": 3500000,
-        "total_setor_ifs": 2500000,
-        "bukti_setor": "/storage/setor/bukti_001.jpg",
-        "ketua": "Ahmad Hidayat",
-        "sekretaris": "Budi Santoso",
-        "bendahara": "Citra Dewi"
-    }
+  "data": {
+    "total_zf_amount": 50000000,
+    "total_zf_rice": 1000.5,
+    "total_zf_muzakki": 500,
+    "total_zm_amount": 20000000,
+    "total_zm_muzakki": 100,
+    "total_ifs_amount": 10000000,
+    "total_ifs_munfiq": 200,
+    "total_pendis_zf_amount": 15000000,
+    "total_pendis_zf_rice": 300.5,
+    "total_pendis_zm": 5000000,
+    "total_pendis_ifs": 3000000,
+    "total_pendis_amount": 23000000,
+    "total_pendis_rice": 300.5,
+    "total_pm": 150,
+    "hak_amil_zf_beras": 20.5,
+    "hak_amil_zf_uang": 1500000,
+    "hak_amil_zm": 600000,
+    "hak_amil_ifs": 500000,
+    "total_hak_amil": 2600000,
+    "total_setor_zf_amount": 12000000,
+    "total_setor_zf_rice": 250.0,
+    "total_setor_zm": 3500000,
+    "total_setor_ifs": 2500000,
+    "bukti_setor": "/storage/setor/bukti_001.jpg",
+    "ketua": "Ahmad Hidayat",
+    "sekretaris": "Budi Santoso",
+    "bendahara": "Citra Dewi"
+  }
 }
 ```
 
 **Response Fields:**
 
-| Field                    | Type    | Description                           |
-| ------------------------ | ------- | ------------------------------------- |
-| total_zf_amount          | int     | Total zakat fitrah uang (Rp)          |
-| total_zf_rice            | float   | Total zakat fitrah beras (kg)         |
-| total_zf_muzakki         | int     | Total muzakki zakat fitrah            |
-| total_zm_amount          | int     | Total zakat maal uang (Rp)            |
-| total_zm_muzakki         | int     | Total muzakki zakat maal              |
-| total_ifs_amount         | int     | Total infak/sedekah (Rp)              |
-| total_ifs_munfiq         | int     | Total munfiq infak/sedekah            |
-| total_pendis_zf_amount   | int     | Total distribusi ZF uang (Rp)         |
-| total_pendis_zf_rice     | float   | Total distribusi ZF beras (kg)        |
-| total_pendis_zm          | int     | Total distribusi ZM (Rp)              |
-| total_pendis_ifs         | int     | Total distribusi IFS (Rp)             |
-| total_pendis_amount      | int     | Total distribusi uang (Rp)            |
-| total_pendis_rice        | float   | Total distribusi beras (kg)           |
-| total_pm                 | int     | Total penerima manfaat                |
-| hak_amil_zf_beras        | float   | Hak amil dari ZF beras (kg)         |
-| hak_amil_zf_uang         | int     | Hak amil dari ZF uang (Rp)          |
-| hak_amil_zm              | int     | Hak amil dari ZM (Rp)               |
-| hak_amil_ifs             | int     | Hak amil dari IFS (Rp)              |
-| total_hak_amil           | int     | **(DEPRECATED)** Total hak amil (uang). Akan dihapus pada API v2. |
-| total_setor_zf_amount    | int     | Total setoran ZF uang (Rp)            |
-| total_setor_zf_rice      | float   | Total setoran ZF beras (kg)           |
-| total_setor_zm           | int     | Total setoran ZM (Rp)                 |
-| total_setor_ifs          | int     | Total setoran IFS (Rp)                |
-| bukti_setor              | string  | URL bukti setor terakhir (nullable)   |
-| ketua                    | string  | Nama ketua unit                       |
-| sekretaris               | string  | Nama sekretaris/wakil unit            |
-| bendahara                | string  | Nama bendahara unit                   |
+| Field                  | Type   | Description                                                       |
+| ---------------------- | ------ | ----------------------------------------------------------------- |
+| total_zf_amount        | int    | Total zakat fitrah uang (Rp)                                      |
+| total_zf_rice          | float  | Total zakat fitrah beras (kg)                                     |
+| total_zf_muzakki       | int    | Total muzakki zakat fitrah                                        |
+| total_zm_amount        | int    | Total zakat maal uang (Rp)                                        |
+| total_zm_muzakki       | int    | Total muzakki zakat maal                                          |
+| total_ifs_amount       | int    | Total infak/sedekah (Rp)                                          |
+| total_ifs_munfiq       | int    | Total munfiq infak/sedekah                                        |
+| total_pendis_zf_amount | int    | Total distribusi ZF uang (Rp)                                     |
+| total_pendis_zf_rice   | float  | Total distribusi ZF beras (kg)                                    |
+| total_pendis_zm        | int    | Total distribusi ZM (Rp)                                          |
+| total_pendis_ifs       | int    | Total distribusi IFS (Rp)                                         |
+| total_pendis_amount    | int    | Total distribusi uang (Rp)                                        |
+| total_pendis_rice      | float  | Total distribusi beras (kg)                                       |
+| total_pm               | int    | Total penerima manfaat                                            |
+| hak_amil_zf_beras      | float  | Hak amil dari ZF beras (kg)                                       |
+| hak_amil_zf_uang       | int    | Hak amil dari ZF uang (Rp)                                        |
+| hak_amil_zm            | int    | Hak amil dari ZM (Rp)                                             |
+| hak_amil_ifs           | int    | Hak amil dari IFS (Rp)                                            |
+| total_hak_amil         | int    | **(DEPRECATED)** Total hak amil (uang). Akan dihapus pada API v2. |
+| total_setor_zf_amount  | int    | Total setoran ZF uang (Rp)                                        |
+| total_setor_zf_rice    | float  | Total setoran ZF beras (kg)                                       |
+| total_setor_zm         | int    | Total setoran ZM (Rp)                                             |
+| total_setor_ifs        | int    | Total setoran IFS (Rp)                                            |
+| bukti_setor            | string | URL bukti setor terakhir (nullable)                               |
+| ketua                  | string | Nama ketua unit                                                   |
+| sekretaris             | string | Nama sekretaris/wakil unit                                        |
+| bendahara              | string | Nama bendahara unit                                               |
 
 ### 8.7 Alokasi Report (Updated Allocations)
 
@@ -1677,17 +1712,19 @@ GET /api/v1/rekap/alokasi-report
 
 **Query Parameters:**
 
-| Parameter | Type    | Required | Description                             |
-| --------- | ------- | -------- | --------------------------------------- |
-| unit_id   | int     | Yes      | ID unit ZIS                             |
-| year      | int     | No       | Tahun fiskal (default: tahun sekarang)  |
+| Parameter | Type | Required | Description                            |
+| --------- | ---- | -------- | -------------------------------------- |
+| unit_id   | int  | Yes      | ID unit ZIS                            |
+| year      | int  | No       | Tahun fiskal (default: tahun sekarang) |
 
 **Example Request - Get allocation report:**
+
 ```
 GET /api/v1/rekap/alokasi-report?unit_id=1
 ```
 
 **Example Request - Filter by year:**
+
 ```
 GET /api/v1/rekap/alokasi-report?unit_id=1&year=2026
 ```
@@ -1696,51 +1733,51 @@ GET /api/v1/rekap/alokasi-report?unit_id=1&year=2026
 
 ```json
 {
-    "data": {
-        "alokasi_kelola_zf_uang": 7000000,
-        "alokasi_kelola_zf_beras": 175.35,
-        "alokasi_kelola_zm": 5600000,
-        "alokasi_kelola_ifs": 2400000,
-        "alokasi_setor_zf_uang": 2000000,
-        "alokasi_setor_zf_beras": 30.5,
-        "alokasi_setor_zm": 1000000,
-        "alokasi_setor_ifs": 500000,
-        "alokasi_pendis_zf_uang": 1500000,
-        "alokasi_pendis_zf_beras": 50.0,
-        "alokasi_pendis_zm": 800000,
-        "alokasi_pendis_ifs": 400000,
-        "alokasi_ha_zf_uang": 375000,
-        "alokasi_ha_zf_beras": 5.0,
-        "alokasi_ha_zm": 200000,
-        "alokasi_ha_ifs": 100000,
-        "alokasi_op_uang": 500000,
-        "alokasi_op_beras": 10.0
-    }
+  "data": {
+    "alokasi_kelola_zf_uang": 7000000,
+    "alokasi_kelola_zf_beras": 175.35,
+    "alokasi_kelola_zm": 5600000,
+    "alokasi_kelola_ifs": 2400000,
+    "alokasi_setor_zf_uang": 2000000,
+    "alokasi_setor_zf_beras": 30.5,
+    "alokasi_setor_zm": 1000000,
+    "alokasi_setor_ifs": 500000,
+    "alokasi_pendis_zf_uang": 1500000,
+    "alokasi_pendis_zf_beras": 50.0,
+    "alokasi_pendis_zm": 800000,
+    "alokasi_pendis_ifs": 400000,
+    "alokasi_ha_zf_uang": 375000,
+    "alokasi_ha_zf_beras": 5.0,
+    "alokasi_ha_zm": 200000,
+    "alokasi_ha_ifs": 100000,
+    "alokasi_op_uang": 500000,
+    "alokasi_op_beras": 10.0
+  }
 }
 ```
 
 **Response Fields:**
 
-| Field                    | Type  | Description                                                      |
-| ------------------------ | ----- | ---------------------------------------------------------------- |
-| alokasi_kelola_zf_uang   | int   | Alokasi kelola ZF uang (langsung dari rekap_alokasi)             |
-| alokasi_kelola_zf_beras  | float | Alokasi kelola ZF beras (langsung dari rekap_alokasi)            |
-| alokasi_kelola_zm        | int   | Alokasi kelola ZM (langsung dari rekap_alokasi)                  |
-| alokasi_kelola_ifs       | int   | Alokasi kelola IFS (langsung dari rekap_alokasi)                 |
-| alokasi_setor_zf_uang    | int   | Sisa alokasi setor ZF uang = rekap_alokasi − rekap_setor        |
-| alokasi_setor_zf_beras   | float | Sisa alokasi setor ZF beras = rekap_alokasi − rekap_setor       |
-| alokasi_setor_zm         | int   | Sisa alokasi setor ZM = rekap_alokasi − rekap_setor             |
-| alokasi_setor_ifs        | int   | Sisa alokasi setor IFS = rekap_alokasi − rekap_setor            |
-| alokasi_pendis_zf_uang   | int   | Sisa alokasi pendis ZF uang = rekap_alokasi − rekap_pendis      |
-| alokasi_pendis_zf_beras  | float | Sisa alokasi pendis ZF beras = rekap_alokasi − rekap_pendis     |
-| alokasi_pendis_zm        | int   | Sisa alokasi pendis ZM = rekap_alokasi − rekap_pendis           |
-| alokasi_pendis_ifs       | int   | Sisa alokasi pendis IFS = rekap_alokasi − rekap_pendis          |
-| alokasi_ha_zf_uang       | int   | Sisa alokasi hak amil ZF uang = rekap_alokasi − rekap_hak_amil  |
-| alokasi_ha_zf_beras      | float | Sisa alokasi hak amil ZF beras = rekap_alokasi − rekap_hak_amil |
-| alokasi_ha_zm            | int   | Sisa alokasi hak amil ZM = rekap_alokasi − rekap_hak_amil       |
-| alokasi_ha_ifs           | int   | Sisa alokasi hak amil IFS = rekap_alokasi − rekap_hak_amil      |
-| alokasi_op_uang          | int   | Alokasi operasional uang (langsung dari rekap_alokasi)           |
-| alokasi_op_beras         | float | Alokasi operasional beras (langsung dari rekap_alokasi)          |
+| Field                   | Type  | Description                                                     |
+| ----------------------- | ----- | --------------------------------------------------------------- |
+| alokasi_kelola_zf_uang  | int   | Alokasi kelola ZF uang (langsung dari rekap_alokasi)            |
+| alokasi_kelola_zf_beras | float | Alokasi kelola ZF beras (langsung dari rekap_alokasi)           |
+| alokasi_kelola_zm       | int   | Alokasi kelola ZM (langsung dari rekap_alokasi)                 |
+| alokasi_kelola_ifs      | int   | Alokasi kelola IFS (langsung dari rekap_alokasi)                |
+| alokasi_setor_zf_uang   | int   | Sisa alokasi setor ZF uang = rekap_alokasi − rekap_setor        |
+| alokasi_setor_zf_beras  | float | Sisa alokasi setor ZF beras = rekap_alokasi − rekap_setor       |
+| alokasi_setor_zm        | int   | Sisa alokasi setor ZM = rekap_alokasi − rekap_setor             |
+| alokasi_setor_ifs       | int   | Sisa alokasi setor IFS = rekap_alokasi − rekap_setor            |
+| alokasi_pendis_zf_uang  | int   | Sisa alokasi pendis ZF uang = rekap_alokasi − rekap_pendis      |
+| alokasi_pendis_zf_beras | float | Sisa alokasi pendis ZF beras = rekap_alokasi − rekap_pendis     |
+| alokasi_pendis_zm       | int   | Sisa alokasi pendis ZM = rekap_alokasi − rekap_pendis           |
+| alokasi_pendis_ifs      | int   | Sisa alokasi pendis IFS = rekap_alokasi − rekap_pendis          |
+| alokasi_ha_zf_uang      | int   | Sisa alokasi hak amil ZF uang = rekap_alokasi − rekap_hak_amil  |
+| alokasi_ha_zf_beras     | float | Sisa alokasi hak amil ZF beras = rekap_alokasi − rekap_hak_amil |
+| alokasi_ha_zm           | int   | Sisa alokasi hak amil ZM = rekap_alokasi − rekap_hak_amil       |
+| alokasi_ha_ifs          | int   | Sisa alokasi hak amil IFS = rekap_alokasi − rekap_hak_amil      |
+| alokasi_op_uang         | int   | Alokasi operasional uang (langsung dari rekap_alokasi)          |
+| alokasi_op_beras        | float | Alokasi operasional beras (langsung dari rekap_alokasi)         |
 
 ---
 
@@ -1787,29 +1824,31 @@ DELETE /api/v1/lpz/{id}     # Delete
 
 **Request Body (Create/Update):**
 
-| Field    | Type    | Required | Description                                        |
-| -------- | ------- | -------- | -------------------------------------------------- |
-| unit_id  | integer | Yes      | ID unit ZIS                                        |
-| trx_date | date    | Yes      | Tanggal laporan (Y-m-d)                            |
-| lpz_year | integer | Yes      | Tahun laporan (4 digit)                            |
-| form101  | string  | No       | URL file Form 1.01 (max 255 karakter)              |
-| form102  | string  | No       | URL file Form 1.02 (max 255 karakter)              |
-| lpz      | string  | No       | URL file LPZ (max 255 karakter)                    |
-| desc     | string  | No       | Keterangan                                         |
+| Field    | Type    | Required | Description                           |
+| -------- | ------- | -------- | ------------------------------------- |
+| unit_id  | integer | Yes      | ID unit ZIS                           |
+| trx_date | date    | Yes      | Tanggal laporan (Y-m-d)               |
+| lpz_year | integer | Yes      | Tahun laporan (4 digit)               |
+| form101  | string  | No       | URL file Form 1.01 (max 255 karakter) |
+| form102  | string  | No       | URL file Form 1.02 (max 255 karakter) |
+| lpz      | string  | No       | URL file LPZ (max 255 karakter)       |
+| desc     | string  | No       | Keterangan                            |
 
 **Query Parameters (List):**
 
-| Parameter  | Type   | Description                    |
-| ---------- | ------ | ------------------------------ |
-| year       | int    | Filter berdasarkan `lpz_year`  |
-| start_date | date   | Filter tanggal mulai           |
-| end_date   | date   | Filter tanggal akhir           |
+| Parameter  | Type | Description                   |
+| ---------- | ---- | ----------------------------- |
+| year       | int  | Filter berdasarkan `lpz_year` |
+| start_date | date | Filter tanggal mulai          |
+| end_date   | date | Filter tanggal akhir          |
 
 **Access Control:**
+
 - Admin dapat mengakses semua data LPZ.
 - User biasa hanya dapat mengakses data LPZ milik unit-nya sendiri.
 
 **Example Request - Create LPZ:**
+
 ```json
 POST /api/v1/lpz
 Authorization: Bearer {token}
@@ -1826,6 +1865,7 @@ Content-Type: application/json
 ```
 
 **Example Request - Update LPZ:**
+
 ```json
 PUT /api/v1/lpz/1
 Authorization: Bearer {token}
@@ -1840,6 +1880,7 @@ Content-Type: application/json
 ```
 
 **Example Request - List LPZ filtered by year:**
+
 ```
 GET /api/v1/lpz?year=2026
 ```
@@ -1848,24 +1889,209 @@ GET /api/v1/lpz?year=2026
 
 ```json
 {
-    "data": {
-        "id": 1,
-        "unit": {
-            "id": 1,
-            "unit_name": "UPZ Masjid Al-Ikhlas"
-        },
-        "trx_date": "2026-02-25",
-        "lpz_year": 2026,
-        "form101": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/form101/xxxxx.pdf",
-        "form102": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/form102/xxxxx.pdf",
-        "lpz": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/dokumen/xxxxx.pdf",
-        "created_at": "2026-02-25 10:00:00",
-        "updated_at": "2026-02-25 10:00:00"
-    }
+  "data": {
+    "id": 1,
+    "unit": {
+      "id": 1,
+      "unit_name": "UPZ Masjid Al-Ikhlas"
+    },
+    "trx_date": "2026-02-25",
+    "lpz_year": 2026,
+    "form101": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/form101/xxxxx.pdf",
+    "form102": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/form102/xxxxx.pdf",
+    "lpz": "https://res.cloudinary.com/<cloud_name>/raw/upload/lpz/dokumen/xxxxx.pdf",
+    "created_at": "2026-02-25 10:00:00",
+    "updated_at": "2026-02-25 10:00:00"
+  }
 }
 ```
 
 **Response (204 - Delete):** No Content
+
+```
+
+---
+
+## 11. Laporan Kurban DKM
+
+🔒 **Requires Authentication**
+
+Endpoint untuk mengelola laporan pelaksanaan kurban tingkat DKM (Dewan Kemakmuran Masjid). Berisi data hewan kurban, shohibul, paket daging, dan dokumentasi.
+
+### 11.1 CRUD Laporan Kurban
+
+```
+
+GET /api/v1/laporan-kurban # List
+POST /api/v1/laporan-kurban # Create
+GET /api/v1/laporan-kurban/{id} # Show
+POST /api/v1/laporan-kurban/{id}/submit # Submit (ubah status)
+DELETE /api/v1/laporan-kurban/{id} # Delete
+
+````
+
+**Request Body (Create/Update):**
+
+| Field               | Type    | Required | Description                                          |
+| ------------------- | ------- | -------- | ---------------------------------------------------- |
+| tahun_hijriah       | string  | Yes      | Tahun Hijriah (max 4 karakter)                       |
+| tahun_masehi        | integer | Yes      | Tahun Masehi (2020-2100)                             |
+| jml_sapi            | integer | Yes      | Jumlah sapi (0-999)                                  |
+| jml_kerbau          | integer | Yes      | Jumlah kerbau (0-999)                                |
+| jml_kambing         | integer | Yes      | Jumlah kambing (0-999)                               |
+| jml_domba           | integer | Yes      | Jumlah domba (0-999)                                 |
+| total_shohibul      | integer | Yes      | Total jumlah shohibul (min: 0)                       |
+| shohibul_dikoreksi  | boolean | No       | Apakah data shohibul dikoreksi                       |
+| alasan_koreksi      | string  | No       | Alasan koreksi (max 255)                             |
+| jml_paket_daging    | integer | No       | Jumlah paket daging (min: 0)                         |
+| jml_penerima        | integer | No       | Jumlah penerima (min: 0)                             |
+| kelompok_penerima   | array   | No       | Kelompok penerima manfaat                            |
+| kelompok_penerima.* | string  | No       | Nilai: `warga`, `fakir_miskin`, `pesantren`, `panti_asuhan`, `luar_daerah` |
+| catatan             | string  | No       | Catatan tambahan (max 1000)                          |
+
+**Query Parameters (List):**
+
+| Parameter | Type   | Description                    |
+| --------- | ------ | ------------------------------ |
+| tahun     | int    | Filter berdasarkan tahun_masehi |
+| status    | string | Filter berdasarkan status      |
+
+**Response (200/201):**
+
+```json
+{
+    "data": {
+        "id": 1,
+        "unit": {
+            "id": 1,
+            "unit_name": "UPZ Masjid Al-Ikhlas",
+            "no_register": "REG001"
+        },
+        "tahun_hijriah": "1446",
+        "tahun_masehi": 2025,
+        "jml_sapi": 2,
+        "jml_kerbau": 0,
+        "jml_kambing": 5,
+        "jml_domba": 0,
+        "total_ekor": 7,
+        "total_shohibul": 10,
+        "shohibul_dikoreksi": false,
+        "alasan_koreksi": null,
+        "jml_paket_daging": 70,
+        "jml_penerima": 70,
+        "kelompok_penerima": ["warga", "fakir_miskin"],
+        "catatan": "Pelaksanaan kurban berjalan lancar",
+        "no_referensi": "LK/2025/001",
+        "status": "draft",
+        "submitted_at": null,
+        "verified_at": null,
+        "dokumentasi": [],
+        "created_at": "2025-06-06T00:00:00.000000Z",
+        "updated_at": "2025-06-06T00:00:00.000000Z"
+    },
+    "success": true,
+    "message": "Laporan berhasil disimpan"
+}
+````
+
+**Response Fields:**
+
+| Field              | Type    | Description                              |
+| ------------------ | ------- | ---------------------------------------- |
+| id                 | integer | ID laporan kurban                        |
+| unit               | object  | Data unit ZIS terkait                    |
+| tahun_hijriah      | string  | Tahun Hijriah                            |
+| tahun_masehi       | integer | Tahun Masehi                             |
+| jml_sapi           | integer | Jumlah sapi                              |
+| jml_kerbau         | integer | Jumlah kerbau                            |
+| jml_kambing        | integer | Jumlah kambing                           |
+| jml_domba          | integer | Jumlah domba                             |
+| total_ekor         | integer | Total hewan (komputasi otomatis)         |
+| total_shohibul     | integer | Total shohibul                           |
+| shohibul_dikoreksi | boolean | Apakah shohibul dikoreksi                |
+| alasan_koreksi     | string  | Alasan koreksi (nullable)                |
+| jml_paket_daging   | integer | Jumlah paket daging (nullable)           |
+| jml_penerima       | integer | Jumlah penerima (nullable)               |
+| kelompok_penerima  | array   | Kelompok penerima (nullable)             |
+| catatan            | string  | Catatan (nullable)                       |
+| no_referensi       | string  | Nomor referensi laporan (nullable)       |
+| status             | string  | Status: `draft`, `submitted`, `verified` |
+| submitted_at       | string  | Waktu pengiriman (ISO 8601, nullable)    |
+| verified_at        | string  | Waktu verifikasi (ISO 8601, nullable)    |
+| dokumentasi        | array   | Daftar dokumentasi terkait               |
+| created_at         | string  | Waktu dibuat (ISO 8601)                  |
+| updated_at         | string  | Waktu diperbarui (ISO 8601)              |
+
+**Example Request - Create Laporan Kurban:**
+
+```json
+POST /api/v1/laporan-kurban
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+    "tahun_hijriah": "1446",
+    "tahun_masehi": 2025,
+    "jml_sapi": 2,
+    "jml_kerbau": 0,
+    "jml_kambing": 5,
+    "jml_domba": 0,
+    "total_shohibul": 10,
+    "jml_paket_daging": 70,
+    "jml_penerima": 70,
+    "kelompok_penerima": ["warga", "fakir_miskin"],
+    "catatan": "Pelaksanaan kurban berjalan lancar"
+}
+```
+
+**Example Request - Submit Laporan Kurban:**
+
+```json
+POST /api/v1/laporan-kurban/1/submit
+Authorization: Bearer {token}
+```
+
+### 11.2 Dokumentasi Kurban
+
+Sub-resource untuk mengelola file dokumentasi (foto, berita acara) dari laporan kurban.
+
+```
+POST   /api/v1/laporan-kurban/{laporanKurbanId}/dokumentasi           # Upload
+DELETE /api/v1/laporan-kurban/{laporanKurbanId}/dokumentasi/{dokId}   # Delete
+```
+
+**Request Body (multipart/form-data):**
+
+| Field | Type   | Required | Description                                                   |
+| ----- | ------ | -------- | ------------------------------------------------------------- |
+| file  | file   | Yes      | File dokumentasi (max 5MB, tipe: jpg/png/pdf)                 |
+| jenis | string | Yes      | Jenis dokumentasi: `foto_kegiatan`, `berita_acara`, `lainnya` |
+
+**Response (201 - Upload):**
+
+```json
+{
+  "data": {
+    "id": 1,
+    "jenis": "foto_kegiatan",
+    "file_path": "dokumentasi/1/1/abc123.jpg",
+    "file_size": 2048576,
+    "mime_type": "image/jpeg",
+    "uploaded_at": "2025-06-06T10:00:00.000000Z"
+  },
+  "success": true,
+  "message": "Dokumentasi berhasil diunggah"
+}
+```
+
+**Response (200 - Delete):**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "Dokumentasi berhasil dihapus"
+}
 ```
 
 ---
@@ -1876,8 +2102,8 @@ GET /api/v1/lpz?year=2026
 
 ```json
 {
-    "message": "Error creating transaction",
-    "error": "Error message details"
+  "message": "Error creating transaction",
+  "error": "Error message details"
 }
 ```
 
@@ -1897,8 +2123,8 @@ GET /api/v1/lpz?year=2026
 
 ```json
 {
-    "message": "Error retrieving transaction",
-    "error": "No query results for model"
+  "message": "Error retrieving transaction",
+  "error": "No query results for model"
 }
 ```
 
@@ -1906,8 +2132,8 @@ GET /api/v1/lpz?year=2026
 
 ```json
 {
-    "message": "The given data was invalid.",
-    "errors": { "field_name": ["Error message"] }
+  "message": "The given data was invalid.",
+  "errors": { "field_name": ["Error message"] }
 }
 ```
 
@@ -1964,10 +2190,10 @@ GET /api/v1/lpz?year=2026
 
 ### Deposit Destination (Setor ZIS)
 
-| Value          | Description                              |
-| -------------- | ---------------------------------------- |
-| upz_desa       | Setoran ke UPZ Desa (batch sale by desa) |
-| upz_kecamatan  | Setoran ke UPZ Kecamatan                 |
+| Value         | Description                              |
+| ------------- | ---------------------------------------- |
+| upz_desa      | Setoran ke UPZ Desa (batch sale by desa) |
+| upz_kecamatan | Setoran ke UPZ Kecamatan                 |
 
 ---
 

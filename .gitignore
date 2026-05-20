@@ -18,6 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
+.kilo/
+
 # VS Code related
 .vscode/
 
@@ -82,3 +84,5 @@ local.properties
 
 *.jks
 *.pem
+
+opencode.json

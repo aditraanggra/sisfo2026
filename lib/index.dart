@@ -32,6 +32,10 @@ export '/page/misc_page/list_dkm/list_dkm_widget.dart' show ListDkmWidget;
 export '/page/main_page/laporan/laporan_widget.dart' show LaporanWidget;
 export '/page/transaksi/penyerapan_hak_amil/penyerapan_hak_amil_widget.dart'
     show PenyerapanHakAmilWidget;
+export '/page/transaksi/laporan_kurban/laporan_kurban_widget.dart'
+    show LaporanKurbanWidget;
+export '/page/transaksi/laporan_kurban/sukses_laporan_widget.dart'
+    show SuksesLaporanWidget;
 export '/page/auth/registration_type/registration_type_widget.dart'
     show RegistrationTypeWidget;
 export '/page/auth/lengkapi_profile_s_d/lengkapi_profile_s_d_widget.dart'

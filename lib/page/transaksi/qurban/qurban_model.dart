@@ -10,32 +10,6 @@ class QurbanModel extends FlutterFlowModel<QurbanWidget> {
   final formKey = GlobalKey<FormState>();
   // Model for DatePicker component.
   late DatePickerModel datePickerModel;
-  // State field(s) for namaMuzakki widget.
-  FocusNode? namaMuzakkiFocusNode;
-  TextEditingController? namaMuzakkiTextController;
-  String? Function(BuildContext, String?)? namaMuzakkiTextControllerValidator;
-  String? _namaMuzakkiTextControllerValidator(
-      BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Nama Muzakki Belum Diisi';
-    }
-
-    return null;
-  }
-
-  // State field(s) for alamatMuzakki widget.
-  FocusNode? alamatMuzakkiFocusNode;
-  TextEditingController? alamatMuzakkiTextController;
-  String? Function(BuildContext, String?)? alamatMuzakkiTextControllerValidator;
-  String? _alamatMuzakkiTextControllerValidator(
-      BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Alamat Belum Diisi';
-    }
-
-    return null;
-  }
-
   // State field(s) for jmlSapi widget.
   FocusNode? jmlSapiFocusNode;
   TextEditingController? jmlSapiTextController;
@@ -68,19 +42,11 @@ class QurbanModel extends FlutterFlowModel<QurbanWidget> {
   @override
   void initState(BuildContext context) {
     datePickerModel = createModel(context, () => DatePickerModel());
-    namaMuzakkiTextControllerValidator = _namaMuzakkiTextControllerValidator;
-    alamatMuzakkiTextControllerValidator =
-        _alamatMuzakkiTextControllerValidator;
   }
 
   @override
   void dispose() {
     datePickerModel.dispose();
-    namaMuzakkiFocusNode?.dispose();
-    namaMuzakkiTextController?.dispose();
-
-    alamatMuzakkiFocusNode?.dispose();
-    alamatMuzakkiTextController?.dispose();
 
     jmlSapiFocusNode?.dispose();
     jmlSapiTextController?.dispose();

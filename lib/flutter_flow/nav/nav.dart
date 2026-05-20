@@ -361,6 +361,39 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: UploadLaporanWidget.routePath,
           requireAuth: true,
           builder: (context, params) => UploadLaporanWidget(),
+        ),
+        FFRoute(
+          name: LaporanKurbanWidget.routeName,
+          path: LaporanKurbanWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => LaporanKurbanWidget(),
+        ),
+        FFRoute(
+          name: SuksesLaporanWidget.routeName,
+          path: SuksesLaporanWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => SuksesLaporanWidget(
+            noReferensi: params.getParam(
+              'noReferensi',
+              ParamType.String,
+            ),
+            reportId: params.getParam(
+              'reportId',
+              ParamType.int,
+            ),
+            unitName: params.getParam(
+              'unitName',
+              ParamType.String,
+            ),
+            fotoKegiatan: params.getParam(
+              'fotoKegiatan',
+              ParamType.String,
+            ),
+            beritaAcara: params.getParam(
+              'beritaAcara',
+              ParamType.String,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

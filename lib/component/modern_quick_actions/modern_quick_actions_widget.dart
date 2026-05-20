@@ -50,8 +50,8 @@ class ModernQuickActionsWidget extends StatefulWidget {
 class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
   late ModernQuickActionsModel _model;
 
-  /// List of quick action items - 3x3 grid = 9 items
-  /// Includes: Zakat Fitrah, Infak/Sedekah, Zakat Mal, Setor ZIS, Penyerapan Amil, Laporan, Fidyah, Kotak Amal, Kurban
+  /// List of quick action items - 3x3 grid = 8 items
+  /// Includes: Zakat Fitrah, Infak/Sedekah, Zakat Mal, Setor ZIS, Penyerapan Amil, Laporan, Fidyah, Kotak Amal
   static final List<ModernQuickActionItem> _quickActions = [
     ModernQuickActionItem(
       label: 'Zakat Fitrah',
@@ -100,12 +100,6 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
       iconPath: 'assets/images/kotak_amal.png',
       fallbackIcon: Icons.inventory_2,
       routeName: KotakAmalWidget.routeName,
-    ),
-    ModernQuickActionItem(
-      label: 'Kurban',
-      iconPath: 'assets/images/kurban.png',
-      fallbackIcon: Icons.pets,
-      routeName: QurbanWidget.routeName,
     ),
   ];
 

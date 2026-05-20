@@ -689,6 +689,7 @@ class TransactionEndPointGroup {
   static AddSedekahCall addSedekahCall = AddSedekahCall();
   static AddFidyahCall addFidyahCall = AddFidyahCall();
   static AddKotakAmalCall addKotakAmalCall = AddKotakAmalCall();
+  static AddQurbanCall addQurbanCall = AddQurbanCall();
   static AddPendistribusianCall addPendistribusianCall =
       AddPendistribusianCall();
   static AddSetorZISCall addSetorZISCall = AddSetorZISCall();
@@ -1052,6 +1053,57 @@ class AddKotakAmalCall {
     return ApiManager.instance.makeApiCall(
       callName: 'Add Kotak Amal',
       apiUrl: '${baseUrl}/kotak_amal',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class AddQurbanCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? unitId,
+    String? trxDate = '',
+    int? sapiQty,
+    int? sapiPrice,
+    int? kambingQty,
+    int? kambingPrice,
+    int? dombaQty,
+    int? dombaPrice,
+    int? total,
+    String? desc = '',
+  }) async {
+    final baseUrl = TransactionEndPointGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "unit_id": ${unitId},
+  "trx_date": "${escapeStringForJson(trxDate)}",
+  "sapi_qty": ${sapiQty},
+  "sapi_price": ${sapiPrice},
+  "kambing_qty": ${kambingQty},
+  "kambing_price": ${kambingPrice},
+  "domba_qty": ${dombaQty},
+  "domba_price": ${dombaPrice},
+  "total": ${total},
+  "desc": "${escapeStringForJson(desc)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Add Qurban',
+      apiUrl: '${baseUrl}/qurban',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -2186,6 +2238,290 @@ class GetAllocationConfigActiveCall {
 }
 
 /// End MiscEndPoint Group Code
+
+/// Start LaporanKurbanEndPoint Group Code
+
+class LaporanKurbanEndPointGroup {
+  static String getBaseUrl() =>
+      'https://sisfo-upz-sisfoupz-webapp.2rxwkd.easypanel.host/api/v1';
+  static Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+  static CreateLaporanKurbanCall createLaporanKurbanCall =
+      CreateLaporanKurbanCall();
+  static GetLaporanKurbanCall getLaporanKurbanCall = GetLaporanKurbanCall();
+  static SubmitLaporanKurbanCall submitLaporanKurbanCall =
+      SubmitLaporanKurbanCall();
+  static UploadDokumentasiCall uploadDokumentasiCall =
+      UploadDokumentasiCall();
+  static DeleteDokumentasiCall deleteDokumentasiCall =
+      DeleteDokumentasiCall();
+  static ListLaporanKurbanCall listLaporanKurbanCall =
+      ListLaporanKurbanCall();
+}
+
+class CreateLaporanKurbanCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? unitId,
+    String? tahunHijriah = '',
+    int? tahunMasehi,
+    int? jmlSapi,
+    int? jmlKerbau,
+    int? jmlKambing,
+    int? jmlDomba,
+    int? totalShohibul,
+    bool? shohibulDikoreksi,
+    String? alasanKoreksi,
+    int? jmlPaketDaging,
+    int? jmlPenerima,
+    List<String>? kelompokPenerima,
+    String? catatan,
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    final kelompok = kelompokPenerima != null && kelompokPenerima.isNotEmpty
+        ? kelompokPenerima.map((k) => '"$k"').join(',')
+        : '';
+
+    final ffApiRequestBody = '''
+{
+  "unit_id": ${unitId},
+  "tahun_hijriah": "${escapeStringForJson(tahunHijriah)}",
+  "tahun_masehi": ${tahunMasehi},
+  "jml_sapi": ${jmlSapi ?? 0},
+  "jml_kerbau": ${jmlKerbau ?? 0},
+  "jml_kambing": ${jmlKambing ?? 0},
+  "jml_domba": ${jmlDomba ?? 0},
+  "total_shohibul": ${totalShohibul},
+  "shohibul_dikoreksi": ${shohibulDikoreksi ?? false},
+  "alasan_koreksi": "${escapeStringForJson(alasanKoreksi)}",
+  "jml_paket_daging": ${jmlPaketDaging ?? 0},
+  "jml_penerima": ${jmlPenerima ?? 0},
+  "kelompok_penerima": [${kelompok}],
+  "catatan": "${escapeStringForJson(catatan)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Create Laporan Kurban',
+      apiUrl: '${baseUrl}/laporan-kurban',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  int? createdId(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.data.id''',
+      ));
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+}
+
+class GetLaporanKurbanCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? id,
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get Laporan Kurban',
+      apiUrl: '${baseUrl}/laporan-kurban/${id}',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+
+  String? noReferensi(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.no_referensi''',
+      ));
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.status''',
+      ));
+}
+
+class SubmitLaporanKurbanCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? id,
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Submit Laporan Kurban',
+      apiUrl: '${baseUrl}/laporan-kurban/${id}/submit',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+
+  String? noReferensi(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.no_referensi''',
+      ));
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.status''',
+      ));
+}
+
+class ListLaporanKurbanCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? tahun,
+    String? status,
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    final Map<String, dynamic> params = {};
+    if (tahun != null) {
+      params['tahun'] = tahun;
+    }
+    if (status != null && status.isNotEmpty) {
+      params['status'] = status;
+    }
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'List Laporan Kurban',
+      apiUrl: '${baseUrl}/laporan-kurban',
+      callType: ApiCallType.GET,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: params,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  List? dataList(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      ) as List?;
+}
+
+class UploadDokumentasiCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? laporanKurbanId,
+    dynamic file,
+    String? jenis = '',
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Upload Dokumentasi Kurban',
+      apiUrl: '${baseUrl}/laporan-kurban/${laporanKurbanId}/dokumentasi',
+      callType: ApiCallType.POST,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {
+        'file': file,
+        'jenis': jenis,
+      },
+      bodyType: BodyType.MULTIPART,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class DeleteDokumentasiCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? laporanKurbanId,
+    int? dokId,
+  }) async {
+    final baseUrl = LaporanKurbanEndPointGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Delete Dokumentasi Kurban',
+      apiUrl:
+          '${baseUrl}/laporan-kurban/${laporanKurbanId}/dokumentasi/${dokId}',
+      callType: ApiCallType.DELETE,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${token}',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// End LaporanKurbanEndPoint Group Code
 
 /// Start RekapEndPoint Group Code
 

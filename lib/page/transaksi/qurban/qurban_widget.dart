@@ -1,3 +1,5 @@
+import '/auth/custom_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/component/date_picker/date_picker_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -27,34 +29,11 @@ class _QurbanWidgetState extends State<QurbanWidget>
   late QurbanModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AnimationController _buttonAnimationController;
-  late Animation<double> _buttonScaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => QurbanModel());
-
-    // Initialize button animation
-    _buttonAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 100),
-      vsync: this,
-    );
-    _buttonScaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.98,
-    ).animate(
-      CurvedAnimation(
-        parent: _buttonAnimationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _model.namaMuzakkiTextController ??= TextEditingController();
-    _model.namaMuzakkiFocusNode ??= FocusNode();
-
-    _model.alamatMuzakkiTextController ??= TextEditingController();
-    _model.alamatMuzakkiFocusNode ??= FocusNode();
 
     _model.jmlSapiTextController ??= TextEditingController();
     _model.jmlSapiFocusNode ??= FocusNode();
@@ -83,8 +62,6 @@ class _QurbanWidgetState extends State<QurbanWidget>
   @override
   void dispose() {
     _model.dispose();
-    _buttonAnimationController.dispose();
-
     super.dispose();
   }
 
@@ -103,7 +80,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
           desktop: false,
         )
             ? AppBar(
-                backgroundColor: FlutterFlowTheme.of(context).primaryDark,
+                backgroundColor: ModernColors.primaryDark,
                 automaticallyImplyLeading: false,
                 leading: FlutterFlowIconButton(
                   borderColor: Colors.transparent,
@@ -112,7 +89,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                   buttonSize: 48.0,
                   icon: Icon(
                     Icons.arrow_back_rounded,
-                    color: Colors.white,
+                    color: ModernColors.textOnDark,
                     size: 20.0,
                   ),
                   onPressed: () async {
@@ -122,7 +99,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 title: Text(
                   'Penerimaan Qurban',
                   style: GoogleFonts.inter(
-                    color: FlutterFlowTheme.of(context).info,
+                    color: ModernColors.textOnDark,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -141,1659 +118,9 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Info Card
                   _buildInfoCard(),
                   SizedBox(height: ModernSpacing.lg),
-
-                  // Form Card
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(ModernSpacing.md),
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                      borderRadius: BorderRadius.circular(ModernRadius.xl),
-                      boxShadow: ModernShadows.cardShadow,
-                    ),
-                    child: Form(
-                      key: _model.formKey,
-                      autovalidateMode: AutovalidateMode.disabled,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'PILIH TANGGAL',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                          wrapWithModel(
-                            model: _model.datePickerModel,
-                            updateCallback: () => safeSetState(() {}),
-                            child: DatePickerWidget(),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Text(
-                              'DATA MUZAKKI',
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: TextFormField(
-                              controller: _model.namaMuzakkiTextController,
-                              focusNode: _model.namaMuzakkiFocusNode,
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Nama Muzakki / Donatur ',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .namaMuzakkiTextControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 16.0),
-                            child: TextFormField(
-                              controller: _model.alamatMuzakkiTextController,
-                              focusNode: _model.alamatMuzakkiFocusNode,
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Alamat',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .alamatMuzakkiTextControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Text(
-                                'QURBAN',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      fontSize: 14.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Text(
-                                'SAPI',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 8.0, 0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 4.0),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.3,
-                                    child: TextFormField(
-                                      controller: _model.jmlSapiTextController,
-                                      focusNode: _model.jmlSapiFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.jmlSapiTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      textCapitalization:
-                                          TextCapitalization.none,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Jumlah',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        filled: true,
-                                        fillColor: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        suffixIcon: _model
-                                                .jmlSapiTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model.jmlSapiTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .jmlSapiTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        if (!isAndroid && !isiOS)
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            return TextEditingValue(
-                                              selection: newValue.selection,
-                                              text: newValue.text
-                                                  .toCapitalization(
-                                                      TextCapitalization.none),
-                                            );
-                                          }),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 8.0, 0.0),
-                                    child: TextFormField(
-                                      controller:
-                                          _model.hargaSapiTextController,
-                                      focusNode: _model.hargaSapiFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.hargaSapiTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Harga Sapi /Ekor',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder:
-                                            UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        suffixIcon: _model
-                                                .hargaSapiTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model.hargaSapiTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .hargaSapiTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp('[0-9]'))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 16.0)),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Text(
-                                'KAMBING',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 8.0, 0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 4.0),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.3,
-                                    child: TextFormField(
-                                      controller:
-                                          _model.jmlKambingTextController,
-                                      focusNode: _model.jmlKambingFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.jmlKambingTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      textCapitalization:
-                                          TextCapitalization.none,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Jumlah',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        filled: true,
-                                        fillColor: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        suffixIcon: _model
-                                                .jmlKambingTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model
-                                                      .jmlKambingTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .jmlKambingTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        if (!isAndroid && !isiOS)
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            return TextEditingValue(
-                                              selection: newValue.selection,
-                                              text: newValue.text
-                                                  .toCapitalization(
-                                                      TextCapitalization.none),
-                                            );
-                                          }),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 8.0, 0.0),
-                                    child: TextFormField(
-                                      controller:
-                                          _model.hargaKambingTextController,
-                                      focusNode: _model.hargaKambingFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.hargaKambingTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Harga Kambing /Ekor',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder:
-                                            UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        suffixIcon: _model
-                                                .hargaKambingTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model
-                                                      .hargaKambingTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .hargaKambingTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp('[0-9]'))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 16.0)),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Text(
-                                'DOMBA',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 8.0, 0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 4.0, 0.0, 4.0),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.3,
-                                    child: TextFormField(
-                                      controller: _model.jmlDombaTextController,
-                                      focusNode: _model.jmlDombaFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.jmlDombaTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      textCapitalization:
-                                          TextCapitalization.none,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Jumlah',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        filled: true,
-                                        fillColor: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        suffixIcon: _model
-                                                .jmlDombaTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model.jmlDombaTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .jmlDombaTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        if (!isAndroid && !isiOS)
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            return TextEditingValue(
-                                              selection: newValue.selection,
-                                              text: newValue.text
-                                                  .toCapitalization(
-                                                      TextCapitalization.none),
-                                            );
-                                          }),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 8.0, 0.0),
-                                    child: TextFormField(
-                                      controller:
-                                          _model.hargaDombaTextController,
-                                      focusNode: _model.hargaDombaFocusNode,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.hargaDombaTextController',
-                                        Duration(milliseconds: 2000),
-                                        () => safeSetState(() {}),
-                                      ),
-                                      autofocus: false,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'Harga Domba /Ekor',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF259148),
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        errorBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        focusedErrorBorder:
-                                            UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        suffixIcon: _model
-                                                .hargaDombaTextController!
-                                                .text
-                                                .isNotEmpty
-                                            ? InkWell(
-                                                onTap: () async {
-                                                  _model
-                                                      .hargaDombaTextController
-                                                      ?.clear();
-                                                  safeSetState(() {});
-                                                },
-                                                child: Icon(
-                                                  Icons.clear,
-                                                  color: Color(0xFF259148),
-                                                  size: 22,
-                                                ),
-                                              )
-                                            : null,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .override(
-                                            font: GoogleFonts.notoSans(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleLarge
-                                                    .fontStyle,
-                                          ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      validator: _model
-                                          .hargaDombaTextControllerValidator
-                                          .asValidator(context),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp('[0-9]'))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ].divide(SizedBox(width: 16.0)),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 16.0),
-                            child: TextFormField(
-                              controller: _model.keteranganTextController,
-                              focusNode: _model.keteranganFocusNode,
-                              autofocus: false,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Keterangan',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                hintStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                      ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF259148),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.notoSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model
-                                  .keteranganTextControllerValidator
-                                  .asValidator(context),
-                            ),
-                          ),
-
-                          // Calculation Summaries
-                          _buildAnimalSummary(
-                              'Sapi',
-                              int.tryParse(_model.jmlSapiTextController?.text ??
-                                      '0') ??
-                                  0,
-                              int.tryParse(_model.hargaSapiTextController?.text
-                                          .replaceAll('.', '') ??
-                                      '0') ??
-                                  0),
-                          _buildAnimalSummary(
-                              'Kambing',
-                              int.tryParse(
-                                      _model.jmlKambingTextController?.text ??
-                                          '0') ??
-                                  0,
-                              int.tryParse(_model
-                                          .hargaKambingTextController?.text
-                                          .replaceAll('.', '') ??
-                                      '0') ??
-                                  0),
-                          _buildAnimalSummary(
-                              'Domba',
-                              int.tryParse(
-                                      _model.jmlDombaTextController?.text ??
-                                          '0') ??
-                                  0,
-                              int.tryParse(_model.hargaDombaTextController?.text
-                                          .replaceAll('.', '') ??
-                                      '0') ??
-                                  0),
-                          _buildOverallTotal(),
-
-                          SizedBox(height: ModernSpacing.lg),
-
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 24.0, 0.0, 24.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                if (_model.formKey.currentState == null ||
-                                    !_model.formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                if (_model.datePickerModel.datePicked == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Tanggal Belum Dipilih',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              font: GoogleFonts.notoSans(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .info,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context).error,
-                                    ),
-                                  );
-                                  return;
-                                }
-                                var confirmDialogResponse =
-                                    await showDialog<bool>(
-                                          context: context,
-                                          builder: (alertDialogContext) {
-                                            return AlertDialog(
-                                              title: Text('Konfirmasi'),
-                                              content: Text(
-                                                  'Apakah ingin menginput transaksi  lainnya?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          false),
-                                                  child: Text('Tidak'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          true),
-                                                  child: Text('Ya'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ) ??
-                                        false;
-                                if (confirmDialogResponse) {
-                                  context.pushNamed(QurbanWidget.routeName);
-                                } else {
-                                  context.pushNamed(HomeWidget.routeName);
-                                }
-                              },
-                              text: 'Simpan',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).primaryDark,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.notoSans(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .fontStyle,
-                                      ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildFormCard(context),
                 ],
               ),
             ),
@@ -1803,16 +130,15 @@ class _QurbanWidgetState extends State<QurbanWidget>
     );
   }
 
-  // Info card explaining Qurban purpose
   Widget _buildInfoCard() {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(ModernSpacing.md),
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
+        color: ModernColors.primaryDark.withOpacity(0.1),
         borderRadius: BorderRadius.circular(ModernRadius.xl),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.3),
+          color: ModernColors.primaryDark.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -1821,12 +147,12 @@ class _QurbanWidgetState extends State<QurbanWidget>
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).primaryDark,
+              color: ModernColors.primaryDark,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.campaign,
-              color: FlutterFlowTheme.of(context).info,
+              color: ModernColors.textOnDark,
               size: 24,
             ),
           ),
@@ -1838,7 +164,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 Text(
                   'Tentang Qurban',
                   style: GoogleFonts.inter(
-                    color: FlutterFlowTheme.of(context).primaryDark,
+                    color: ModernColors.primaryDark,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1847,7 +173,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
                 Text(
                   'Qurban adalah ibadah penyembelihan hewan pada Hari Raya Idul Adha',
                   style: GoogleFonts.inter(
-                    color: FlutterFlowTheme.of(context).secondaryText,
+                    color: ModernColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -1859,42 +185,638 @@ class _QurbanWidgetState extends State<QurbanWidget>
     );
   }
 
-  // Calculation summary for animal types
-  Widget _buildAnimalSummary(String animal, int count, int price) {
-    if (count > 0 && price > 0) {
-      return Container(
-        margin: EdgeInsets.only(bottom: ModernSpacing.sm),
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(ModernRadius.lg),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildFormCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(ModernSpacing.md),
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        borderRadius: BorderRadius.circular(ModernRadius.xl),
+        boxShadow: ModernShadows.cardShadow,
+      ),
+      child: Form(
+        key: _model.formKey,
+        autovalidateMode: AutovalidateMode.disabled,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Total $animal: $count × Rp ${CurrencyInputFormatter.formatToCurrency(price)}',
-              style: GoogleFonts.inter(
-                color: FlutterFlowTheme.of(context).primaryText,
-                fontSize: 14,
+            _buildSectionLabel('PILIH TANGGAL'),
+            wrapWithModel(
+              model: _model.datePickerModel,
+              updateCallback: () => safeSetState(() {}),
+              child: DatePickerWidget(),
+            ),
+            SizedBox(height: ModernSpacing.lg),
+            _buildAnimalSection(
+              animal: 'Sapi',
+              icon: Icons.pets,
+              iconBgColor: ModernColors.primaryDark,
+              cardBgColor: ModernColors.primaryDark.withOpacity(0.06),
+              qtyController: _model.jmlSapiTextController!,
+              qtyFocusNode: _model.jmlSapiFocusNode!,
+              qtyValidator: _model.jmlSapiTextControllerValidator,
+              priceController: _model.hargaSapiTextController!,
+              priceFocusNode: _model.hargaSapiFocusNode!,
+              priceValidator: _model.hargaSapiTextControllerValidator,
+              priceLabel: 'Harga / Ekor',
+            ),
+            SizedBox(height: ModernSpacing.md),
+            _buildAnimalSection(
+              animal: 'Kambing',
+              icon: Icons.pets,
+              iconBgColor: ModernColors.primaryAccent,
+              cardBgColor: ModernColors.primaryAccent.withOpacity(0.06),
+              qtyController: _model.jmlKambingTextController!,
+              qtyFocusNode: _model.jmlKambingFocusNode!,
+              qtyValidator: _model.jmlKambingTextControllerValidator,
+              priceController: _model.hargaKambingTextController!,
+              priceFocusNode: _model.hargaKambingFocusNode!,
+              priceValidator: _model.hargaKambingTextControllerValidator,
+              priceLabel: 'Harga / Ekor',
+            ),
+            SizedBox(height: ModernSpacing.md),
+            _buildAnimalSection(
+              animal: 'Domba',
+              icon: Icons.pets,
+              iconBgColor: ModernColors.goldAccent,
+              cardBgColor: ModernColors.goldAccent.withOpacity(0.06),
+              qtyController: _model.jmlDombaTextController!,
+              qtyFocusNode: _model.jmlDombaFocusNode!,
+              qtyValidator: _model.jmlDombaTextControllerValidator,
+              priceController: _model.hargaDombaTextController!,
+              priceFocusNode: _model.hargaDombaFocusNode!,
+              priceValidator: _model.hargaDombaTextControllerValidator,
+              priceLabel: 'Harga / Ekor',
+            ),
+            SizedBox(height: ModernSpacing.lg),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+              child: Text(
+                'KETERANGAN',
+                style: GoogleFonts.notoSans(
+                  fontWeight: FontWeight.w600,
+                  color: ModernColors.textSecondary,
+                  fontSize: 14.0,
+                ),
               ),
             ),
-            Text(
-              'Rp ${CurrencyInputFormatter.formatToCurrency(count * price)}',
-              style: GoogleFonts.inter(
-                color: FlutterFlowTheme.of(context).primaryDark,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+            TextFormField(
+              controller: _model.keteranganTextController,
+              focusNode: _model.keteranganFocusNode,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                labelText: 'Keterangan',
+                labelStyle: GoogleFonts.notoSans(
+                  color: ModernColors.textSecondary,
+                  fontSize: 14,
+                ),
+                hintStyle: GoogleFonts.notoSans(
+                  color: ModernColors.textSecondary.withOpacity(0.7),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: FlutterFlowTheme.of(context).alternate,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: ModernColors.primaryAccent,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: ModernColors.expenseRed,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: ModernColors.expenseRed,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                ),
+                filled: true,
+                fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+              ),
+              style: GoogleFonts.notoSans(
+                color: ModernColors.textPrimary,
+                fontSize: 14,
+              ),
+              validator: _model.keteranganTextControllerValidator
+                  .asValidator(context),
+            ),
+            SizedBox(height: ModernSpacing.md),
+            _buildOverallTotal(),
+            SizedBox(height: ModernSpacing.lg),
+            FFButtonWidget(
+              onPressed: () async {
+                if (_model.formKey.currentState == null ||
+                    !_model.formKey.currentState!.validate()) {
+                  return;
+                }
+                if (_model.datePickerModel.datePicked == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Tanggal Belum Dipilih',
+                        style: GoogleFonts.notoSans(
+                          color: ModernColors.textOnDark,
+                          fontSize: 14,
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 4000),
+                      backgroundColor: ModernColors.expenseRed,
+                    ),
+                  );
+                  return;
+                }
+                final sapiQty =
+                    int.tryParse(_model.jmlSapiTextController?.text ?? '0') ??
+                        0;
+                final sapiPrice = int.tryParse(
+                        _model.hargaSapiTextController?.text ?? '0') ??
+                    0;
+                final kambingQty = int.tryParse(
+                        _model.jmlKambingTextController?.text ?? '0') ??
+                    0;
+                final kambingPrice = int.tryParse(
+                        _model.hargaKambingTextController?.text ?? '0') ??
+                    0;
+                final dombaQty =
+                    int.tryParse(_model.jmlDombaTextController?.text ?? '0') ??
+                        0;
+                final dombaPrice = int.tryParse(
+                        _model.hargaDombaTextController?.text ?? '0') ??
+                    0;
+                final total = (sapiQty * sapiPrice) +
+                    (kambingQty * kambingPrice) +
+                    (dombaQty * dombaPrice);
+
+                if (total <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Minimal satu hewan harus diisi',
+                        style: GoogleFonts.notoSans(
+                          color: ModernColors.textOnDark,
+                          fontSize: 14,
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 4000),
+                      backgroundColor: ModernColors.expenseRed,
+                    ),
+                  );
+                  return;
+                }
+
+                var confirmDialogResponse = await showDialog<bool>(
+                      context: context,
+                      builder: (alertDialogContext) {
+                        return AlertDialog(
+                          title: Text(
+                            'Konfirmasi',
+                            style: GoogleFonts.notoSans(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (sapiQty > 0)
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 4),
+                                    child: Text(
+                                      'Sapi: $sapiQty ekor × Rp ${CurrencyInputFormatter.formatToCurrency(sapiPrice)}',
+                                      style: GoogleFonts.notoSans(fontSize: 14),
+                                    ),
+                                  ),
+                                if (kambingQty > 0)
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 4),
+                                    child: Text(
+                                      'Kambing: $kambingQty ekor × Rp ${CurrencyInputFormatter.formatToCurrency(kambingPrice)}',
+                                      style: GoogleFonts.notoSans(fontSize: 14),
+                                    ),
+                                  ),
+                                if (dombaQty > 0)
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 4),
+                                    child: Text(
+                                      'Domba: $dombaQty ekor × Rp ${CurrencyInputFormatter.formatToCurrency(dombaPrice)}',
+                                      style: GoogleFonts.notoSans(fontSize: 14),
+                                    ),
+                                  ),
+                                Divider(),
+                                Text(
+                                  'Total: Rp ${CurrencyInputFormatter.formatToCurrency(total)}',
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(alertDialogContext, false),
+                              child: Text(
+                                'Batal',
+                                style: GoogleFonts.notoSans(
+                                  color: ModernColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(alertDialogContext, true),
+                              child: Text(
+                                'Proses',
+                                style: GoogleFonts.notoSans(
+                                  color: ModernColors.primaryAccent,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ) ??
+                    false;
+                if (!confirmDialogResponse) return;
+
+                await TransactionEndPointGroup.addQurbanCall.call(
+                  token: currentAuthenticationToken,
+                  unitId: FFAppState().profileUPZ.id,
+                  trxDate: _model.datePickerModel.datePicked?.toString(),
+                  sapiQty: sapiQty,
+                  sapiPrice: sapiPrice,
+                  kambingQty: kambingQty,
+                  kambingPrice: kambingPrice,
+                  dombaQty: dombaQty,
+                  dombaPrice: dombaPrice,
+                  total: total,
+                  desc: _model.keteranganTextController?.text ?? '',
+                );
+
+                await showDialog(
+                  context: context,
+                  builder: (alertDialogContext) {
+                    return AlertDialog(
+                      title: Text(
+                        'Berhasil',
+                        style: GoogleFonts.notoSans(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      content: Text(
+                        'Transaksi Berhasil',
+                        style: GoogleFonts.notoSans(),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(alertDialogContext),
+                          child: Text(
+                            'Ok',
+                            style: GoogleFonts.notoSans(
+                              color: ModernColors.primaryAccent,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                context.goNamed(HomeWidget.routeName);
+              },
+              text: 'Simpan',
+              options: FFButtonOptions(
+                width: double.infinity,
+                height: 40.0,
+                padding: EdgeInsetsDirectional.fromSTEB(
+                    24.0, 0.0, 24.0, 0.0),
+                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                    0.0, 0.0, 0.0, 0.0),
+                color: ModernColors.primaryDark,
+                textStyle: GoogleFonts.notoSans(
+                  color: ModernColors.textOnDark,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+                elevation: 3.0,
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(ModernRadius.sm),
               ),
             ),
           ],
         ),
-      );
-    }
-    return SizedBox.shrink();
+      ),
+    );
   }
 
-  // Overall total calculation
+  Widget _buildSectionLabel(String label) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+      child: Text(
+        label,
+        style: GoogleFonts.notoSans(
+          fontWeight: FontWeight.w600,
+          color: ModernColors.textSecondary,
+          fontSize: 14.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimalSection({
+    required String animal,
+    required IconData icon,
+    required Color iconBgColor,
+    required Color cardBgColor,
+    required TextEditingController qtyController,
+    required FocusNode qtyFocusNode,
+    required String? Function(BuildContext, String?)? qtyValidator,
+    required TextEditingController priceController,
+    required FocusNode priceFocusNode,
+    required String? Function(BuildContext, String?)? priceValidator,
+    required String priceLabel,
+  }) {
+    final qty = int.tryParse(qtyController.text) ?? 0;
+    final price =
+        int.tryParse(priceController.text.replaceAll('.', '')) ?? 0;
+    final total = qty * price;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cardBgColor,
+        borderRadius: BorderRadius.circular(ModernRadius.md),
+        border: Border.all(
+          color: iconBgColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(ModernSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: iconBgColor,
+                    borderRadius: BorderRadius.circular(ModernRadius.sm),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: ModernColors.textOnDark,
+                    size: 20,
+                  ),
+                ),
+                SizedBox(width: ModernSpacing.sm),
+                Text(
+                  animal,
+                  style: GoogleFonts.notoSans(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: ModernColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: ModernSpacing.md),
+            Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.25,
+                  child: TextFormField(
+                    controller: qtyController,
+                    focusNode: qtyFocusNode,
+                    onChanged: (_) => EasyDebounce.debounce(
+                      'qty_$animal',
+                      Duration(milliseconds: 2000),
+                      () => safeSetState(() {}),
+                    ),
+                    autofocus: false,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      labelText: 'Jumlah',
+                      labelStyle: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary,
+                        fontSize: 13,
+                      ),
+                      hintStyle: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary.withOpacity(0.7),
+                        fontSize: 13,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.textSecondary.withOpacity(0.3),
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.primaryAccent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.expenseRed,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.expenseRed,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                      suffixIcon: qtyController.text.isNotEmpty
+                          ? InkWell(
+                              onTap: () {
+                                qtyController.clear();
+                                safeSetState(() {});
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: ModernColors.primaryAccent,
+                                size: 18,
+                              ),
+                            )
+                          : null,
+                    ),
+                    style: GoogleFonts.notoSans(
+                      color: ModernColors.textPrimary,
+                      fontSize: 14,
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: qtyValidator.asValidator(context),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
+                ),
+                SizedBox(width: ModernSpacing.sm),
+                Expanded(
+                  child: TextFormField(
+                    controller: priceController,
+                    focusNode: priceFocusNode,
+                    onChanged: (_) => EasyDebounce.debounce(
+                      'price_$animal',
+                      Duration(milliseconds: 2000),
+                      () => safeSetState(() {}),
+                    ),
+                    autofocus: false,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      labelText: priceLabel,
+                      labelStyle: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary,
+                        fontSize: 13,
+                      ),
+                      hintStyle: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary.withOpacity(0.7),
+                        fontSize: 13,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.textSecondary.withOpacity(0.3),
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.primaryAccent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.expenseRed,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: ModernColors.expenseRed,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                      prefixText: 'Rp ',
+                      prefixStyle: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      suffixIcon: priceController.text.isNotEmpty
+                          ? InkWell(
+                              onTap: () {
+                                priceController.clear();
+                                safeSetState(() {});
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: ModernColors.primaryAccent,
+                                size: 18,
+                              ),
+                            )
+                          : null,
+                    ),
+                    style: GoogleFonts.notoSans(
+                      color: ModernColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: priceValidator.asValidator(context),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (total > 0) ...[
+              SizedBox(height: ModernSpacing.sm),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: ModernSpacing.sm,
+                  vertical: ModernSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: iconBgColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$qty × Rp ${CurrencyInputFormatter.formatToCurrency(price)}',
+                      style: GoogleFonts.notoSans(
+                        color: ModernColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      'Rp ${CurrencyInputFormatter.formatToCurrency(total)}',
+                      style: GoogleFonts.notoSans(
+                        color: iconBgColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildOverallTotal() {
     final sapiCount =
         int.tryParse(_model.jmlSapiTextController?.text ?? '0') ?? 0;
@@ -1919,11 +841,19 @@ class _QurbanWidgetState extends State<QurbanWidget>
 
     if (total > 0) {
       return Container(
-        margin: EdgeInsets.symmetric(vertical: ModernSpacing.md),
-        padding: EdgeInsets.all(16),
+        width: double.infinity,
+        padding: EdgeInsets.all(ModernSpacing.md),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryDark.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(ModernRadius.lg),
+          gradient: LinearGradient(
+            colors: [
+              ModernColors.primaryDark,
+              ModernColors.primaryDarkEnd,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(ModernRadius.md),
+          boxShadow: ModernShadows.buttonShadow,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1931,6 +861,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
             Text(
               'Total Keseluruhan',
               style: GoogleFonts.inter(
+                color: ModernColors.textOnDark,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -1938,7 +869,7 @@ class _QurbanWidgetState extends State<QurbanWidget>
             Text(
               'Rp ${CurrencyInputFormatter.formatToCurrency(total)}',
               style: GoogleFonts.inter(
-                color: FlutterFlowTheme.of(context).primaryDark,
+                color: ModernColors.textOnDark,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
