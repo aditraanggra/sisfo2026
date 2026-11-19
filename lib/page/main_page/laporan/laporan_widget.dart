@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 
 import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
@@ -328,8 +329,14 @@ class _LaporanWidgetState extends State<LaporanWidget>
             : null,
         body: SafeArea(
           top: true,
-          child: Column(
+          child: ResponsiveContentWrapper(
+            child: Column(
             children: [
+              if (!isPhoneScreen(context))
+                DesktopPageHeader(
+                  title: 'Laporan Pengelolaan ZIS',
+                  subtitle: 'UPZ ${FFAppState().profileUPZ.unitName}',
+                ),
               _buildFilterPanel(),
               if (_model.isLoading)
                 Expanded(
@@ -425,6 +432,7 @@ class _LaporanWidgetState extends State<LaporanWidget>
                 ),
             ],
           ),
+        ),
         ),
         floatingActionButton: !_model.isLoading && _model.reportData != null
             ? FloatingActionButton.extended(

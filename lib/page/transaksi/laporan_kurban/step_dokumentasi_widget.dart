@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import '/flutter_flow/upload_data.dart';
 import '/backend/cloudinary/cloudinary_service.dart';
 import '/backend/cloudinary/cloudinary_config.dart';
@@ -56,9 +57,21 @@ class _StepDokumentasiWidgetState extends State<StepDokumentasiWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(ModernSpacing.md),
-      child: Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final screenType = getScreenType(context);
+        final double contentWidth = switch (screenType) {
+          ScreenType.phone => double.infinity,
+          ScreenType.tablet => screenWidth * 0.80,
+          ScreenType.desktop => min(screenWidth * 0.55, 720.0),
+        };
+        return Center(
+          child: SizedBox(
+            width: contentWidth,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(ModernSpacing.md),
+              child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -134,6 +147,10 @@ class _StepDokumentasiWidgetState extends State<StepDokumentasiWidget> {
           ),
         ],
       ),
+            ),
+          ),
+        );
+      },
     );
   }
 

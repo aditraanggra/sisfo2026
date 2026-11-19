@@ -1,6 +1,7 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/responsive_helper.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,44 +48,45 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
         top: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              // Header Profile Section
-              _buildProfileHeader(),
+        child: ResponsiveContentWrapper(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                // Header Profile Section
+                _buildProfileHeader(),
 
-              SizedBox(height: 24.0),
+                SizedBox(height: 24.0),
 
-              // Menu Sections
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Informasi UPZ Section
-                    _buildSectionTitle('Informasi UPZ'),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.grid_view_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Profil UPZ',
-                      subtitle: 'Informasi lengkap UPZ',
-                      onTap: () {
-                        context.pushNamed(ProfilUPZWidget.routeName);
-                      },
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.file_upload_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Upload Laporan',
-                      subtitle: 'Formulir 101, 102 & LPZ',
-                      onTap: () {
-                        context.pushNamed('UploadLaporan');
-                      },
-                    ),
-                    /* SizedBox(height: 12.0),
+                // Menu Sections
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Informasi UPZ Section
+                      _buildSectionTitle('Informasi UPZ'),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.grid_view_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Profil UPZ',
+                        subtitle: 'Informasi lengkap UPZ',
+                        onTap: () {
+                          context.pushNamed(ProfilUPZWidget.routeName);
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.file_upload_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Upload Laporan',
+                        subtitle: 'Formulir 101, 102 & LPZ',
+                        onTap: () {
+                          context.pushNamed('UploadLaporan');
+                        },
+                      ),
+                      /* SizedBox(height: 12.0),
                     _buildMenuItem(
                       icon: Icons.people_outline_rounded,
                       iconColor: Color(0xFF259148),
@@ -95,88 +97,89 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
                       },
                     ),
  */
-                    SizedBox(height: 12.0),
+                      SizedBox(height: 12.0),
 
-                    // Pengaturan Section
-                    _buildSectionTitle('Pengaturan'),
-                    SizedBox(height: 12.0),
-                    _buildThemeToggleMenuItem(),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.person_outline_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Akun Saya',
-                      subtitle: 'Ubah informasi akun',
-                      onTap: () {
-                        context.pushNamed(EditProfileWidget.routeName);
-                      },
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.lock_outline_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Ubah Password',
-                      subtitle: 'Ganti password akun',
-                      onTap: () {
-                        // Handle change password
-                      },
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.calendar_today_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Tahun Pengelolaan ZIS',
-                      subtitle: 'Atur tahun data ZIS',
-                      onTap: () {
-                        context.pushNamed(TahunPengelolaanWidget.routeName);
-                      },
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.notifications_outlined,
-                      iconColor: Color(0xFF259148),
-                      title: 'Notifikasi',
-                      subtitle: 'Pengaturan notifikasi',
-                      onTap: () {
-                        // Handle notifications
-                      },
-                    ),
+                      // Pengaturan Section
+                      _buildSectionTitle('Pengaturan'),
+                      SizedBox(height: 12.0),
+                      _buildThemeToggleMenuItem(),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.person_outline_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Akun Saya',
+                        subtitle: 'Ubah informasi akun',
+                        onTap: () {
+                          context.pushNamed(EditProfileWidget.routeName);
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.lock_outline_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Ubah Password',
+                        subtitle: 'Ganti password akun',
+                        onTap: () {
+                          // Handle change password
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.calendar_today_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Tahun Pengelolaan ZIS',
+                        subtitle: 'Atur tahun data ZIS',
+                        onTap: () {
+                          context.pushNamed(TahunPengelolaanWidget.routeName);
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.notifications_outlined,
+                        iconColor: Color(0xFF259148),
+                        title: 'Notifikasi',
+                        subtitle: 'Pengaturan notifikasi',
+                        onTap: () {
+                          // Handle notifications
+                        },
+                      ),
 
-                    SizedBox(height: 24.0),
+                      SizedBox(height: 24.0),
 
-                    // Bantuan Section
-                    _buildSectionTitle('Bantuan'),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.help_outline_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Panduan Aplikasi',
-                      subtitle: 'Cara menggunakan aplikasi',
-                      onTap: () {
-                        // Handle app guide
-                      },
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildMenuItem(
-                      icon: Icons.info_outline_rounded,
-                      iconColor: Color(0xFF259148),
-                      title: 'Tentang Aplikasi',
-                      subtitle: 'Versi 1.0.0',
-                      onTap: () {
-                        // Handle about app
-                      },
-                    ),
+                      // Bantuan Section
+                      _buildSectionTitle('Bantuan'),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.help_outline_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Panduan Aplikasi',
+                        subtitle: 'Cara menggunakan aplikasi',
+                        onTap: () {
+                          // Handle app guide
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      _buildMenuItem(
+                        icon: Icons.info_outline_rounded,
+                        iconColor: Color(0xFF259148),
+                        title: 'Tentang Aplikasi',
+                        subtitle: 'Versi 1.0.0',
+                        onTap: () {
+                          // Handle about app
+                        },
+                      ),
 
-                    SizedBox(height: 32.0),
+                      SizedBox(height: 32.0),
 
-                    // Logout Button
-                    _buildLogoutButton(),
+                      // Logout Button
+                      _buildLogoutButton(),
 
-                    SizedBox(height: 32.0),
-                  ],
+                      SizedBox(height: 32.0),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -345,39 +348,51 @@ class _ProfileResponsiveWidgetState extends State<ProfileResponsiveWidget> {
   }
 
   Widget _buildLogoutButton() {
-    return InkWell(
-      onTap: () async {
-        GoRouter.of(context).prepareAuthEvent();
-        await authManager.signOut();
-        GoRouter.of(context).clearRedirectLocation();
-        context.goNamedAuth(LoginWidget.routeName, context.mounted);
-      },
-      borderRadius: BorderRadius.circular(12.0),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).error.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12.0),
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: responsiveValue(
+            context: context,
+            phone: double.infinity,
+            tablet: 360.0,
+            desktop: 400.0,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.logout_rounded,
-              color: FlutterFlowTheme.of(context).error,
-              size: 20.0,
+        child: InkWell(
+          onTap: () async {
+            GoRouter.of(context).prepareAuthEvent();
+            await authManager.signOut();
+            GoRouter.of(context).clearRedirectLocation();
+            context.goNamedAuth(LoginWidget.routeName, context.mounted);
+          },
+          borderRadius: BorderRadius.circular(12.0),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            SizedBox(width: 8.0),
-            Text(
-              'Keluar',
-              style: GoogleFonts.inter(
-                color: FlutterFlowTheme.of(context).error,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.logout_rounded,
+                  color: FlutterFlowTheme.of(context).error,
+                  size: 20.0,
+                ),
+                SizedBox(width: 8.0),
+                Text(
+                  'Keluar',
+                  style: GoogleFonts.inter(
+                    color: FlutterFlowTheme.of(context).error,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

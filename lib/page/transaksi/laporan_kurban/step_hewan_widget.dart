@@ -2,6 +2,7 @@ import '/component/hewan_counter_row/hewan_counter_row_widget.dart';
 import '/component/shohibul_auto_box/shohibul_auto_box_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'step_hewan_model.dart';
@@ -70,82 +71,104 @@ class _StepHewanWidgetState extends State<StepHewanWidget> {
       widget.jmlKambing +
       widget.jmlDomba;
 
-  double get _estimatedMeat => _totalEkor * 25.0;
+  double get _estimatedMeatMin =>
+      (widget.jmlSapi + widget.jmlKerbau) * 120 +
+      (widget.jmlKambing + widget.jmlDomba) * 8;
+
+  double get _estimatedMeatMax =>
+      (widget.jmlSapi + widget.jmlKerbau) * 140 +
+      (widget.jmlKambing + widget.jmlDomba) * 13;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(ModernSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hewan Kurban',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final screenType = getScreenType(context);
+        final double contentWidth = switch (screenType) {
+          ScreenType.phone => double.infinity,
+          ScreenType.tablet => screenWidth * 0.80,
+          ScreenType.desktop => min(screenWidth * 0.55, 720.0),
+        };
+        return Center(
+          child: SizedBox(
+            width: contentWidth,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(ModernSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hewan Kurban',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: ModernColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Masukkan jumlah hewan yang disembelih',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: ModernColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  HewanCounterRowWidget(
+                    icon: Icons.pets,
+                    label: 'Sapi',
+                    subtitle: '1 sapi = 7 Mudhohhi',
+                    iconColor: ModernColors.primaryDark,
+                    value: widget.jmlSapi,
+                    onChanged: widget.onSapiChanged,
+                  ),
+                  const SizedBox(height: ModernSpacing.sm),
+                  HewanCounterRowWidget(
+                    icon: Icons.pets,
+                    label: 'Kerbau',
+                    subtitle: '1 kerbau = 7 Mudhohhi',
+                    iconColor: const Color(0xFF8B4513),
+                    value: widget.jmlKerbau,
+                    onChanged: widget.onKerbauChanged,
+                  ),
+                  const SizedBox(height: ModernSpacing.sm),
+                  HewanCounterRowWidget(
+                    icon: Icons.pets,
+                    label: 'Kambing',
+                    subtitle: '1 kambing = 1 Mudhohhi',
+                    iconColor: ModernColors.primaryAccent,
+                    value: widget.jmlKambing,
+                    onChanged: widget.onKambingChanged,
+                  ),
+                  const SizedBox(height: ModernSpacing.sm),
+                  HewanCounterRowWidget(
+                    icon: Icons.pets,
+                    label: 'Domba',
+                    subtitle: '1 domba = 1 Mudhohhi',
+                    iconColor: ModernColors.goldAccent,
+                    value: widget.jmlDomba,
+                    onChanged: widget.onDombaChanged,
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  ShohibulAutoBoxWidget(
+                    calculatedShohibul: _calculatedShohibul,
+                    isCorrected: widget.shohibulDikoreksi,
+                    manualValue: widget.shohibulManual,
+                    alasanKoreksi: widget.alasanKoreksi,
+                    onManualValueChanged: widget.onShohibulManualChanged,
+                    onAlasanChanged: widget.onAlasanKoreksiChanged,
+                    onToggleKoreksi: widget.onToggleKoreksi,
+                    onReset: widget.onResetShohibul,
+                  ),
+                  const SizedBox(height: ModernSpacing.md),
+                  _buildStatPills(),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Masukkan jumlah hewan yang disembelih',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: ModernColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          HewanCounterRowWidget(
-            icon: Icons.pets,
-            label: 'Sapi',
-            subtitle: '1 sapi = 7 shohibul',
-            iconColor: ModernColors.primaryDark,
-            value: widget.jmlSapi,
-            onChanged: widget.onSapiChanged,
-          ),
-          const SizedBox(height: ModernSpacing.sm),
-          HewanCounterRowWidget(
-            icon: Icons.pets,
-            label: 'Kerbau',
-            subtitle: '1 kerbau = 7 shohibul',
-            iconColor: const Color(0xFF8B4513),
-            value: widget.jmlKerbau,
-            onChanged: widget.onKerbauChanged,
-          ),
-          const SizedBox(height: ModernSpacing.sm),
-          HewanCounterRowWidget(
-            icon: Icons.pets,
-            label: 'Kambing',
-            subtitle: '1 kambing = 1 shohibul',
-            iconColor: ModernColors.primaryAccent,
-            value: widget.jmlKambing,
-            onChanged: widget.onKambingChanged,
-          ),
-          const SizedBox(height: ModernSpacing.sm),
-          HewanCounterRowWidget(
-            icon: Icons.pets,
-            label: 'Domba',
-            subtitle: '1 domba = 1 shohibul',
-            iconColor: ModernColors.goldAccent,
-            value: widget.jmlDomba,
-            onChanged: widget.onDombaChanged,
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          ShohibulAutoBoxWidget(
-            calculatedShohibul: _calculatedShohibul,
-            isCorrected: widget.shohibulDikoreksi,
-            manualValue: widget.shohibulManual,
-            alasanKoreksi: widget.alasanKoreksi,
-            onManualValueChanged: widget.onShohibulManualChanged,
-            onAlasanChanged: widget.onAlasanKoreksiChanged,
-            onToggleKoreksi: widget.onToggleKoreksi,
-            onReset: widget.onResetShohibul,
-          ),
-          const SizedBox(height: ModernSpacing.md),
-          _buildStatPills(),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -161,7 +184,7 @@ class _StepHewanWidgetState extends State<StepHewanWidget> {
         _buildPill(
           icon: Icons.restaurant,
           label: 'Estimasi daging',
-          value: '${_estimatedMeat.toStringAsFixed(0)} kg',
+          value: '${_estimatedMeatMin.toStringAsFixed(0)} - ${_estimatedMeatMax.toStringAsFixed(0)} kg',
         ),
       ],
     );

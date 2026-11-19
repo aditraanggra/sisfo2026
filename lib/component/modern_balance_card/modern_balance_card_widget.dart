@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'modern_balance_card_model.dart';
 export 'modern_balance_card_model.dart';
@@ -71,6 +72,9 @@ class _ModernBalanceCardWidgetState extends State<ModernBalanceCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isPhone = isPhoneScreen(context);
+    final buttonWidth = isPhone ? null : 200.0;
+
     return Container(
       width: double.infinity,
       // Requirements: 4.4 - Large border radius 20-24px
@@ -110,26 +114,53 @@ class _ModernBalanceCardWidgetState extends State<ModernBalanceCardWidget> {
             const SizedBox(height: ModernSpacing.lg),
             // Requirements: 4.5 - Two pill-shaped action buttons
             Row(
+              mainAxisAlignment: isPhone
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: _buildActionButton(
-                    context: context,
-                    label: 'Pendistribusian',
-                    icon: Icons.arrow_upward_rounded,
-                    onTap: widget.onPendistribusianTap,
-                    isPrimary: true,
+                if (isPhone)
+                  Expanded(
+                    child: _buildActionButton(
+                      context: context,
+                      label: 'Pendistribusian',
+                      icon: Icons.arrow_upward_rounded,
+                      onTap: widget.onPendistribusianTap,
+                      isPrimary: true,
+                    ),
+                  )
+                else
+                  SizedBox(
+                    width: buttonWidth,
+                    child: _buildActionButton(
+                      context: context,
+                      label: 'Pendistribusian',
+                      icon: Icons.arrow_upward_rounded,
+                      onTap: widget.onPendistribusianTap,
+                      isPrimary: true,
+                    ),
                   ),
-                ),
                 const SizedBox(width: ModernSpacing.md),
-                Expanded(
-                  child: _buildActionButton(
-                    context: context,
-                    label: 'Setor ZIS',
-                    icon: Icons.arrow_downward_rounded,
-                    onTap: widget.onSetorZisTap,
-                    isPrimary: false,
+                if (isPhone)
+                  Expanded(
+                    child: _buildActionButton(
+                      context: context,
+                      label: 'Setor ZIS',
+                      icon: Icons.arrow_downward_rounded,
+                      onTap: widget.onSetorZisTap,
+                      isPrimary: false,
+                    ),
+                  )
+                else
+                  SizedBox(
+                    width: buttonWidth,
+                    child: _buildActionButton(
+                      context: context,
+                      label: 'Setor ZIS',
+                      icon: Icons.arrow_downward_rounded,
+                      onTap: widget.onSetorZisTap,
+                      isPrimary: false,
+                    ),
                   ),
-                ),
               ],
             ),
           ],

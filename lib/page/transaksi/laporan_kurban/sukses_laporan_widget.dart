@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/auth/custom_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -99,8 +100,20 @@ class _SuksesLaporanWidgetState extends State<SuksesLaporanWidget> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(ModernSpacing.lg),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final screenType = getScreenType(context);
+            final double contentWidth = switch (screenType) {
+              ScreenType.phone => double.infinity,
+              ScreenType.tablet => screenWidth * 0.65,
+              ScreenType.desktop => min(screenWidth * 0.35, 480.0),
+            };
+            return Center(
+              child: SizedBox(
+                width: contentWidth,
+                child: Padding(
+                  padding: const EdgeInsets.all(ModernSpacing.lg),
           child: Column(
             children: [
               const Spacer(flex: 2),
@@ -256,6 +269,10 @@ class _SuksesLaporanWidgetState extends State<SuksesLaporanWidget> {
               const Spacer(flex: 3),
             ],
           ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

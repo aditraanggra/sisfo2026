@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,119 +68,140 @@ class _StepKonfirmasiWidgetState extends State<StepKonfirmasiWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(ModernSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Ringkasan Laporan',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Periksa kembali data sebelum dikirim',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: ModernColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          _buildSummaryCard(
-            icon: Icons.mosque,
-            title: 'Masjid & Lokasi',
-            children: [
-              _buildRow('Nama UPZ', widget.unitName ?? '-'),
-              _buildRow('Desa', widget.desa ?? '-'),
-              _buildRow('Kecamatan', widget.kecamatan ?? '-'),
-              _buildRow('Tahun', '${widget.tahunMasehi}'),
-            ],
-          ),
-          const SizedBox(height: ModernSpacing.md),
-          _buildSummaryCard(
-            icon: Icons.pets,
-            title: 'Hewan Kurban',
-            children: [
-              if (widget.jmlSapi > 0)
-                _buildRow('Sapi', '${widget.jmlSapi}'),
-              if (widget.jmlKerbau > 0)
-                _buildRow('Kerbau', '${widget.jmlKerbau}'),
-              if (widget.jmlKambing > 0)
-                _buildRow('Kambing', '${widget.jmlKambing}'),
-              if (widget.jmlDomba > 0)
-                _buildRow('Domba', '${widget.jmlDomba}'),
-              const Divider(height: 16),
-              _buildRow('Total Ekor',
-                  '${widget.jmlSapi + widget.jmlKerbau + widget.jmlKambing + widget.jmlDomba}'),
-              _buildRow(
-                'Shohibul Kurban',
-                '${widget.totalShohibul}',
-                badge: widget.shohibulDikoreksi ? 'Dikoreksi' : null,
-              ),
-            ],
-          ),
-          const SizedBox(height: ModernSpacing.md),
-          _buildSummaryCard(
-            icon: Icons.restaurant,
-            title: 'Distribusi',
-            children: [
-              _buildRow('Paket Daging', '${widget.jmlPaketDaging} paket'),
-              _buildRow('Penerima', '${widget.jmlPenerima} orang'),
-              if (widget.kelompokPenerima.isNotEmpty)
-                _buildRow('Kelompok', widget.kelompokPenerima.join(', ')),
-            ],
-          ),
-          if (widget.fotoKegiatan != null || widget.beritaAcara != null) ...[
-            const SizedBox(height: ModernSpacing.md),
-            _buildSummaryCard(
-              icon: Icons.photo_library,
-              title: 'Dokumentasi',
-              children: [
-                if (widget.fotoKegiatan != null)
-                  _buildRow('Foto Kegiatan', '${widget.fotoKegiatan!.path.split('/').last}'),
-                if (widget.beritaAcara != null)
-                  _buildRow('Berita Acara', '${widget.beritaAcara!.path.split('/').last}'),
-              ],
-            ),
-          ],
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: widget.isLoading ? null : widget.onKirim,
-              icon: widget.isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final screenType = getScreenType(context);
+        final double contentWidth = switch (screenType) {
+          ScreenType.phone => double.infinity,
+          ScreenType.tablet => screenWidth * 0.80,
+          ScreenType.desktop => min(screenWidth * 0.55, 720.0),
+        };
+        return Center(
+          child: SizedBox(
+            width: contentWidth,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(ModernSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ringkasan Laporan',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: ModernColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Periksa kembali data sebelum dikirim',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: ModernColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  _buildSummaryCard(
+                    icon: Icons.mosque,
+                    title: 'Data UPZ & Lokasi',
+                    children: [
+                      _buildRow('Nama UPZ', widget.unitName ?? '-'),
+                      _buildRow('Desa', widget.desa ?? '-'),
+                      _buildRow('Kecamatan', widget.kecamatan ?? '-'),
+                      _buildRow('Tahun', '${widget.tahunMasehi}'),
+                    ],
+                  ),
+                  const SizedBox(height: ModernSpacing.md),
+                  _buildSummaryCard(
+                    icon: Icons.pets,
+                    title: 'Hewan Kurban',
+                    children: [
+                      if (widget.jmlSapi > 0)
+                        _buildRow('Sapi', '${widget.jmlSapi}'),
+                      if (widget.jmlKerbau > 0)
+                        _buildRow('Kerbau', '${widget.jmlKerbau}'),
+                      if (widget.jmlKambing > 0)
+                        _buildRow('Kambing', '${widget.jmlKambing}'),
+                      if (widget.jmlDomba > 0)
+                        _buildRow('Domba', '${widget.jmlDomba}'),
+                      const Divider(height: 16),
+                      _buildRow('Total Ekor',
+                          '${widget.jmlSapi + widget.jmlKerbau + widget.jmlKambing + widget.jmlDomba}'),
+                      _buildRow(
+                        'Mudhohhi Kurban',
+                        '${widget.totalShohibul}',
+                        badge: widget.shohibulDikoreksi ? 'Dikoreksi' : null,
                       ),
-                    )
-                  : const Icon(Icons.send_rounded, size: 20),
-              label: Text(
-                widget.isLoading ? 'Mengirim...' : 'Kirim Laporan',
-                style: GoogleFonts.inter(
-                    fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ModernColors.primaryAccent,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ModernRadius.sm),
-                ),
-                elevation: 0,
+                    ],
+                  ),
+                  const SizedBox(height: ModernSpacing.md),
+                  _buildSummaryCard(
+                    icon: Icons.restaurant,
+                    title: 'Distribusi',
+                    children: [
+                      _buildRow(
+                          'Paket Daging', '${widget.jmlPaketDaging} paket'),
+                      _buildRow('Penerima', '${widget.jmlPenerima} orang'),
+                      if (widget.kelompokPenerima.isNotEmpty)
+                        _buildRow(
+                            'Kelompok', widget.kelompokPenerima.join(', ')),
+                    ],
+                  ),
+                  if (widget.fotoKegiatan != null ||
+                      widget.beritaAcara != null) ...[
+                    const SizedBox(height: ModernSpacing.md),
+                    _buildSummaryCard(
+                      icon: Icons.photo_library,
+                      title: 'Dokumentasi',
+                      children: [
+                        if (widget.fotoKegiatan != null)
+                          _buildRow('Foto Kegiatan',
+                              '${widget.fotoKegiatan!.path.split('/').last}'),
+                        if (widget.beritaAcara != null)
+                          _buildRow('Berita Acara',
+                              '${widget.beritaAcara!.path.split('/').last}'),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: widget.isLoading ? null : widget.onKirim,
+                      icon: widget.isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.send_rounded, size: 20),
+                      label: Text(
+                        widget.isLoading ? 'Mengirim...' : 'Kirim Laporan',
+                        style: GoogleFonts.inter(
+                            fontSize: 15, fontWeight: FontWeight.w600),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ModernColors.primaryAccent,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(ModernRadius.sm),
+                        ),
+                        elevation: 0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 24),
-        ],
-      ),
+        );
+      },
     );
   }
 

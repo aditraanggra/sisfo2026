@@ -74,7 +74,7 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
               ),
               const SizedBox(width: ModernSpacing.sm),
               Text(
-                'Shohibul Kurban',
+                'Mudhohhi',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -84,8 +84,8 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
               const Spacer(),
               if (widget.isCorrected)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: ModernColors.goldAccent.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -135,8 +135,8 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
                 ),
                 style: TextButton.styleFrom(
                   foregroundColor: ModernColors.primaryAccent,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 ),
               ),
               if (widget.isCorrected)
@@ -149,8 +149,8 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
                   ),
                   style: TextButton.styleFrom(
                     foregroundColor: ModernColors.textSecondary,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   ),
                 ),
             ],
@@ -166,14 +166,13 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
                         '${widget.manualValue ?? widget.calculatedShohibul}',
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Jumlah shohibul',
+                      labelText: 'Jumlah Mudhohhi',
                       labelStyle: GoogleFonts.inter(
                         color: ModernColors.textSecondary,
                         fontSize: 13,
                       ),
                       border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(ModernRadius.sm),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 10),
@@ -197,8 +196,7 @@ class _ShohibulAutoBoxWidgetState extends State<ShohibulAutoBoxWidget> {
                         fontSize: 13,
                       ),
                       border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(ModernRadius.sm),
+                        borderRadius: BorderRadius.circular(ModernRadius.sm),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 10),

@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -160,8 +161,8 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: _gridColumnCount(context),
                   crossAxisSpacing: ModernSpacing.xs,
                   mainAxisSpacing: ModernSpacing.xs,
                   childAspectRatio: 1.0,
@@ -263,5 +264,13 @@ class _ModernQuickActionsWidgetState extends State<ModernQuickActionsWidget> {
         },
       ),
     );
+  }
+
+  int _gridColumnCount(BuildContext context) {
+    return switch (getScreenType(context)) {
+      ScreenType.phone => 3,
+      ScreenType.tablet => 4,
+      ScreenType.desktop => 6,
+    };
   }
 }

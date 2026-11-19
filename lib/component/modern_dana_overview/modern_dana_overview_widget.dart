@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'modern_dana_overview_model.dart';
 export 'modern_dana_overview_model.dart';
@@ -70,10 +71,12 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Requirements: 4.6, 4.7 - Three clean cards side by side
+    final cardGap = getScreenType(context) == ScreenType.phone
+        ? ModernSpacing.sm
+        : ModernSpacing.md;
+
     return Row(
       children: [
-        // Jumlah Muzakki
         Expanded(
           child: _buildCountCard(
             context: context,
@@ -84,8 +87,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             iconColor: FlutterFlowTheme.of(context).primary,
           ),
         ),
-        const SizedBox(width: ModernSpacing.sm),
-        // Jumlah Munfiq
+        SizedBox(width: cardGap),
         Expanded(
           child: _buildCountCard(
             context: context,
@@ -97,8 +99,7 @@ class _ModernDanaOverviewWidgetState extends State<ModernDanaOverviewWidget> {
             iconColor: FlutterFlowTheme.of(context).secondary,
           ),
         ),
-        const SizedBox(width: ModernSpacing.sm),
-        // Jumlah Mustahik
+        SizedBox(width: cardGap),
         Expanded(
           child: _buildCountCard(
             context: context,

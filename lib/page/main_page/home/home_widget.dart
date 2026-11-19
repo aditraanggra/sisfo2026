@@ -9,6 +9,7 @@ import '/component/recent_transactions/recent_transactions_widget.dart';
 import '/component/laporan_kurban_banner/laporan_kurban_banner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -210,57 +211,71 @@ class _HomeWidgetState extends State<HomeWidget> {
               },
             ),
           ),
-          if (!isVerified) _buildUnverifiedMessage(context),
-          if (isVerified) ...[
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
-              child: wrapWithModel(
-                model: _model.modernDanaOverviewModel,
-                updateCallback: () => safeSetState(() {}),
-                child: ModernDanaOverviewWidget(
-                  jumlahMuzakki: _totalMuzakki,
-                  jumlahMunfiq: _totalMunfiq,
-                  jumlahMustahik: _totalMustahik,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-              child: const LaporanKurbanBannerWidget(),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-              child: wrapWithModel(
-                model: _model.modernQuickActionsModel,
-                updateCallback: () => safeSetState(() {}),
-                child: ModernQuickActionsWidget(),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-              child: RecentTransactionsWidget(),
-            ),
-          ],
-          Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 24.0),
-              child: Text(
-                'SISFO ZIS Version 2.0',
-                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      font: GoogleFonts.lato(
-                        fontWeight: FontWeight.w300,
-                        fontStyle:
-                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+          ResponsiveContentWrapper(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!isVerified) _buildUnverifiedMessage(context),
+                if (isVerified) ...[
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                    child: wrapWithModel(
+                      model: _model.modernDanaOverviewModel,
+                      updateCallback: () => safeSetState(() {}),
+                      child: ModernDanaOverviewWidget(
+                        jumlahMuzakki: _totalMuzakki,
+                        jumlahMunfiq: _totalMunfiq,
+                        jumlahMustahik: _totalMustahik,
                       ),
-                      color: Color(0xFFD0D0D0),
-                      fontSize: 12.0,
-                      letterSpacing: 0.0,
-                      fontWeight: FontWeight.w300,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                     ),
-              ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                    child: const LaporanKurbanBannerWidget(),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                    child: wrapWithModel(
+                      model: _model.modernQuickActionsModel,
+                      updateCallback: () => safeSetState(() {}),
+                      child: ModernQuickActionsWidget(),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+                    child: RecentTransactionsWidget(),
+                  ),
+                ],
+                Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 24.0),
+                    child: Text(
+                      'SISFO ZIS Version 2.0',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color: Color(0xFFD0D0D0),
+                            fontSize: 12.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -327,7 +342,9 @@ class _HomeWidgetState extends State<HomeWidget> {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
-          child: _buildShimmerContent(),
+          child: ResponsiveContentWrapper(
+            child: _buildShimmerContent(),
+          ),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import '/component/skeleton_loader/skeleton_loader_widget.dart';
 import '/component/modern_transaction_item/modern_transaction_item_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import '/backend/schema/structs/index.dart';
 import '/index.dart';
 import '/services/dialog_service.dart';
@@ -97,9 +98,12 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
             : null,
         body: SafeArea(
           top: true,
-          child: Column(
+          child: ResponsiveContentWrapper(
+            child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              if (!isPhoneScreen(context))
+                DesktopPageHeader(title: 'Histori Transaksi'),
               Expanded(
                 child: Column(
                   children: [
@@ -1308,6 +1312,7 @@ class _HistoriTransaksiWidgetState extends State<HistoriTransaksiWidget>
               ),
             ],
           ),
+        ),
         ),
       ),
     );

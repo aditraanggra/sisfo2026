@@ -4,6 +4,7 @@ import '/component/stepper_header/stepper_header_widget.dart';
 import '/component/step_nav_bar/step_nav_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'laporan_kurban_model.dart';
 import 'step_masjid_widget.dart';
 import 'step_hewan_widget.dart';
@@ -31,7 +32,7 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   static const List<String> _stepLabels = [
-    'Masjid',
+    'UPZ',
     'Hewan',
     'Distribusi',
     'Dokumentasi',
@@ -52,14 +53,15 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
   }
 
   Future<void> _checkExistingReport() async {
-    final response = await LaporanKurbanEndPointGroup.listLaporanKurbanCall.call(
+    final response =
+        await LaporanKurbanEndPointGroup.listLaporanKurbanCall.call(
       token: currentAuthenticationToken,
       tahun: _model.tahunMasehi,
       status: 'submitted',
     );
     if (response.succeeded) {
-      final list =
-          LaporanKurbanEndPointGroup.listLaporanKurbanCall.dataList(response.jsonBody);
+      final list = LaporanKurbanEndPointGroup.listLaporanKurbanCall
+          .dataList(response.jsonBody);
       if (list != null && list.isNotEmpty) {
         _model.hasExistingReport = true;
         safeSetState(() {});
@@ -94,7 +96,8 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
             TextButton(
               onPressed: () {
                 LaporanKurbanModel.clearDraft();
-                safeSetState(() => _model = createModel(context, () => LaporanKurbanModel()));
+                safeSetState(() =>
+                    _model = createModel(context, () => LaporanKurbanModel()));
                 _model.initFromProfile();
                 Navigator.of(ctx).pop(false);
               },
@@ -212,9 +215,8 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
         return;
       }
 
-      final reportId =
-          LaporanKurbanEndPointGroup.createLaporanKurbanCall
-              .createdId(createResp.jsonBody);
+      final reportId = LaporanKurbanEndPointGroup.createLaporanKurbanCall
+          .createdId(createResp.jsonBody);
 
       if (reportId == null) {
         _showError('Gagal membuat laporan', 'ID laporan tidak ditemukan');
@@ -232,9 +234,8 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
         return;
       }
 
-      final noReferensi =
-          LaporanKurbanEndPointGroup.submitLaporanKurbanCall
-              .noReferensi(submitResp.jsonBody);
+      final noReferensi = LaporanKurbanEndPointGroup.submitLaporanKurbanCall
+          .noReferensi(submitResp.jsonBody);
 
       LaporanKurbanModel.clearDraft();
 
@@ -242,7 +243,7 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
       context.pushReplacement(
         SuksesLaporanWidget.routePath,
         extra: {
-          'noReferensi': noReferensi ?? 'LK/${_model.tahunMasehi}/XXX',
+          'noReferensi': noReferensi ?? 'KRB-${_model.tahunMasehi}-${FFAppState().profileUPZ.noRegister}-XXX',
           'reportId': reportId,
           'unitName': _model.unitName ?? '',
           'fotoKegiatan': _model.fotoKegiatan,
@@ -290,70 +291,85 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
           centerTitle: true,
         ),
         body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(ModernSpacing.lg),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      color: ModernColors.goldAccent.withOpacity(0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.info_outline,
-                      color: ModernColors.goldAccent,
-                      size: 36,
-                    ),
-                  ),
-                  const SizedBox(height: ModernSpacing.lg),
-                  Text(
-                    'Laporan Sudah Ada',
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: ModernColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: ModernSpacing.sm),
-                  Text(
-                    'Anda sudah melaporkan kurban tahun ${_model.tahunMasehi}. Jika ada perubahan silakan hubungi admin.',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: ModernColors.textSecondary,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: ModernSpacing.xl),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => context.pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ModernColors.primaryAccent,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ModernRadius.sm),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final screenWidth = constraints.maxWidth;
+              final screenType = getScreenType(context);
+              final double contentWidth = switch (screenType) {
+                ScreenType.phone => double.infinity,
+                ScreenType.tablet => screenWidth * 0.65,
+                ScreenType.desktop => min(screenWidth * 0.35, 480.0),
+              };
+              return Center(
+                child: SizedBox(
+                  width: contentWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.all(ModernSpacing.lg),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 72,
+                          height: 72,
+                          decoration: BoxDecoration(
+                            color: ModernColors.goldAccent.withOpacity(0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.info_outline,
+                            color: ModernColors.goldAccent,
+                            size: 36,
+                          ),
                         ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        'Kembali ke Beranda',
-                        style: GoogleFonts.inter(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(height: ModernSpacing.lg),
+                        Text(
+                          'Laporan Sudah Ada',
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ModernColors.textPrimary,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: ModernSpacing.sm),
+                        Text(
+                          'Anda sudah melaporkan kurban tahun ${_model.tahunMasehi}. Jika ada perubahan silakan hubungi admin.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: ModernColors.textSecondary,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: ModernSpacing.xl),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => context.pop(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ModernColors.primaryAccent,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(ModernRadius.sm),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: Text(
+                              'Kembali ke Beranda',
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       );
@@ -409,14 +425,11 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
           desa: _model.desa,
           kecamatan: _model.kecamatan,
           tahunMasehi: _model.tahunMasehi,
-          onUnitNameChanged: (v) =>
-              _onStateChanged(() => _model.unitName = v),
-          onDesaChanged: (v) =>
-              _onStateChanged(() => _model.desa = v),
+          onUnitNameChanged: (v) => _onStateChanged(() => _model.unitName = v),
+          onDesaChanged: (v) => _onStateChanged(() => _model.desa = v),
           onKecamatanChanged: (v) =>
               _onStateChanged(() => _model.kecamatan = v),
-          onTahunChanged: (v) =>
-              _onStateChanged(() => _model.tahunMasehi = v),
+          onTahunChanged: (v) => _onStateChanged(() => _model.tahunMasehi = v),
         );
       case 1:
         return StepHewanWidget(
@@ -427,21 +440,16 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
           shohibulDikoreksi: _model.shohibulDikoreksi,
           shohibulManual: _model.shohibulManual,
           alasanKoreksi: _model.alasanKoreksi,
-          onSapiChanged: (v) =>
-              _onStateChanged(() => _model.jmlSapi = v),
-          onKerbauChanged: (v) =>
-              _onStateChanged(() => _model.jmlKerbau = v),
-          onKambingChanged: (v) =>
-              _onStateChanged(() => _model.jmlKambing = v),
-          onDombaChanged: (v) =>
-              _onStateChanged(() => _model.jmlDomba = v),
+          onSapiChanged: (v) => _onStateChanged(() => _model.jmlSapi = v),
+          onKerbauChanged: (v) => _onStateChanged(() => _model.jmlKerbau = v),
+          onKambingChanged: (v) => _onStateChanged(() => _model.jmlKambing = v),
+          onDombaChanged: (v) => _onStateChanged(() => _model.jmlDomba = v),
           onShohibulManualChanged: (v) =>
               _onStateChanged(() => _model.shohibulManual = v),
           onAlasanKoreksiChanged: (v) =>
               _onStateChanged(() => _model.alasanKoreksi = v),
-          onToggleKoreksi: () =>
-              _onStateChanged(() => _model.shohibulDikoreksi =
-                  !_model.shohibulDikoreksi),
+          onToggleKoreksi: () => _onStateChanged(
+              () => _model.shohibulDikoreksi = !_model.shohibulDikoreksi),
           onResetShohibul: () => _onStateChanged(() {
             _model.shohibulDikoreksi = false;
             _model.shohibulManual = null;
@@ -515,9 +523,7 @@ class _LaporanKurbanWidgetState extends State<LaporanKurbanWidget> {
     return StepNavBarWidget(
       onBack: _model.currentStep > 0 ? _onBack : _cancelReport,
       onNext: _canGoNext ? _onNext : () {},
-      nextLabel: isLastStep
-          ? 'Ringkasan'
-          : 'Lanjut',
+      nextLabel: isLastStep ? 'Ringkasan' : 'Lanjut',
       showSkip: isSecondLast,
       isLoading: _model.isLoading,
     );

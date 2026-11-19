@@ -8,7 +8,7 @@ class LaporanKurbanBannerModel
   late Animation<double> pulseAnimation;
   double pulseValue = 0.0;
 
-  void initAnimation(SingleTickerProviderStateMixin vsync) {
+  void initAnimation(TickerProviderStateMixin vsync) {
     pulseController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 2000),

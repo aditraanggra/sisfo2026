@@ -100,93 +100,54 @@ class _HewanCounterRowWidgetState extends State<HewanCounterRowWidget> {
               ],
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildMinusButton(),
-              SizedBox(
-                width: 56,
-                child: TextFormField(
-                  controller: _model.countController,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(4),
-                  ],
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
-                  ),
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 8),
-                    border: InputBorder.none,
-                    isDense: true,
-                  ),
-                  onChanged: (v) {
-                    final parsed = int.tryParse(v) ?? 0;
-                    _model.syncValue(parsed);
-                    widget.onChanged(parsed);
-                  },
-                ),
+          SizedBox(
+            width: 80,
+            child: TextFormField(
+              controller: _model.countController,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(4),
+              ],
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: ModernColors.textPrimary,
               ),
-              _buildPlusButton(),
-            ],
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                  borderSide: BorderSide(
+                    color: FlutterFlowTheme.of(context).alternate,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                  borderSide: BorderSide(
+                    color: FlutterFlowTheme.of(context).alternate,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ModernRadius.sm),
+                  borderSide: const BorderSide(
+                    color: ModernColors.primaryAccent,
+                    width: 2,
+                  ),
+                ),
+                isDense: true,
+              ),
+              onChanged: (v) {
+                final parsed = int.tryParse(v) ?? 0;
+                _model.syncValue(parsed);
+                widget.onChanged(parsed);
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMinusButton() {
-    final isDisabled = widget.value <= 0;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: isDisabled
-            ? null
-            : () => widget.onChanged(widget.value - 1),
-        borderRadius: BorderRadius.circular(ModernRadius.sm),
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: isDisabled
-                ? Colors.grey.withOpacity(0.1)
-                : ModernColors.expenseRed.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(ModernRadius.sm),
-          ),
-          child: Icon(
-            Icons.remove,
-            color: isDisabled ? Colors.grey.shade300 : ModernColors.expenseRed,
-            size: 18,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlusButton() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => widget.onChanged(widget.value + 1),
-        borderRadius: BorderRadius.circular(ModernRadius.sm),
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: ModernColors.primaryAccent.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(ModernRadius.sm),
-          ),
-          child: const Icon(
-            Icons.add,
-            color: ModernColors.primaryAccent,
-            size: 18,
-          ),
-        ),
-      ),
-    );
-  }
 }

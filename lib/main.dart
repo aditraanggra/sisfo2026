@@ -13,6 +13,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
+import 'flutter_flow/responsive_helper.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'index.dart';
@@ -152,7 +153,6 @@ class NavBarPage extends StatefulWidget {
   _NavBarPageState createState() => _NavBarPageState();
 }
 
-/// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
   String _currentPageName = 'Home';
   late Widget? _currentPage;
@@ -164,121 +164,173 @@ class _NavBarPageState extends State<NavBarPage> {
     _currentPage = widget.page;
   }
 
+  Map<String, Widget> get _tabs => {
+        'Home': HomeWidget(),
+        'Laporan': LaporanWidget(),
+        'HistoriTransaksi': HistoriTransaksiWidget(),
+        'ProfileResponsive': ProfileResponsiveWidget(),
+      };
+
+  int get _currentIndex {
+    final keys = _tabs.keys.toList();
+    final idx = keys.indexOf(_currentPageName);
+    return idx >= 0 ? idx : 0;
+  }
+
+  void _onTabSelected(int index) {
+    safeSetState(() {
+      _currentPage = null;
+      _currentPageName = _tabs.keys.toList()[index];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final tabs = {
-      'Home': HomeWidget(),
-      'Laporan': LaporanWidget(),
-      'HistoriTransaksi': HistoriTransaksiWidget(),
-      'ProfileResponsive': ProfileResponsiveWidget(),
-    };
-    final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    final screenType = getScreenType(context);
+    final currentBody = _currentPage ?? _tabs[_currentPageName]!;
+
+    if (screenType == ScreenType.phone) {
+      return _buildPhoneLayout(currentBody);
+    }
+    return _buildDesktopLayout(currentBody);
+  }
+
+  Widget _buildPhoneLayout(Widget body) {
+    final currentIndex = _currentIndex;
 
     return Scaffold(
       resizeToAvoidBottomInset: !widget.disableResizeToAvoidBottomInset,
-      body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: Visibility(
-        visible: responsiveVisibility(
-          context: context,
-          desktop: false,
-        ),
-        // Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6
-        // Modern bottom navigation with subtle top shadow and safe area padding
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            // Requirements: 8.1 - Subtle top shadow
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          // Requirements: 8.6 - Safe area padding for devices with home indicator
-          child: SafeArea(
-            top: false,
-            child: BottomNavigationBar(
-              currentIndex: currentIndex,
-              onTap: (i) => safeSetState(() {
-                _currentPage = null;
-                _currentPageName = tabs.keys.toList()[i];
-              }),
-              // Requirements: 8.1 - White background
-              backgroundColor: Colors.white,
-              elevation: 0, // Remove default elevation, using custom shadow
-              // Requirements: 8.4 - Primary dark color for active state
-              selectedItemColor: ModernColors.primaryDark,
-              // Requirements: 8.3 - Secondary text color for inactive state
-              unselectedItemColor: ModernColors.textSecondary,
-              // Requirements: 8.5 - Text labels below icons
-              showSelectedLabels: true,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              selectedLabelStyle: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-              unselectedLabelStyle: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-              ),
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  // Requirements: 8.3, 8.4 - Outlined icons for inactive, filled for active
-                  icon: FaIcon(
-                    FontAwesomeIcons.house,
-                    size: 20.0,
-                  ),
-                  activeIcon: FaIcon(
-                    FontAwesomeIcons.house,
-                    size: 20.0,
-                  ),
-                  label: 'Beranda',
-                  tooltip: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    FFIcons.kchartPie,
-                    size: 20.0,
-                  ),
-                  activeIcon: Icon(
-                    FFIcons.kchartPie,
-                    size: 20.0,
-                  ),
-                  label: 'Laporan',
-                  tooltip: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.view_list_outlined,
-                    size: 22.0,
-                  ),
-                  activeIcon: Icon(
-                    Icons.view_list_rounded,
-                    size: 22.0,
-                  ),
-                  label: 'Transaksi',
-                  tooltip: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person_outline_rounded,
-                    size: 24.0,
-                  ),
-                  activeIcon: Icon(
-                    Icons.person_rounded,
-                    size: 24.0,
-                  ),
-                  label: 'Profil',
-                  tooltip: '',
-                )
-              ],
+      body: body,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
             ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: BottomNavigationBar(
+            currentIndex: currentIndex,
+            onTap: _onTabSelected,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            selectedItemColor: ModernColors.primaryDark,
+            unselectedItemColor: ModernColors.textSecondary,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            selectedLabelStyle: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            unselectedLabelStyle: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.normal,
+            ),
+            items: _navBarItems,
           ),
         ),
       ),
     );
   }
+
+  Widget _buildDesktopLayout(Widget body) {
+    return Scaffold(
+      resizeToAvoidBottomInset: !widget.disableResizeToAvoidBottomInset,
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: _onTabSelected,
+            labelType: NavigationRailLabelType.all,
+            backgroundColor: Colors.white,
+            selectedIconTheme: IconThemeData(
+              color: ModernColors.primaryDark,
+              size: 22,
+            ),
+            unselectedIconTheme: IconThemeData(
+              color: ModernColors.textSecondary,
+              size: 22,
+            ),
+            selectedLabelTextStyle: GoogleFonts.inter(
+              color: ModernColors.primaryDark,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+            unselectedLabelTextStyle: GoogleFonts.inter(
+              color: ModernColors.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.normal,
+            ),
+            indicatorColor: ModernColors.primaryDark.withOpacity(0.1),
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            minWidth: 72,
+            groupAlignment: 0.0,
+            destinations: _navRailDestinations,
+          ),
+          const VerticalDivider(thickness: 1, width: 1),
+          Expanded(child: body),
+        ],
+      ),
+    );
+  }
+
+  List<BottomNavigationBarItem> get _navBarItems =>
+      <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.house, size: 20.0),
+          activeIcon: FaIcon(FontAwesomeIcons.house, size: 20.0),
+          label: 'Beranda',
+          tooltip: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FFIcons.kchartPie, size: 20.0),
+          activeIcon: Icon(FFIcons.kchartPie, size: 20.0),
+          label: 'Laporan',
+          tooltip: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.view_list_outlined, size: 22.0),
+          activeIcon: Icon(Icons.view_list_rounded, size: 22.0),
+          label: 'Transaksi',
+          tooltip: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline_rounded, size: 24.0),
+          activeIcon: Icon(Icons.person_rounded, size: 24.0),
+          label: 'Profil',
+          tooltip: '',
+        ),
+      ];
+
+  List<NavigationRailDestination> get _navRailDestinations =>
+      <NavigationRailDestination>[
+        NavigationRailDestination(
+          icon: FaIcon(FontAwesomeIcons.house),
+          selectedIcon: FaIcon(FontAwesomeIcons.house),
+          label: Text('Beranda'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(FFIcons.kchartPie, size: 22),
+          selectedIcon: Icon(FFIcons.kchartPie, size: 22),
+          label: Text('Laporan'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.view_list_outlined, size: 22),
+          selectedIcon: Icon(Icons.view_list_rounded, size: 22),
+          label: Text('Transaksi'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.person_outline_rounded, size: 24),
+          selectedIcon: Icon(Icons.person_rounded, size: 24),
+          label: Text('Profil'),
+        ),
+      ];
 }

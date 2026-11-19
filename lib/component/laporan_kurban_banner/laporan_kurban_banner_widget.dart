@@ -15,20 +15,70 @@ class LaporanKurbanBannerWidget extends StatefulWidget {
 }
 
 class _LaporanKurbanBannerWidgetState extends State<LaporanKurbanBannerWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late LaporanKurbanBannerModel _model;
+  late AnimationController _rippleController;
+  late List<CurvedAnimation> _rippleAnimations;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => LaporanKurbanBannerModel());
     _model.initAnimation(this);
+    _rippleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat();
+    _rippleAnimations = [
+      CurvedAnimation(
+        parent: _rippleController,
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
+      ),
+      CurvedAnimation(
+        parent: _rippleController,
+        curve: const Interval(0.15, 0.85, curve: Curves.easeOut),
+      ),
+      CurvedAnimation(
+        parent: _rippleController,
+        curve: const Interval(0.30, 1.0, curve: Curves.easeOut),
+      ),
+    ];
   }
 
   @override
   void dispose() {
+    for (final anim in _rippleAnimations) {
+      anim.dispose();
+    }
+    _rippleController.dispose();
     _model.dispose();
     super.dispose();
+  }
+
+  Widget _buildRipple(int index, double beginOpacity) {
+    final anim = _rippleAnimations[index];
+    return AnimatedBuilder(
+      animation: anim,
+      builder: (context, child) {
+        final t = anim.value;
+        final scale = 1.0 + (t * 1.8);
+        final opacity = beginOpacity * (1.0 - t);
+        return Opacity(
+          opacity: opacity.clamp(0.0, 1.0),
+          child: Transform.scale(
+            scale: scale,
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(opacity.clamp(0.0, 1.0)),
+                borderRadius: BorderRadius.circular(ModernRadius.md),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -38,19 +88,9 @@ class _LaporanKurbanBannerWidgetState extends State<LaporanKurbanBannerWidget>
       child: AnimatedBuilder(
         animation: _model.pulseController,
         builder: (context, child) {
-          final glowOpacity = 0.15 + (_model.pulseValue * 0.35);
-          final glowBlur = 8.0 + (_model.pulseValue * 12.0);
-          final glowSpread = _model.pulseValue * 6.0;
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(ModernRadius.lg),
-              boxShadow: [
-                BoxShadow(
-                  color: ModernColors.primaryDark.withOpacity(glowOpacity),
-                  blurRadius: glowBlur,
-                  spreadRadius: glowSpread,
-                ),
-              ],
             ),
             child: child,
           );
@@ -74,17 +114,29 @@ class _LaporanKurbanBannerWidgetState extends State<LaporanKurbanBannerWidget>
                 padding: const EdgeInsets.all(ModernSpacing.md),
                 child: Row(
                   children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(ModernRadius.md),
-                      ),
-                      child: const Icon(
-                        Icons.assignment_turned_in,
-                        color: Colors.white,
-                        size: 24,
+                      SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          _buildRipple(2, 0.2),
+                          _buildRipple(1, 0.35),
+                          _buildRipple(0, 0.5),
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(ModernRadius.md),
+                            ),
+                            child: const Icon(
+                              Icons.assignment_turned_in,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: ModernSpacing.md),

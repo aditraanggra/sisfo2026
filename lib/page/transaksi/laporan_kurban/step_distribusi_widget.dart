@@ -1,6 +1,7 @@
 import '/component/chip_group/chip_group_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,68 +66,84 @@ class _StepDistribusiWidgetState extends State<StepDistribusiWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(ModernSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Distribusi Daging',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final screenType = getScreenType(context);
+        final double contentWidth = switch (screenType) {
+          ScreenType.phone => double.infinity,
+          ScreenType.tablet => screenWidth * 0.80,
+          ScreenType.desktop => min(screenWidth * 0.55, 720.0),
+        };
+        return Center(
+          child: SizedBox(
+            width: contentWidth,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(ModernSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Distribusi Daging',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: ModernColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Informasi paket daging dan penerima manfaat',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: ModernColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  _buildNumberField(
+                    label: 'Jumlah Paket Daging',
+                    value: widget.jmlPaketDaging,
+                    min: 5,
+                    max: 9999,
+                    suffix: 'paket',
+                    controller: _model.paketDagingController,
+                    onChanged: (v) => widget.onPaketDagingChanged(v.toDouble()),
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  _buildNumberField(
+                    label: 'Jumlah Penerima Manfaat',
+                    value: widget.jmlPenerima,
+                    min: 5,
+                    max: 9999,
+                    suffix: 'orang',
+                    controller: _model.penerimaController,
+                    onChanged: (v) => widget.onPenerimaChanged(v.toDouble()),
+                  ),
+                  const SizedBox(height: ModernSpacing.lg),
+                  Text(
+                    'Kelompok Penerima',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: ModernSpacing.sm),
+                  ChipGroupWidget(
+                    options: _kelompokOptions,
+                    selected: widget.kelompokPenerima,
+                    onChanged: widget.onKelompokChanged,
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Informasi paket daging dan penerima manfaat',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: ModernColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          _buildCounterSection(
-            label: 'Jumlah Paket Daging',
-            value: widget.jmlPaketDaging,
-            min: 10,
-            max: 500,
-            suffix: 'paket',
-            controller: _model.paketDagingController,
-            onChanged: (v) => widget.onPaketDagingChanged(v.toDouble()),
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          _buildCounterSection(
-            label: 'Jumlah Penerima Manfaat',
-            value: widget.jmlPenerima,
-            min: 10,
-            max: 2000,
-            suffix: 'orang',
-            controller: _model.penerimaController,
-            onChanged: (v) => widget.onPenerimaChanged(v.toDouble()),
-          ),
-          const SizedBox(height: ModernSpacing.lg),
-          Text(
-            'Kelompok Penerima',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: ModernSpacing.sm),
-          ChipGroupWidget(
-            options: _kelompokOptions,
-            selected: widget.kelompokPenerima,
-            onChanged: widget.onKelompokChanged,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildCounterSection({
+  Widget _buildNumberField({
     required String label,
     required int value,
     required int min,
@@ -135,137 +152,67 @@ class _StepDistribusiWidgetState extends State<StepDistribusiWidget> {
     required TextEditingController controller,
     required ValueChanged<int> onChanged,
   }) {
-    final displayValue = '$value $suffix';
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                color: ModernColors.primaryAccent.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                displayValue,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: ModernColors.primaryAccent,
-                ),
-              ),
-            ),
-          ],
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: ModernColors.textPrimary,
+          ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            _buildStepperButton(
-              icon: Icons.remove,
-              onTap: value > min ? () => onChanged(value - 10) : null,
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(5),
+          ],
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: ModernColors.textPrimary,
+          ),
+          decoration: InputDecoration(
+            suffixText: suffix,
+            suffixStyle: GoogleFonts.inter(
+              fontSize: 14,
+              color: ModernColors.textSecondary,
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: TextFormField(
-                controller: controller,
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(5),
-                ],
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: ModernColors.textPrimary,
-                ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ModernRadius.sm),
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ModernRadius.sm),
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).alternate,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ModernRadius.sm),
-                    borderSide: const BorderSide(
-                      color: ModernColors.primaryAccent,
-                      width: 2,
-                    ),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                ),
-                onChanged: (v) {
-                  var parsed = int.tryParse(v) ?? min;
-                  if (parsed < min) parsed = min;
-                  if (parsed > max) parsed = max;
-                  onChanged(parsed);
-                },
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(ModernRadius.sm),
+              borderSide: BorderSide(
+                color: FlutterFlowTheme.of(context).alternate,
               ),
             ),
-            const SizedBox(width: 8),
-            _buildStepperButton(
-              icon: Icons.add,
-              onTap: value < max ? () => onChanged(value + 10) : null,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(ModernRadius.sm),
+              borderSide: BorderSide(
+                color: FlutterFlowTheme.of(context).alternate,
+              ),
             ),
-          ],
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(ModernRadius.sm),
+              borderSide: const BorderSide(
+                color: ModernColors.primaryAccent,
+                width: 2,
+              ),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+          onChanged: (v) {
+            var parsed = int.tryParse(v) ?? min;
+            if (parsed < min) parsed = min;
+            if (parsed > max) parsed = max;
+            onChanged(parsed);
+          },
         ),
       ],
-    );
-  }
-
-  Widget _buildStepperButton({
-    required IconData icon,
-    required VoidCallback? onTap,
-  }) {
-    final isDisabled = onTap == null;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(ModernRadius.sm),
-        child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: isDisabled
-                ? Colors.grey.withOpacity(0.1)
-                : ModernColors.primaryAccent.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(ModernRadius.sm),
-            border: Border.all(
-              color: isDisabled
-                  ? Colors.grey.withOpacity(0.2)
-                  : ModernColors.primaryAccent.withOpacity(0.3),
-            ),
-          ),
-          child: Icon(
-            icon,
-            color: isDisabled
-                ? Colors.grey.shade300
-                : ModernColors.primaryAccent,
-            size: 20,
-          ),
-        ),
-      ),
     );
   }
 }
